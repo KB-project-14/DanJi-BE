@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.member.mapper.MemberMapper">
+  <insert id="insert">
+    INSERT INTO tbl_member
+    VALUES (#{username}, #{password}, #{email}, now(), now())
+  </insert>
+
+  <insert id="insertAuth">
+    INSERT INTO tbl_member_auth(username, auth)
+    VALUES (#{username}, #{auth})
+  </insert>
+
+  <resultMap id="authMap" type="AuthVO">
+    <result column="username" property="username"/>
+    <result column="auth" property="auth"/>
+  </resultMap>
+
+  <resultMap id="memberMap" type="MemberVO">
+    <id column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="email" property="email"/>
+    <result column="reg_date" property="regDate"/>
+    <result column="update_date" property="updateDate"/>
+    <collection property="authList" resultMap="authMap"/>
+  </resultMap>
+
+  <select id="get" resultMap="memberMap">
+    SELECT m.username, password, email, reg_date, update_date, auth
+    FROM tbl_member m
+           LEFT OUTER JOIN tbl_member_auth a
+                           ON m.username = a.username
+    where m.username = #{username}
+  </select>
+
+  <select id="findByUsername" resultType="org.danji.security.account.domain.MemberVO">
+    SELECT *
+    FROM tbl_member
+    WHERE username = #{username}
+  </select>
+
+  <update id="update">
+    UPDATE tbl_member
+    SET email       = #{email},
+        update_date = now()
+    WHERE username = #{username}
+  </update>
+
+  <update id="updatePassword">
+    UPDATE tbl_member
+    SET password    = #{newPassword},
+        update_date = now()
+    WHERE username = #{username}
+  </update>
+</mapper>
