@@ -13,7 +13,7 @@
         <Root level="INFO">
             <AppenderRef ref="console"/>
         </Root>
-        <Logger name="org.scoula" level="INFO" additivity="false">
+        <Logger name="org.danji" level="INFO" additivity="false">
             <AppenderRef ref="console"/>
         </Logger>
 

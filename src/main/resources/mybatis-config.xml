@@ -9,8 +9,8 @@
   </settings>
 
   <typeAliases>
-    <package name="org.scoula.security.account.domain"/>
-    <package name="org.scoula.board.domain"/>
+    <package name="org.danji.security.account.domain"/>
+    <package name="org.danji.board.domain"/>
   </typeAliases>
 
 </configuration>
