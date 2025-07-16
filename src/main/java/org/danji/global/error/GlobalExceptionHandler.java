@@ -2,6 +2,7 @@ package org.danji.global.error;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.global.common.ApiResponse;
 import org.danji.global.exception.BusinessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
