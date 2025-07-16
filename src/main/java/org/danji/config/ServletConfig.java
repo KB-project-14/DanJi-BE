@@ -24,7 +24,7 @@ public class ServletConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/")
-                .setViewName("forward:/resources/index.html");
+                .setViewName("redirect:/swagger-ui.html");
     }
 
     @Override
