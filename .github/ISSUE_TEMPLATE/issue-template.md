@@ -1,3 +1,12 @@
+---
+name: issue template
+about: 이슈 생성
+title: '[Type] <기능 또는 변경 요약> '
+labels: ''
+assignees: ''
+
+---
+
 ## 🧩 관련 기능 (복수 선택 가능)
 
 - [ ] `member`
