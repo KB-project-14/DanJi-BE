@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.scoula.travel.mapper.TravelMapper">
+<mapper namespace="org.danji.travel.mapper.TravelMapper">
     <delete id="delete">
         DELETE
         FROM tbl_travel_image
