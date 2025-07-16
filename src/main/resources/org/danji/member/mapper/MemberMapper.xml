@@ -36,7 +36,7 @@
     where m.username = #{username}
   </select>
 
-  <select id="findByUsername" resultType="org.danji.security.account.domain.MemberVO">
+  <select id="findByUsername" resultType="MemberVO">
     SELECT *
     FROM tbl_member
     WHERE username = #{username}

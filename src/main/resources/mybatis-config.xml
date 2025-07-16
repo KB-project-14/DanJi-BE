@@ -9,7 +9,7 @@
   </settings>
 
   <typeAliases>
-    <package name="org.danji.security.account.domain"/>
+    <package name="org.danji.auth.account.domain"/>
     <package name="org.danji.board.domain"/>
   </typeAliases>
 
