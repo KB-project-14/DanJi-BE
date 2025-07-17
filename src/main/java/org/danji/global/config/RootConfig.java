@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.flywaydb.core.Flyway;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,25 @@ public class RootConfig {
         DataSourceTransactionManager manager = new DataSourceTransactionManager(dataSource());
 
         return manager;
+    }
+
+    @Bean
+    public Flyway flyway(DataSource dataSource) {
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .locations("classpath:db/migration")
+                .baselineVersion("0.0")  // 초기 마이그레이션 버전 설정
+                .baselineOnMigrate(true)
+                .encoding("UTF-8")
+                .cleanDisabled(true)  // 안전을 위해 clean 비활성화
+                .validateMigrationNaming(true)
+                .load();
+        // Flyway 설정
+
+        // 수동으로 migrate 호출
+        flyway.migrate();
+
+        return flyway;
     }
 
 }
