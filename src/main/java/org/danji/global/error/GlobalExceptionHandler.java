@@ -92,6 +92,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                            HttpServletRequest httpRequest) {
 
         log.error("[BusinessException] : {}", ex.getErrorMessage());
+        log.error("[BusinessException 발생 에러코드] : {}", ex.getErrorCode());
         log.error("[BusinessException] 발생 지점 : {} | {} ", httpRequest.getMethod(),
                 httpRequest.getRequestURI());
 
