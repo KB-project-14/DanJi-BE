@@ -3,7 +3,9 @@ package org.danji.member.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.danji.security.account.domain.MemberVO;
+
+
+import org.danji.auth.account.domain.MemberVO;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data

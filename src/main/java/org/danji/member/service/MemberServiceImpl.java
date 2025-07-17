@@ -2,14 +2,15 @@ package org.danji.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.auth.account.domain.AuthVO;
+import org.danji.auth.account.domain.MemberVO;
 import org.danji.member.dto.ChangePasswordDTO;
 import org.danji.member.dto.MemberDTO;
 import org.danji.member.dto.MemberJoinDTO;
 import org.danji.member.dto.MemberUpdateDTO;
 import org.danji.member.exception.PasswordMissmatchException;
 import org.danji.member.mapper.MemberMapper;
-import org.danji.security.account.domain.AuthVO;
-import org.danji.security.account.domain.MemberVO;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

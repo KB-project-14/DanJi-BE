@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.scoula.member.mapper.MemberMapper">
+<mapper namespace="org.danji.member.mapper.MemberMapper">
   <insert id="insert">
     INSERT INTO tbl_member
     VALUES (#{username}, #{password}, #{email}, now(), now())
@@ -36,7 +36,7 @@
     where m.username = #{username}
   </select>
 
-  <select id="findByUsername" resultType="org.danji.security.account.domain.MemberVO">
+  <select id="findByUsername" resultType="MemberVO">
     SELECT *
     FROM tbl_member
     WHERE username = #{username}
