@@ -1,7 +1,7 @@
 package org.danji.mapper;
 
 import lombok.extern.log4j.Log4j2;
-import org.danji.config.RootConfig;
+import org.danji.global.config.RootConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

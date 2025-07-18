@@ -23,7 +23,8 @@ import javax.sql.DataSource;
 @PropertySource({"classpath:/application.properties"})
 @MapperScan(basePackages = {"org.danji.board.mapper",
         "org.danji.member.mapper",
-        "org.danji.travel.mapper"
+        "org.danji.travel.mapper",
+        "org.danji.mapper"
 })
 @ComponentScan(basePackages = {"org.danji.board.service",
         "org.danji.member.service",
