@@ -1,8 +1,9 @@
 package org.danji.security.util;
 
 import lombok.extern.log4j.Log4j2;
-import org.danji.config.RootConfig;
-import org.danji.security.config.SecurityConfig;
+import org.danji.global.config.RootConfig;
+import org.danji.global.security.jwt.util.JwtProcessor;
+import org.danji.global.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
