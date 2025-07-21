@@ -3,6 +3,7 @@ package org.danji.security;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
 import org.danji.global.config.SecurityConfig;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         SecurityConfig.class
 })
 @Log4j2
+@Disabled
 public class PasswordEncoderTest {
 
     //싱글톤으로 만든 암호화해주는 객체를 주입

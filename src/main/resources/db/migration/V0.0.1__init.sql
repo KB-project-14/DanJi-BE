@@ -12,13 +12,13 @@ CREATE TABLE region
 CREATE TABLE local_currency
 (
     local_currency_id BINARY(16) PRIMARY KEY,
-    region_id         BINARY(16)                    NOT NULL,
-    name              VARCHAR(25)                   NOT NULL,
-    benefit_type      ENUM ('CASHBACK', ' BONUS_CHARGE',  'DISCOUNT_CHARGE') NOT NULL,
-    maximum           BIGINT                        NOT NULL,
-    percentage        BIGINT                        NOT NULL,
-    created_at        DATETIME                      NOT NULL,
-    updated_at        DATETIME                      NOT NULL,
+    region_id         BINARY(16)                                            NOT NULL,
+    name              VARCHAR(25)                                           NOT NULL,
+    benefit_type      ENUM ('CASHBACK', ' BONUS_CHARGE', 'DISCOUNT_CHARGE') NOT NULL,
+    maximum           BIGINT                                                NOT NULL,
+    percentage        BIGINT                                                NOT NULL,
+    created_at        DATETIME                                              NOT NULL,
+    updated_at        DATETIME                                              NOT NULL,
     FOREIGN KEY (region_id) REFERENCES region (region_id)
 );
 
@@ -85,11 +85,11 @@ CREATE TABLE available_merchant
 CREATE TABLE badge
 (
     badge_id          BINARY(16) PRIMARY KEY,
-    name              VARCHAR(25)                      NOT NULL,
+    name              VARCHAR(25)                       NOT NULL,
     badge_type        ENUM ('BRONZE', 'SILVER', 'GOLD') NOT NULL,
-    local_currency_id BINARY(16)                       NOT NULL,
-    created_at        DATETIME                         NOT NULL,
-    updated_at        DATETIME                         NOT NULL,
+    local_currency_id BINARY(16)                        NOT NULL,
+    created_at        DATETIME                          NOT NULL,
+    updated_at        DATETIME                          NOT NULL,
     FOREIGN KEY (local_currency_id) REFERENCES local_currency (local_currency_id)
 );
 
