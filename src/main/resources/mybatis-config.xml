@@ -13,4 +13,8 @@
     <package name="org.danji.board.domain"/>
   </typeAliases>
 
+  <typeHandlers>
+    <typeHandler handler="org.danji.global.handler.UUIDTypeHandler"/>
+  </typeHandlers>
+
 </configuration>

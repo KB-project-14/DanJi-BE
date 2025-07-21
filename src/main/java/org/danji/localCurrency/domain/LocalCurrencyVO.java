@@ -4,17 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.danji.localCurrency.enums.benefitType;
+import org.danji.localCurrency.enums.BenefitType;
+
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 public class LocalCurrencyVO {
-    private Long localCurrencyId;
-    private Long regionId;
+    private UUID localCurrencyId;
+    private UUID regionId;
     private String name;
-    private benefitType benefitType;
+    private BenefitType benefitType;
     private Integer Maximum;
     private Integer percentage;
 }

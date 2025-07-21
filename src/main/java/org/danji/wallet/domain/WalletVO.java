@@ -7,14 +7,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danji.wallet.enums.WalletType;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 public class WalletVO {
-    private Long walletId;
-    private Long memberId;
-    private Long localCurrencyId;
+    private UUID walletId;
+    private UUID memberId;
+    private UUID localCurrencyId;
     private WalletType walletType;
     private Integer balance;
 }

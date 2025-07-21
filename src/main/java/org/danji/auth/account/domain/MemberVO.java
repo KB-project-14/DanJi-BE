@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class MemberVO {
-
+    private UUID memberId;
     private String username;
     private String password;
     private String email;
