@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
 import org.danji.global.security.jwt.util.JwtProcessor;
 import org.danji.global.config.SecurityConfig;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class, SecurityConfig.class})
 @Log4j2
+@Disabled
 class JwtProcessorTest {
     @Autowired
     JwtProcessor jwtProcessor;

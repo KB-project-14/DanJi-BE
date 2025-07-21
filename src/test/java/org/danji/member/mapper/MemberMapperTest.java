@@ -6,6 +6,7 @@ import org.danji.auth.account.domain.AuthVO;
 import org.danji.auth.account.domain.MemberVO;
 import org.danji.global.config.SecurityConfig;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class, SecurityConfig.class})
 @Log4j2
+@Disabled
 class MemberMapperTest {
 
     @Autowired

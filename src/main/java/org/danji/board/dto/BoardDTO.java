@@ -1,22 +1,22 @@
 package org.danji.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.danji.board.domain.BoardAttachmentVO;
 import org.danji.board.domain.BoardVO;
+import org.danji.global.dto.BaseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class BoardDTO {
+@SuperBuilder
+public class BoardDTO extends BaseDTO {
 
     private Long no;
     private String title;
@@ -40,6 +40,8 @@ public class BoardDTO {
                 .regDate(vo.getRegDate())
                 .updateDate(vo.getUpdateDate())
                 .attaches(vo.getAttaches())
+                .createdAt(vo.getCreatedAt())
+                .updatedAt(vo.getUpdatedAt())
                 .build();
     }
 
@@ -52,6 +54,8 @@ public class BoardDTO {
                 .regDate(regDate)
                 .updateDate(updateDate)
                 .attaches(attaches)
+                .createdAt(getCreatedAt())
+                .updatedAt(getUpdatedAt())
                 .build();
     }
 }
