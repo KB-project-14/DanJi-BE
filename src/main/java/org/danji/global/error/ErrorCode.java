@@ -18,8 +18,11 @@ public enum ErrorCode {
     WALLET_BALANCE_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "WL-02", "지갑의 잔액이 부족합니다"),
 
     //localCurrency
-    LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "WL-01", "지갑을 찾을 수 없습니다");
+    LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "LC-01", "지갑을 찾을 수 없습니다"),
 
+    //transaction
+    TRANSACTION_SAVE_FAILED_MAIN(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "메인 지갑 거래 내역 저장에 실패했습니다."),
+    TRANSACTION_SAVE_FAILED_LOCAL(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "지역화폐 지갑 거래 내역 저장에 실패했습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

@@ -15,6 +15,13 @@
 
   <typeHandlers>
     <typeHandler handler="org.danji.global.handler.UUIDTypeHandler"/>
+    <typeHandler handler="org.danji.cashback.handler.CashbackStatusTypeHandler"/>
   </typeHandlers>
+
+
+
+  <mappers>
+    <mapper resource="mapper/WalletMapper.xml"/>
+  </mappers>
 
 </configuration>

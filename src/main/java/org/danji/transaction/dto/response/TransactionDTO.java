@@ -19,8 +19,11 @@ public class TransactionDTO extends BaseDTO {
     private UUID fromWalletId;
     private UUID toWalletId;
     private UUID memberId;
+    private Integer beforeBalance;
     private Integer amount;
+    private Integer afterBalance;
     private Direction direction;
     private Type type;
+    private String comment;
 
 }

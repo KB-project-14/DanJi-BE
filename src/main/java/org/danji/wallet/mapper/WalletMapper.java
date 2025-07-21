@@ -1,19 +1,20 @@
 package org.danji.wallet.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.enums.BenefitType;
 import org.danji.wallet.domain.WalletVO;
+import org.springframework.security.core.parameters.P;
 
 import javax.validation.constraints.Min;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface WalletMapper {
-    Optional<WalletVO> getCashWalletByUserId(UUID userId);
+    Optional<WalletVO> getCashWalletByUserId(@Param("userId") UUID userId);
 
-    Optional<WalletVO> getWalletByUserId(UUID walletId);
+    Optional<WalletVO> getWalletByUUId(@Param("walletId") UUID walletId);
 
-    void updateWalletBalance(UUID walletId, UUID walletId1, int amount);
+    void updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
 
-    void increaseBalance(UUID walletId, int amount);
 }

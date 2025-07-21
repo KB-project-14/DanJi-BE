@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.localCurrency.mapper.LocalCurrencyMapper">
+    <select id="findLocalCurrency" parameterType="java.util.UUID"
+            resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
+        SELECT
+            local_currency_id,
+            region_id,
+            name,
+            benefit_type,
+            maximum,
+            percentage
+        FROM local_currency
+        WHERE local_currency_id = #{localCurrencyId}
+
+    </select>
+
+
+</mapper>

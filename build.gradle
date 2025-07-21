@@ -15,6 +15,7 @@ buildscript {
 plugins {
     id 'java'
     id 'war'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 group 'org.scoula'
@@ -31,8 +32,6 @@ ext {
     springSecurityVersion = '5.8.13'
 }
 
-sourceCompatibility = '1.17'
-targetCompatibility = '1.17'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -127,9 +126,13 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 
 test {
     useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
 }

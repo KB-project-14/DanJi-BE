@@ -6,6 +6,7 @@ import org.danji.global.domain.BaseVO;
 import org.danji.transaction.enums.Direction;
 import org.danji.transaction.enums.Type;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,17 +24,5 @@ public class TransactionVO extends BaseVO {
     private Type type;
     private String comment;
 
-    @Builder
-    public TransactionVO(UUID transactionId, UUID fromWalletId, UUID toWalletId, Integer beforeBalance, Integer afterBalance, Integer amount, Direction direction, Type type, String comment) {
-        this.transactionId = transactionId;
-        this.fromWalletId = fromWalletId;
-        this.toWalletId = toWalletId;
-        this.beforeBalance = beforeBalance;
-        this.afterBalance = afterBalance;
-        this.amount = amount;
-        this.direction = direction;
-        this.type = type;
-        this.comment = comment;
-    }
 
 }

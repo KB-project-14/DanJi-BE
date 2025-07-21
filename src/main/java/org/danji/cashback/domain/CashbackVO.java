@@ -3,6 +3,7 @@ package org.danji.cashback.domain;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.danji.cashback.enums.CashBackStatus;
 import org.danji.global.domain.BaseVO;
 
 import java.time.LocalDateTime;
@@ -18,13 +19,6 @@ public class CashbackVO extends BaseVO {
     private UUID walletId;
     private Integer amount;
     private LocalDateTime cashbackDate;
+    private CashBackStatus status;
 
-    @Builder
-    public CashbackVO(UUID cashbackId, UUID memberId, UUID walletId, int amount, LocalDateTime cashbackDate) {
-        this.cashbackId = cashbackId;
-        this.memberId = memberId;
-        this.walletId = walletId;
-        this.amount = amount;
-        this.cashbackDate = cashbackDate;
-    }
 }

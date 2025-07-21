@@ -21,10 +21,10 @@ public class CashbackScheduler {
 
     @Scheduled(cron = "0 0 0 * * *") // 매일 0시 실행
     public void processDueCashbacks() {
-        List<CashbackVO> dueList = cashbackMapper.findDueCashbacks(LocalDateTime.now());
+        List<CashbackVO> dueList = cashbackMapper.findDueCashBacks(LocalDateTime.now());
 
         for (CashbackVO cashbackVO : dueList) {
-            walletMapper.increaseBalance(cashbackVO.getWalletId(), cashbackVO.getAmount());
+            walletMapper.updateWalletBalance(cashbackVO.getWalletId(), cashbackVO.getAmount());
             cashbackMapper.markAsCompleted(cashbackVO.getCashbackId());
             log.info("캐시백 지급 완료: walletId={}, amount={}", cashbackVO.getWalletId(), cashbackVO.getAmount());
         }
