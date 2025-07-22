@@ -12,7 +12,7 @@ CREATE TABLE region
 );
 
 ALTER TABLE local_currency
-    MODIFY region_id BIGINT;
+    MODIFY region_id BIGINT NOT NULL;
 
 ALTER TABLE local_currency
     ADD CONSTRAINT fk_local_currency_region
