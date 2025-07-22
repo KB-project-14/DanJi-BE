@@ -39,7 +39,7 @@ import javax.sql.DataSource;
         "org.danji.availableMerchant.service",
         "org.danji.transaction.service",
         "org.danji.cashback.converter",
-        "org.danji.transaction.converter"
+        "org.danji.transaction.converter",
         "org.danji.region.service"
 })
 @Log4j2
