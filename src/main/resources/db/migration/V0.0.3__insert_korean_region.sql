@@ -1,3 +1,5 @@
+ALTER TABLE local_currency DROP FOREIGN KEY local_currency_ibfk_1;
+
 DROP TABLE region;
 
 CREATE TABLE region
@@ -10,11 +12,12 @@ CREATE TABLE region
 );
 
 ALTER TABLE local_currency
+    MODIFY region_id BIGINT;
+
+ALTER TABLE local_currency
     ADD CONSTRAINT fk_local_currency_region
         FOREIGN KEY (region_id)
             REFERENCES region(region_id);
-SHOW CREATE TABLE region;
-
 
 INSERT INTO region (region_id, province, city, created_at, updated_at) VALUES (11001, '서울특별시', '종로구', NOW(), NOW());
 INSERT INTO region (region_id, province, city, created_at, updated_at) VALUES (11002, '서울특별시', '중구', NOW(), NOW());
