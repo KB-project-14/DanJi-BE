@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.danji.transaction.mapper.TransactionMapper">
-    <insert id="insert" parameterType="org.danji.transaction.domain.TransactionVO">
+    <insert id="insert" parameterType="TransactionVO">
         INSERT INTO transaction (
             transaction_id
             ,from_wallet_id

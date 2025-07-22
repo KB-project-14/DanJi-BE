@@ -5,7 +5,7 @@
 
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"
-            resultType="org.danji.wallet.domain.WalletVO">
+            resultType="WalletVO">
         SELECT
             wallet_id,
             member_id,
@@ -18,7 +18,7 @@
     </select>
 
     <select id="getWalletByUUId" parameterType="java.util.UUID"
-            resultType="org.danji.wallet.domain.WalletVO">
+            resultType="WalletVO">
         SELECT
             wallet_id,
             member_id,

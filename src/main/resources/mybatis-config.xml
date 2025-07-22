@@ -11,17 +11,14 @@
   <typeAliases>
     <package name="org.danji.auth.account.domain"/>
     <package name="org.danji.board.domain"/>
+    <package name="org.danji.localCurrency.domain"/>
+    <package name="org.danji.transaction.domain"/>
+    <package name="org.danji.wallet.domain"/>
   </typeAliases>
 
   <typeHandlers>
     <typeHandler handler="org.danji.global.handler.UUIDTypeHandler"/>
     <typeHandler handler="org.danji.cashback.handler.CashbackStatusTypeHandler"/>
   </typeHandlers>
-
-
-
-  <mappers>
-    <mapper resource="mapper/WalletMapper.xml"/>
-  </mappers>
 
 </configuration>

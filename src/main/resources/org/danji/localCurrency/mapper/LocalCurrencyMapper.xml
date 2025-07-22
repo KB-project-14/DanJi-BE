@@ -5,7 +5,7 @@
 
 <mapper namespace="org.danji.localCurrency.mapper.LocalCurrencyMapper">
     <select id="findLocalCurrency" parameterType="java.util.UUID"
-            resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
+            resultType="LocalCurrencyVO">
         SELECT
             local_currency_id,
             region_id,
