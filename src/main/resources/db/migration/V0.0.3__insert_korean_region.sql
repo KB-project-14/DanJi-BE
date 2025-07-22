@@ -1,3 +1,21 @@
+DROP TABLE region;
+
+CREATE TABLE region
+(
+    region_id BIGINT NOT NULL PRIMARY KEY,
+    province   VARCHAR(50) NOT NULL,
+    city       VARCHAR(50) NOT NULL,
+    created_at DATETIME    NOT NULL,
+    updated_at DATETIME    NOT NULL
+);
+
+ALTER TABLE local_currency
+    ADD CONSTRAINT fk_local_currency_region
+        FOREIGN KEY (region_id)
+            REFERENCES region(region_id);
+SHOW CREATE TABLE region;
+
+
 INSERT INTO region (region_id, province, city, created_at, updated_at) VALUES (11001, '서울특별시', '종로구', NOW(), NOW());
 INSERT INTO region (region_id, province, city, created_at, updated_at) VALUES (11002, '서울특별시', '중구', NOW(), NOW());
 INSERT INTO region (region_id, province, city, created_at, updated_at) VALUES (11003, '서울특별시', '용산구', NOW(), NOW());
