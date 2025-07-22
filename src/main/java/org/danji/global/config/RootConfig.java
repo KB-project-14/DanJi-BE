@@ -24,11 +24,13 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {"org.danji.board.mapper",
         "org.danji.member.mapper",
         "org.danji.travel.mapper",
-        "org.danji.mapper"
+        "org.danji.mapper",
+        "org.danji.availableMerchant.mapper"
 })
 @ComponentScan(basePackages = {"org.danji.board.service",
         "org.danji.member.service",
-        "org.danji.travel.service"
+        "org.danji.travel.service",
+        "org.danji.availableMerchant.service"
 })
 @Log4j2
 @EnableTransactionManagement
