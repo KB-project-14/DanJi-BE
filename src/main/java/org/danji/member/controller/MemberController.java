@@ -45,15 +45,15 @@ public class MemberController {
     }
 
     // 아바타(이미지) 요청 엔드포인트 (이미지 stream 반환)
-    @GetMapping("/{username}/avatar")
-    public void getAvatar(@PathVariable String username,
-                          HttpServletResponse response) {
-        String avatarPath = "c:/upload/avatar/" + username + ".png";
-        File file = new File(avatarPath);
-        if (!file.exists()) { // 아바타 등록이 없는 경우, 디폴트 아바타 이미지 사용
-            file = new File("C:/upload/avatar/unknown.png");
-        }
-
-        UploadFiles.downloadImage(response, file);
-    }
+//    @GetMapping("/{username}/avatar")
+//    public void getAvatar(@PathVariable String username,
+//                          HttpServletResponse response) {
+//        String avatarPath = "c:/upload/avatar/" + username + ".png";
+//        File file = new File(avatarPath);
+//        if (!file.exists()) { // 아바타 등록이 없는 경우, 디폴트 아바타 이미지 사용
+//            file = new File("C:/upload/avatar/unknown.png");
+//        }
+//
+//        UploadFiles.downloadImage(response, file);
+//    }
 }

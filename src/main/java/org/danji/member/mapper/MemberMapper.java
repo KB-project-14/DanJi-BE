@@ -18,4 +18,6 @@ public interface MemberMapper {
     int update(MemberVO member);
 
     int updatePassword(ChangePasswordDTO changePasswordDTO);
+
+    void deleteByMemberId(Long memberId);
 }
