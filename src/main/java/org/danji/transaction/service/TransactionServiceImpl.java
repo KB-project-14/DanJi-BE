@@ -76,6 +76,8 @@ public class TransactionServiceImpl implements TransactionService {
             walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount());
             //7일 뒤에 캐시백에 대한 부분 업데이트
 
+            // TODO converter로 구현한거 빌더패턴으로 바꾸기
+
             cashbackMapper.insert(cashbackConverter.toCashbackVO(
                     UUID.randomUUID(), userId, LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount() * localCurrencyVO.getPercentage(), LocalDateTime.now().plusDays(7), CashBackStatus.PENDING));
 
