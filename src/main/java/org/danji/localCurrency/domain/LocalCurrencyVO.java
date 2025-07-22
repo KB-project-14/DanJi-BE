@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 public class LocalCurrencyVO {
     private UUID localCurrencyId;
-    private UUID regionId;
+    private Long regionId;
     private String name;
     private BenefitType benefitType;
     private Integer Maximum;
