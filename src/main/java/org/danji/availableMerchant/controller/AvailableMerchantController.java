@@ -37,6 +37,6 @@ public class AvailableMerchantController {
 
         //가맹점 생성 후 결과 반환
         AvailableMerchantDTO created = service.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(org.danji.global.common.ApiResponse.success(created));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(created));
     }
 }
