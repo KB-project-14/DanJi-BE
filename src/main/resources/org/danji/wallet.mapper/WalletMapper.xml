@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.wallet.mapper.WalletMapper">
+    <select id="getCashWalletByUserId" parameterType="java.util.UUID"
+            resultType="WalletVO">
+        SELECT
+            wallet_id,
+            member_id,
+            local_currency_id,
+            wallet_type,
+            balance
+        FROM wallet
+        WHERE member_id = #{userId}
+          AND wallet_type = 'CASH'
+    </select>
+
+    <select id="getWalletByUUId" parameterType="java.util.UUID"
+            resultType="WalletVO">
+        SELECT
+            wallet_id,
+            member_id,
+            local_currency_id,
+            wallet_type,
+            balance
+        FROM wallet
+        WHERE wallet_id = #{walletId}
+
+    </select>
+
+    <update id="updateWalletBalance" parameterType="java.util.UUID">
+        UPDATE wallet
+        SET balance = balance + #{amount},
+            updated_at = NOW()
+        WHERE wallet_id = #{walletId}
+    </update>
+
+</mapper>

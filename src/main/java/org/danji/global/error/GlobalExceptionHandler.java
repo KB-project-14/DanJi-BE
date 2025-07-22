@@ -88,7 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<Object> handleMemberException(BusinessException ex,
+    protected ResponseEntity<Object> handleBusinessException(BusinessException ex,
                                                            HttpServletRequest httpRequest) {
 
         log.error("[BusinessException] : {}", ex.getErrorMessage());
