@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.danji.cashback.mapper.CashbackMapper">
-    <insert id="insert" parameterType="org.danji.cashback.domain.CashbackVO">
+    <insert id="insert" parameterType="CashbackVO">
         INSERT INTO cashback (
             cashback_id,
             member_id,
@@ -36,7 +36,7 @@
 
     <select id="findDueCashBacks"
             parameterType="java.time.LocalDateTime"
-            resultType="org.danji.cashback.domain.CashbackVO">
+            resultType="CashbackVO">
         SELECT
         cashback_id,
         member_id,
