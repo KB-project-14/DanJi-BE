@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface TransactionService {
 
-    List<TransactionDTO> recharge(UUID userId, TransferDTO transferDTO);
+    List<TransactionDTO> recharge(TransferDTO transferDTO);
 }

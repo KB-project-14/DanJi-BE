@@ -47,7 +47,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public List<TransactionDTO> recharge(UUID userId, TransferDTO transferDTO) {
+    public List<TransactionDTO> recharge(TransferDTO transferDTO) {
+
+        // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
+        //-------------------------------------------
+        UUID userId = UUID.randomUUID();
         // userId로 메인 지갑 찾기
         WalletVO mainWalletVO = walletMapper.getCashWalletByUserId(userId).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기

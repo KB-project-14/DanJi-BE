@@ -25,6 +25,8 @@ import javax.sql.DataSource;
         "org.danji.member.mapper",
         "org.danji.travel.mapper",
         "org.danji.mapper",
+        "org.danji.availableMerchant.mapper",
+        "org.danji.mapper",
         "org.danji.wallet.mapper",
         "org.danji.transaction.mapper",
         "org.danji.localCurrency.mapper",
@@ -32,6 +34,8 @@ import javax.sql.DataSource;
 })
 @ComponentScan(basePackages = {"org.danji.board.service",
         "org.danji.member.service",
+        "org.danji.travel.service",
+        "org.danji.availableMerchant.service",
         "org.danji.travel.service",
         "org.danji.transaction.service",
         "org.danji.cashback.converter",

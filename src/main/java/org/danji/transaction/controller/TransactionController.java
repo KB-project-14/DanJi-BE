@@ -33,8 +33,8 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/recharge")
-    public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody MemberVO memberVO, @RequestBody TransferDTO transferDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(transactionService.recharge(memberVO.getMemberId(), transferDTO)));
+    public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(transactionService.recharge(transferDTO)));
 
     }
 }
