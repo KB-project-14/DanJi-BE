@@ -15,10 +15,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CashbackConverter {
 
-    public CashbackVO toCashbackVO(UUID cashbackId, UUID memberId, UUID walletId, int amount, LocalDateTime cashbackDate, CashBackStatus status){
+    public CashbackVO toCashbackVO(UUID cashbackId, UUID walletId, int amount, LocalDateTime cashbackDate, CashBackStatus status){
         return CashbackVO.builder()
                 .cashbackId(cashbackId)
-                .memberId(memberId)
                 .walletId(walletId)
                 .amount(amount)
                 .cashbackDate(cashbackDate)
