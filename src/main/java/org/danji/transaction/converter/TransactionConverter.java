@@ -1,6 +1,5 @@
 package org.danji.transaction.converter;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.transaction.Transaction;
 import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.response.TransactionDTO;
@@ -8,20 +7,19 @@ import org.danji.transaction.enums.Direction;
 import org.danji.transaction.enums.Type;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
 public class TransactionConverter {
 
-    public TransactionVO toTransactionVO(UUID transactionId, UUID fromWalletId, UUID toWalletId, Integer beforeBalance,
-                                         Integer afterBalance, Integer amount, Direction direction, Type type, String comment) {
+    public TransactionVO toTransactionVO(UUID transactionId, UUID mainWalletId, UUID LocalWalletId,
+                                         Integer beforeBalance, Integer afterBalance, Integer amount,
+                                         Direction direction, Type type, String comment) {
         return TransactionVO.builder()
                 .transactionId(transactionId)
-                .fromWalletId(fromWalletId)
-                .toWalletId(toWalletId)
+                .fromWalletId(mainWalletId)
+                .toWalletId(LocalWalletId)
                 .beforeBalance(beforeBalance)
                 .afterBalance(afterBalance)
                 .amount(amount)
@@ -33,7 +31,7 @@ public class TransactionConverter {
                 .build();
     }
 
-    public TransactionDTO transactionDTO(TransactionVO transactionVO){
+    public TransactionDTO toTransactionDTO(TransactionVO transactionVO){
         return TransactionDTO.builder()
                 .transactionId(transactionVO.getTransactionId())
                 .fromWalletId(transactionVO.getFromWalletId())
@@ -44,8 +42,6 @@ public class TransactionConverter {
                 .direction(transactionVO.getDirection())
                 .type(transactionVO.getType())
                 .comment(transactionVO.getComment())
-                .createdAt(transactionVO.getCreatedAt())
-                .updatedAt(transactionVO.getUpdatedAt())
                 .build();
     }
 }

@@ -77,35 +77,54 @@ public class TransactionServiceImpl implements TransactionService {
             //7일 뒤에 캐시백에 대한 부분 업데이트
 
             // TODO converter로 구현한거 빌더패턴으로 바꾸기
-
-            cashbackMapper.insert(cashbackConverter.toCashbackVO(
-                    UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount() * localCurrencyVO.getPercentage(), LocalDateTime.now().plusDays(7), CashBackStatus.PENDING));
+            // TODO 결제 로직에 빌더 패턴으로 바꿔서 이 코드 넣기
+            //cashbackMapper.insert(cashbackConverter.toCashbackVO(
+            //  UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount() * localCurrencyVO.getPercentage(), LocalDateTime.now().plusDays(7), CashBackStatus.PENDING));
 
         }
 
         //transaction 테이블에 복식 부기
         //메인지갑 기준
-        TransactionVO mainTx = transactionConverter.toTransactionVO(UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
-                mainWalletVO.getBalance(), mainWalletVO.getBalance() - transferDTO.getAmount(), transferDTO.getAmount(),
-                Direction.EXPENSE, Type.CHARGE, "메인지갑(출금) -> 지역화폐 지갑");
+        TransactionVO mainTx = transactionConverter.toTransactionVO(
+                UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
+                mainWalletVO.getBalance(), (int) (mainWalletVO.getBalance() - transferDTO.getAmount() - transferDTO.getAmount() * RECHARGE_FEE_RATE),
+                transferDTO.getAmount(), Direction.EXPENSE, Type.CHARGE, "메인지갑(출금) -> 지역화폐 지갑");
         int successMainWalletCount = transactionMapper.insert(mainTx);
+
         if (successMainWalletCount != 1) {
             log.error("Main wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount());
             throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
         }
         //지역화폐 기준
-        TransactionVO localTx = transactionConverter.toTransactionVO(UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
-                LocalCurrencyWalletVO.getBalance(), LocalCurrencyWalletVO.getBalance() + transferDTO.getAmount(), transferDTO.getAmount(),
-                Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)");
-        int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
-        if (successLocalCurrencyWalletCount != 1) {
-            log.error("Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount());
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+        //인센티브 규정일때는 인센티브 금액까지 포함해서 transaction 테이블에 넣기
+        TransactionVO localTx = null;
+        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+            localTx = transactionConverter.toTransactionVO(
+                    UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
+                    LocalCurrencyWalletVO.getBalance(), (int) (LocalCurrencyWalletVO.getBalance() + transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE),
+                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)");
+            int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
+            if (successLocalCurrencyWalletCount != 1) {
+                log.error("Incentive Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE);
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+            }
+        }
+        //캐시백 규정일때는 캐시백 포함하지 않은 금액을 transaction 테이블에 넣어주고, 캐시백이 발생될때 또 transaction 테이블에 넣어주기
+        else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
+            localTx = transactionConverter.toTransactionVO(
+                    UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
+                    LocalCurrencyWalletVO.getBalance(), (LocalCurrencyWalletVO.getBalance() + transferDTO.getAmount()),
+                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)");
+            int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
+            if (successLocalCurrencyWalletCount != 1) {
+                log.error("Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount());
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+            }
         }
 
         return List.of(
-                transactionConverter.transactionDTO(mainTx),
-                transactionConverter.transactionDTO(localTx)
+                transactionConverter.toTransactionDTO(mainTx),
+                transactionConverter.toTransactionDTO(localTx)
         );
 
 
