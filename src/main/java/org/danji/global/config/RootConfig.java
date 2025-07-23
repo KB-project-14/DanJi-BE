@@ -37,7 +37,6 @@ import javax.sql.DataSource;
         "org.danji.member.service",
         "org.danji.travel.service",
         "org.danji.availableMerchant.service",
-        "org.danji.availableMerchant.util",
         "org.danji.transaction.service",
         "org.danji.cashback.converter",
         "org.danji.transaction.converter",
