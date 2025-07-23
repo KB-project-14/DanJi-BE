@@ -2,7 +2,6 @@ package org.danji.security.account.mapper;
 
 import lombok.extern.log4j.Log4j2;
 import org.danji.auth.account.domain.AuthVO;
-import org.danji.auth.account.domain.MemberVO;
 import org.danji.auth.account.mapper.UserDetailsMapper;
 import org.danji.global.config.RootConfig;
 import org.danji.global.config.SecurityConfig;

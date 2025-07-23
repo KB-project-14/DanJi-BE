@@ -1,7 +1,7 @@
 package org.danji.member.mapper;
 
 import org.danji.auth.account.domain.AuthVO;
-import org.danji.auth.account.domain.MemberVO;
+import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.ChangePasswordDTO;
 
 

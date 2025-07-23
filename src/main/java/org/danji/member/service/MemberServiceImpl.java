@@ -3,7 +3,7 @@ package org.danji.member.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.auth.account.domain.AuthVO;
-import org.danji.auth.account.domain.MemberVO;
+import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
 import org.danji.member.exception.PasswordMissmatchException;
 import org.danji.member.mapper.MemberMapper;
@@ -65,11 +65,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 석제
-    @Transactional
     @Override
-    public void delete(MemberDeleteDTO dto) {
-        log.info("회원 탈퇴 요청: {}", dto.getMemberId());
-        mapper.deleteByMemberId(dto.getMemberId());
+    @Transactional
+    public void delete(Long memberId) {
+        mapper.deleteByMemberId(memberId);
     }
 
     // 비밀번호 변경

@@ -19,6 +19,7 @@ public class JwtProcessor {
             = "충분히긴임의의(랜덤한) 비밀키문자열배정";
     private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
+
     //3. jwt유효성 검증(브라우저로부터 서버로 전송된 경우, 서버에서 검증할 때)
     public boolean validateToken(String token) {
         Jws<Claims> claims = Jwts.parserBuilder()
@@ -48,5 +49,7 @@ public class JwtProcessor {
                 .getBody()
                 .getSubject();
     }
+
+
 
 }

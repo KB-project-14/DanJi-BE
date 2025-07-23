@@ -14,5 +14,5 @@ public interface MemberService {
 
     void changePassword(ChangePasswordDTO changePassword);
 
-    void delete(MemberDeleteDTO dto);
+    void delete(Long memberId);;
 }

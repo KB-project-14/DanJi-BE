@@ -3,7 +3,6 @@ package org.danji.member.mapper;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
 import org.danji.auth.account.domain.AuthVO;
-import org.danji.auth.account.domain.MemberVO;
 import org.danji.global.config.SecurityConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

@@ -3,7 +3,7 @@ package org.danji.auth.account.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.danji.auth.account.domain.MemberVO;
+import org.danji.member.domain.MemberVO;
 
 import java.util.List;
 
@@ -15,13 +15,16 @@ public class UserInfoDTO {
     String email;
     List<String> roles;
 
+    public UserInfoDTO(String username, String name, String role, String password, Long memberId) {
+    }
+
     public static UserInfoDTO of(MemberVO member) {
         return new UserInfoDTO(
                 member.getUsername(),
-                member.getEmail(),
-                member.getAuthList().stream()
-                        .map(a -> a.getAuth())
-                        .toList()
+                member.getName(), 
+                member.getRole(),
+                member.getPassword(),
+                member.getMemberId()
         );
     }
 }

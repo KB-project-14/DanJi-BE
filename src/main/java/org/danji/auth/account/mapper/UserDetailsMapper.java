@@ -1,6 +1,6 @@
 package org.danji.auth.account.mapper;
 
-import org.danji.auth.account.domain.MemberVO;
+import org.danji.member.domain.MemberVO;
 
 public interface UserDetailsMapper {
 

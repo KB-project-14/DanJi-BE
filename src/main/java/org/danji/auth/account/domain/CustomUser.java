@@ -2,10 +2,13 @@ package org.danji.auth.account.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.danji.member.domain.MemberVO;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -18,9 +21,15 @@ public class CustomUser extends User {
 
     //생성자 2개를 만들어줌.
     public CustomUser(MemberVO memberVO) {
-        super(memberVO.getUsername(), memberVO.getPassword(), memberVO.getAuthList());
+        super(
+                memberVO.getUsername(),
+                memberVO.getPassword(),
+                List.of(new SimpleGrantedAuthority(memberVO.getRole()))  // 🔧 수정된 부분
+        );
         this.member = memberVO;
     }
+
+
 
     public CustomUser(String username, String password,
                       Collection<? extends GrantedAuthority> authorities) {
