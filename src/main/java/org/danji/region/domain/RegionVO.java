@@ -1,20 +1,18 @@
 package org.danji.region.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.dto.BaseDTO;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class RegionVO {
+@SuperBuilder
+public class RegionVO extends BaseDTO {
     private Long regionId;
     private String province;
     private String city;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
