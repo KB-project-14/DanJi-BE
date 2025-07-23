@@ -15,6 +15,7 @@
             ,direction
             ,type
             ,comment
+            ,owner_wallet_id
             ,created_at
             ,updated_at
         )
@@ -27,7 +28,8 @@
                    #{amount},
                    #{direction},
                    #{type},
-                   #{comment}
+                   #{comment},
+                   #{ownerWalletId},
                    #{createdAt},
                    #{updatedAt}
                )

@@ -15,7 +15,6 @@ import java.util.UUID;
 @Data
 public class CashbackVO extends BaseVO {
     private UUID cashbackId;
-    private UUID memberId;
     private UUID walletId;
     private Integer amount;
     private LocalDateTime cashbackDate;

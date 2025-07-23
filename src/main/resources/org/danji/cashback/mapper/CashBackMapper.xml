@@ -7,7 +7,6 @@
     <insert id="insert" parameterType="CashbackVO">
         INSERT INTO cashback (
             cashback_id,
-            member_id,
             wallet_id,
             amount,
             cashback_date,
@@ -17,7 +16,6 @@
         )
         VALUES (
                    #{cashbackId},
-                   #{memberId},
                    #{walletId},
                    #{amount},
                    #{cashbackDate},
@@ -39,7 +37,6 @@
             resultType="CashbackVO">
         SELECT
         cashback_id,
-        member_id,
         wallet_id,
         amount,
         cashback_date,
