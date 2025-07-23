@@ -17,6 +17,17 @@
         WHERE local_currency_id = #{localCurrencyId}
 
     </select>
+    <select id="findByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
+        SELECT
+            local_currency_id,
+            regiond_id,
+            name,
+            benefit_type,
+            maximum,
+            percentage
+        FROM local_currency
+        WHERE name = #{name}
+    </select>
 
 
 </mapper>

@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface LocalCurrencyMapper {
 
     Optional<LocalCurrencyVO> findLocalCurrency(@Param("localCurrencyId") UUID localCurrencyId);
+    Optional<LocalCurrencyVO> findByName(@Param("name") String name);
 
 }
