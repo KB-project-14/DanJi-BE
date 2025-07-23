@@ -15,7 +15,7 @@ public class TransactionConverter {
 
     public TransactionVO toTransactionVO(UUID transactionId, UUID mainWalletId, UUID LocalWalletId,
                                          Integer beforeBalance, Integer afterBalance, Integer amount,
-                                         Direction direction, Type type, String comment) {
+                                         Direction direction, Type type, String comment, UUID ownerWalletId) {
         return TransactionVO.builder()
                 .transactionId(transactionId)
                 .fromWalletId(mainWalletId)
@@ -26,6 +26,7 @@ public class TransactionConverter {
                 .direction(direction)
                 .type(type)
                 .comment(comment)
+                .ownerWalletId(ownerWalletId)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -42,6 +43,7 @@ public class TransactionConverter {
                 .direction(transactionVO.getDirection())
                 .type(transactionVO.getType())
                 .comment(transactionVO.getComment())
+                .ownerWalletId(transactionVO.getOwnerWalletId())
                 .build();
     }
 }

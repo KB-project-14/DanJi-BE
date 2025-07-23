@@ -88,11 +88,11 @@ public class TransactionServiceImpl implements TransactionService {
         TransactionVO mainTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
                 mainWalletVO.getBalance(), (int) (mainWalletVO.getBalance() - transferDTO.getAmount() - transferDTO.getAmount() * RECHARGE_FEE_RATE),
-                transferDTO.getAmount(), Direction.EXPENSE, Type.CHARGE, "메인지갑(출금) -> 지역화폐 지갑");
+                transferDTO.getAmount(), Direction.EXPENSE, Type.CHARGE, "메인지갑(출금) -> 지역화폐 지갑", mainWalletVO.getWalletId());
         int successMainWalletCount = transactionMapper.insert(mainTx);
 
         if (successMainWalletCount != 1) {
-            log.error("Main wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount());
+            log.error("Main wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE);
             throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
         }
         //지역화폐 기준
@@ -102,10 +102,10 @@ public class TransactionServiceImpl implements TransactionService {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance(), (int) (LocalCurrencyWalletVO.getBalance() + transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE),
-                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)");
+                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
-                log.error("Incentive Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE);
+                log.error("Incentive Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount() + transferDTO.getAmount() * localCurrencyVO.getPercentage());
                 throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
             }
         }
@@ -114,7 +114,7 @@ public class TransactionServiceImpl implements TransactionService {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance(), (LocalCurrencyWalletVO.getBalance() + transferDTO.getAmount()),
-                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)");
+                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
                 log.error("Local wallet transaction insert failed. userId={}, amount={}", userId, transferDTO.getAmount());
