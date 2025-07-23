@@ -27,8 +27,6 @@ public class TransactionConverter {
                 .type(type)
                 .comment(comment)
                 .ownerWalletId(ownerWalletId)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
