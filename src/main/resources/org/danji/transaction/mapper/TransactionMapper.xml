@@ -30,8 +30,8 @@
                    #{type},
                    #{comment},
                    #{ownerWalletId},
-                   #{createdAt},
-                   #{updatedAt}
+                   now(),
+                   now()
                )
     </insert>
 
