@@ -40,7 +40,8 @@ import javax.sql.DataSource;
         "org.danji.transaction.service",
         "org.danji.cashback.converter",
         "org.danji.transaction.converter",
-        "org.danji.region.service"
+        "org.danji.region.service",
+        "org.danji.transaction.processor"
 })
 @Log4j2
 @EnableTransactionManagement
