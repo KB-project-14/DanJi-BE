@@ -2,6 +2,7 @@ package org.danji.availableMerchant.domain;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.danji.global.domain.BaseVO;
 import org.danji.global.dto.BaseDTO;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AvailableMerchantVO extends BaseDTO{
+public class AvailableMerchantVO extends BaseVO {
 
     private UUID availableMerchantId;
     private String name;
