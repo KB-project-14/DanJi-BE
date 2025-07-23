@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -120,5 +121,15 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                 log.error("공공 API 수집 중 예외 발생", e);
             }
         }
+    }
+
+    @Override
+    public List<AvailableMerchantDTO> getAll() {
+        List<AvailableMerchantVO> voList = merchantMappermapper.findAll();
+
+        //DTO로 변환해서 반환
+        return voList.stream()
+                .map(AvailableMerchantDTO::of)
+                .toList();
     }
 }

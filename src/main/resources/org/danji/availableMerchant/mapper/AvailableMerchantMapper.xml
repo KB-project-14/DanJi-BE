@@ -24,4 +24,17 @@
             WHERE name = #{name} AND address = #{address}
         )
     </select>
+    <select id="findAll" resultType="org.danji.availableMerchant.domain.AvailableMerchantVO">
+        SELECT
+            available_merchant_id,
+            name,
+            address,
+            latitude,
+            longitude,
+            category,
+            local_currency_id,
+            created_at,
+            updated_at
+        FROM available_merchant
+    </select>
 </mapper>
