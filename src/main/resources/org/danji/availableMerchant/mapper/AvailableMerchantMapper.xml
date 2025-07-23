@@ -5,8 +5,8 @@
 
 <mapper namespace="org.danji.availableMerchant.mapper.AvailableMerchantMapper">
     <insert id="create">
-        insert into available_merchant
-        values (
+        INSERT INTO available_merchant
+        VALUES (
                 #{availableMerchantId},
                 #{name},
                 #{address},
@@ -18,4 +18,10 @@
                 NOW()
                )
     </insert>
+    <select id="existsByNameAndAddress" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM available_merchant
+            WHERE name = #{name} AND address = #{address}
+        )
+    </select>
 </mapper>
