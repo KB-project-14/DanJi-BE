@@ -46,10 +46,16 @@ public class RefundProcessor implements TransferProcessor {
         //UUID userId = UUID.randomUUID();
 
         // transferDto의 from_wallet_id 필드로 지역화폐 지갑 찾기
-        WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getFromWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
+        WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getFromWalletId());
+        if (LocalCurrencyWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
 
         //transferDto의 to_wallet_id 필드로 메인지갑 찾기
-        WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
+        WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId());
+        if (mainWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
 
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
         LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());

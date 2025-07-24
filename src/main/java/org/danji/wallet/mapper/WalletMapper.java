@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface WalletMapper {
 
-    Optional<WalletVO> getWalletByUUId(UUID walletId);
+    WalletVO getWalletByUUId(UUID walletId);
 
     void updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
 
