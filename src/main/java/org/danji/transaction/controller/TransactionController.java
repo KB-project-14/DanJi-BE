@@ -7,15 +7,13 @@ import org.danji.auth.account.domain.MemberVO;
 import org.danji.global.common.ApiResponse;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
+import org.danji.transaction.enums.TransferType;
 import org.danji.transaction.service.TransactionService;
 import org.danji.transaction.service.TransactionServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,9 +30,9 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @PostMapping("/recharge")
+    @PostMapping("/transfer")
     public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(transactionService.recharge(transferDTO)));
-
+        List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 }
