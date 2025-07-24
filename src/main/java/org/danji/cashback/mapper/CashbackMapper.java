@@ -13,4 +13,6 @@ public interface CashbackMapper {
     List<CashbackVO> findDueCashBacks(LocalDateTime now);
 
     void markAsCompleted(@Param("cashbackId") UUID cashbackId);
+
+    int sumAmountByWalletId(UUID LocalWalletId);
 }
