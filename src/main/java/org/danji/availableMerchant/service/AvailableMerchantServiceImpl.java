@@ -49,8 +49,7 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
         int numOfRows = 1000;
         int totalPages = Integer.MAX_VALUE;
 
-        while (page <= totalPages) {
-            //공공데이터 API URL 구성
+        //공공데이터 API URL 구성
             try {
                 String url = UriComponentsBuilder
                         .fromHttpUrl("https://api.data.go.kr/openapi/tn_pubr_public_local_bill_api")
