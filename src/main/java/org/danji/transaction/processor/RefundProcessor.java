@@ -52,9 +52,10 @@ public class RefundProcessor implements TransferProcessor {
         WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
 
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
-        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findLocalCurrency(LocalCurrencyWalletVO.getLocalCurrencyId())
-                .orElseThrow(() -> new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND));
-
+        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());
+        if (localCurrencyVO == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
 
         //인센티브 시, 요청금액이 지역화폐 지갑의 잔액(잔액 - 잔액 * 인센티브 퍼센트) + 수수료 적용(1%) 보다 작다면 예외 처리
         if (LocalCurrencyWalletVO.getBalance() * ((100 - localCurrencyVO.getPercentage()) / 100.0) + transferDTO.getAmount() * RECHARGE_FEE_RATE < transferDTO.getAmount()) {
