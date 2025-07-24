@@ -62,8 +62,10 @@ public class TransactionServiceImpl implements TransactionService {
         WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
 
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
-        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findLocalCurrency(LocalCurrencyWalletVO.getLocalCurrencyId())
-                .orElseThrow(() -> new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND));
+        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());
+        if (localCurrencyVO == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
 
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트

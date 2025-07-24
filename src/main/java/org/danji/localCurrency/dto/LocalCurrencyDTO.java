@@ -1,9 +1,6 @@
 package org.danji.localCurrency.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.dto.BaseDTO;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
@@ -24,7 +21,7 @@ public class LocalCurrencyDTO extends BaseDTO {
     private Integer maximum;
     private Integer percentage;
 
-    public LocalCurrencyDTO of(LocalCurrencyVO vo) {
+    public static LocalCurrencyDTO of(LocalCurrencyVO vo) {
         return vo == null ? null : LocalCurrencyDTO.builder()
                 .localCurrencyId(vo.getLocalCurrencyId())
                 .regionId(vo.getRegionId())

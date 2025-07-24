@@ -5,9 +5,24 @@
 
 <mapper namespace="org.danji.localCurrency.mapper.LocalCurrencyMapper">
     <insert id="create">
-        insert into local_currency(localCurrency_id, region_id, benefit_type, maximum, percentage, created_at, updated_at)
+        insert into local_currency(local_currency_id, region_id, name, benefit_type, maximum, percentage, created_at, updated_at)
             value (#{localCurrencyId}, #{regionId}, #{name}, #{benefitType}, #{maximum}, #{percentage}, now(), now())
     </insert>
 
+
+    <select id="findById" resultMap="LocalCurrencyMap">
+        select * from local_currency where local_currency_id = #{localCurrencyId}
+    </select>
+
+    <resultMap id="LocalCurrencyMap" type="LocalCurrencyVO">
+        <id property="localCurrencyId" column="local_currency_id"/>
+        <result property="regionId" column="region_id"/>
+        <result property="name" column="name"/>
+        <result property="benefitType" column="benefit_type"/>
+        <result property="maximum" column="maximum"/>
+        <result property="percentage" column="percentage"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
 
 </mapper>

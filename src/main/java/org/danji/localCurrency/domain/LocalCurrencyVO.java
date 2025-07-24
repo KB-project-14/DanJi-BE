@@ -10,9 +10,6 @@ import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.domain.BaseVO;
-import org.danji.localCurrency.enums.BenefitType;
-
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

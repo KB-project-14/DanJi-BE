@@ -1,13 +1,18 @@
 package org.danji.localCurrency.service;
 
 import lombok.RequiredArgsConstructor;
+import org.danji.global.error.ErrorCode;
+import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
-public class LocalCurrencyServiceImpl implements LocalCurrencyService{
+public class LocalCurrencyServiceImpl implements LocalCurrencyService {
 
 //    private final RegionMapper regionMapper;
 
@@ -15,16 +20,23 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService{
 
     public LocalCurrencyDTO createLocalCurrency(LocalCurrencyDTO localCurrencyDTO) {
 
-        // TODO region 조회 로직
+        // TODO region 조회 예외처리 로직
         /*
         if (regionMapper.get(localCurrencyDTO.getRegionId()).isEmpty()) {
             throw new RegionException();
         }
          */
+        UUID localCurrencyId = UUID.randomUUID();
+        localCurrencyDTO.setLocalCurrencyId(localCurrencyId);
 
+        localCurrencyMapper.create(localCurrencyDTO.toVo());
 
+        LocalCurrencyVO vo = localCurrencyMapper.findById(localCurrencyId);
+        if (vo == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
 
-
+        return LocalCurrencyDTO.of(vo);
     }
 
 }
