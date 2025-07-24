@@ -44,17 +44,24 @@ public class RechargeProcessor implements TransferProcessor {
         //-------------------------------------------
         UUID userId = UUID.randomUUID();
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
-        WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getFromWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
+        WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getFromWalletId());
+        if (mainWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
         // 수수료 1% 도 감안해서 계산
         if (mainWalletVO.getBalance() + mainWalletVO.getBalance() * RECHARGE_FEE_RATE < transferDTO.getAmount()) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
-        WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId()).orElseThrow(() -> new WalletException(ErrorCode.WALLET_NOT_FOUND));
-
+        WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId());
+        if (LocalCurrencyWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
-        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findLocalCurrency(LocalCurrencyWalletVO.getLocalCurrencyId())
-                .orElseThrow(() -> new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND));
+        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());
+        if (localCurrencyVO == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
 
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트
