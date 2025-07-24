@@ -44,9 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public List<TransactionDTO> handleTransfer(TransferDTO transferDTO, TransferType type){
         TransferProcessor processor = processorMap.get(type.name());
-        if (processor == null) {
-            throw new IllegalArgumentException("지원하지 않는 전송 타입입니다: " + type);
-        }
+
         return processor.process(transferDTO);
     }
 
