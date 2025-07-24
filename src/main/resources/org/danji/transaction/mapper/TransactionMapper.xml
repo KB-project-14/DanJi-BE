@@ -15,6 +15,7 @@
             ,direction
             ,type
             ,comment
+            ,owner_wallet_id
             ,created_at
             ,updated_at
         )
@@ -27,9 +28,10 @@
                    #{amount},
                    #{direction},
                    #{type},
-                   #{comment}
-                   #{createdAt},
-                   #{updatedAt}
+                   #{comment},
+                   #{ownerWalletId},
+                   now(),
+                   now()
                )
     </insert>
 

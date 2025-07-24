@@ -25,5 +25,5 @@ public class TransactionDTO extends BaseDTO {
     private Direction direction;
     private Type type;
     private String comment;
-
+    private UUID ownerWalletId;
 }

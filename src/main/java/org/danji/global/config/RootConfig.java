@@ -30,16 +30,17 @@ import javax.sql.DataSource;
         "org.danji.wallet.mapper",
         "org.danji.transaction.mapper",
         "org.danji.localCurrency.mapper",
-        "org.danji.cashback.mapper"
+        "org.danji.cashback.mapper",
+        "org.danji.region.mapper"
 })
 @ComponentScan(basePackages = {"org.danji.board.service",
         "org.danji.member.service",
         "org.danji.travel.service",
         "org.danji.availableMerchant.service",
-        "org.danji.travel.service",
         "org.danji.transaction.service",
         "org.danji.cashback.converter",
-        "org.danji.transaction.converter"
+        "org.danji.transaction.converter",
+        "org.danji.region.service"
 })
 @Log4j2
 @EnableTransactionManagement
