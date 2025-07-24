@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface WalletMapper {
-    Optional<WalletVO> getCashWalletByUserId(UUID userId);
 
     Optional<WalletVO> getWalletByUUId(UUID walletId);
 

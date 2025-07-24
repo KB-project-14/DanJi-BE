@@ -45,4 +45,14 @@
         WHERE cashback_date <![CDATA[ < ]]> #{now}
         AND status = 'PENDING'
     </select>
+
+    <select id="sumAmountByWalletId"
+            parameterType="java.time.LocalDateTime"
+            resultType="int">
+        SELECT
+            COALESCE(SUM(amount), 0)
+        FROM cashback
+        WHERE status = 'COMPLETED'
+          AND wallet_id = #{walletId}
+    </select>
 </mapper>
