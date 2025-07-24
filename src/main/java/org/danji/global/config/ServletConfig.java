@@ -18,6 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "org.danji.board.controller",
         "org.danji.member.controller",
         "org.danji.travel.controller",
+        "org.danji.availableMerchant.controller",
+        "org.danji.transaction.controller",
+        "org.danji.region.controller",
+        "org.danji.localCurrency.controller"
 })
 public class ServletConfig implements WebMvcConfigurer {
 

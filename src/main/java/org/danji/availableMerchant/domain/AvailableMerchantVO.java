@@ -1,22 +1,26 @@
 package org.danji.availableMerchant.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.domain.BaseVO;
+import org.danji.global.dto.BaseDTO;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AvailableMerchantVO {
+@SuperBuilder
+public class AvailableMerchantVO extends BaseVO {
 
-    private Long availableMerchantId;
+    private UUID availableMerchantId;
     private String name;
     private String address;
-    private double latitude;
-    private double longitude;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private String category;
-    private Long localCurrencyId;
-
+    private UUID localCurrencyId;
 }

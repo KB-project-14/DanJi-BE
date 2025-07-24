@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.region.mapper.RegionMapper">
+
+    <resultMap id="RegionMap" type="org.danji.region.domain.RegionVO">
+        <id property="regionId" column="region_id" />
+        <result property="province" column="province" />
+        <result property="city" column="city" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updatedAt" />
+    </resultMap>
+    <!--전체 조회-->
+    <select id="findAll" resultType="org.danji.region.domain.RegionVO">
+        select region_id, province, city
+        from region
+        order by region_id
+    </select>
+    <!--단건 조회-->
+    <select id="findById" resultMap="RegionMap">
+        select *
+        from region
+        where region_id = #{regionId};
+    </select>
+</mapper>

@@ -1,25 +1,27 @@
 package org.danji.transaction.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.domain.BaseVO;
 import org.danji.transaction.enums.Direction;
 import org.danji.transaction.enums.Type;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class TransactionVO {
-    private Long transactionId;
-    private Long fromWalletId;
-    private Long toWalletId;
+public class TransactionVO extends BaseVO {
+    private UUID transactionId;
+    private UUID fromWalletId;
+    private UUID toWalletId;
     private Integer beforeBalance;
     private Integer afterBalance;
     private Integer amount;
     private Direction direction;
     private Type type;
     private String comment;
-
+    private UUID ownerWalletId;
 }

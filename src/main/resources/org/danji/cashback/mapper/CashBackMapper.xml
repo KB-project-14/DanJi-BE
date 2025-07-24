@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.cashback.mapper.CashbackMapper">
+    <insert id="insert" parameterType="CashbackVO">
+        INSERT INTO cashback (
+            cashback_id,
+            wallet_id,
+            amount,
+            cashback_date,
+            status,
+            created_at,
+            updated_at
+        )
+        VALUES (
+                   #{cashbackId},
+                   #{walletId},
+                   #{amount},
+                   #{cashbackDate},
+                   #{status},
+                   #{createdAt},
+                   #{updatedAt}
+               )
+    </insert>
+
+    <update id="markAsCompleted" parameterType="java.util.UUID">
+        UPDATE cashback
+        SET status = 'COMPLETED',
+            updated_at = NOW()
+        WHERE cashback_id = #{cashbackId}
+    </update>
+
+    <select id="findDueCashBacks"
+            parameterType="java.time.LocalDateTime"
+            resultType="CashbackVO">
+        SELECT
+        cashback_id,
+        wallet_id,
+        amount,
+        cashback_date,
+        status
+        FROM cashback
+        WHERE cashback_date <![CDATA[ < ]]> #{now}
+        AND status = 'PENDING'
+    </select>
+</mapper>
