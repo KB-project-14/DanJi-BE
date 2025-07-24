@@ -1,4 +1,10 @@
 package org.danji.localCurrency.service;
 
-public class LocalCurrencyService {
+import org.danji.localCurrency.dto.LocalCurrencyDTO;
+
+public interface LocalCurrencyService {
+
+    LocalCurrencyDTO createLocalCurrency(LocalCurrencyDTO localCurrencyDTO);
+
+
 }
