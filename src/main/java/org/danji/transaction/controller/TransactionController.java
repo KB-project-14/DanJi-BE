@@ -31,8 +31,8 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/transfer")
-    public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO, @RequestParam TransferType type) {
-        List<TransactionDTO> result = transactionService.handleTransfer(transferDTO, type);
+    public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO) {
+        List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 }
