@@ -18,7 +18,6 @@ import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
-import org.danji.transaction.enums.TransferType;
 import org.danji.transaction.enums.Type;
 import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
@@ -39,14 +38,13 @@ import java.util.UUID;
 @Log4j2
 public class TransactionServiceImpl implements TransactionService {
 
-
     private final Map<String, TransferProcessor> processorMap;
 
+    @Transactional
+    @Override
     public List<TransactionDTO> handleTransfer(TransferDTO transferDTO){
         TransferProcessor processor = processorMap.get(transferDTO.getTransferType().name());
 
         return processor.process(transferDTO);
     }
-
-
 }
