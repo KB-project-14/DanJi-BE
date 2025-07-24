@@ -19,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "org.danji.member.controller",
         "org.danji.travel.controller",
         "org.danji.availableMerchant.controller",
-        "org.danji.availableMerchant.util",
         "org.danji.transaction.controller",
         "org.danji.region.controller"
 })

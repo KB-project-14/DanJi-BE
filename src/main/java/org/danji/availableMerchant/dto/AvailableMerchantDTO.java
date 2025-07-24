@@ -25,6 +25,7 @@ public class AvailableMerchantDTO extends BaseDTO {
     //VO -> DTO 변환
     public static AvailableMerchantDTO of(AvailableMerchantVO vo) {
         return vo == null ? null : AvailableMerchantDTO.builder()
+                .availableMerchantId(vo.getAvailableMerchantId())
                 .name(vo.getName())
                 .address(vo.getAddress())
                 .latitude(vo.getLatitude())

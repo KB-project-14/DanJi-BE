@@ -7,13 +7,13 @@
     <insert id="create">
         INSERT INTO available_merchant
         VALUES (
-                #{availableMerchantId},
+                UUID_TO_BIN(#{availableMerchantId}),
                 #{name},
                 #{address},
                 #{latitude},
                 #{longitude},
                 #{category},
-                #{localCurrencyId},
+                UUID_TO_BIN(#{localCurrencyId}),
                 NOW(),
                 NOW()
                )
@@ -24,15 +24,28 @@
             WHERE name = #{name} AND address = #{address}
         )
     </select>
-    <select id="findAll" resultType="org.danji.availableMerchant.domain.AvailableMerchantVO">
+
+    <resultMap id="availableMerchantMap" type="org.danji.availableMerchant.domain.AvailableMerchantVO">
+        <result column="availableMerchantId" property="availableMerchantId" javaType="java.util.UUID" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="latitude" property="latitude" />
+        <result column="longitude" property="longitude" />
+        <result column="category" property="category" />
+        <result column="localCurrencyId" property="localCurrencyId" javaType="java.util.UUID"/>
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <select id="findAll" resultMap="availableMerchantMap">
         SELECT
-            available_merchant_id,
+            BIN_TO_UUID(available_merchant_id) AS availableMerchantId,
             name,
             address,
             latitude,
             longitude,
             category,
-            local_currency_id,
+            BIN_TO_UUID(local_currency_id) AS localCurrencyId,
             created_at,
             updated_at
         FROM available_merchant
