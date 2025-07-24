@@ -42,8 +42,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final Map<String, TransferProcessor> processorMap;
 
-    public List<TransactionDTO> handleTransfer(TransferDTO transferDTO, TransferType type){
-        TransferProcessor processor = processorMap.get(type.name());
+    public List<TransactionDTO> handleTransfer(TransferDTO transferDTO){
+        TransferProcessor processor = processorMap.get(transferDTO.getTransferType().name());
 
         return processor.process(transferDTO);
     }

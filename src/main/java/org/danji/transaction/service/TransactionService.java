@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface TransactionService {
 
-    List<TransactionDTO> handleTransfer(TransferDTO transferDTO, TransferType transferType);
+    List<TransactionDTO> handleTransfer(TransferDTO transferDTO);
 
 }
