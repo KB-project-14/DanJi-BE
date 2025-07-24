@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,4 +41,22 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
         return LocalCurrencyDTO.of(vo);
     }
 
+
+    public LocalCurrencyDTO getLocalCurrencyByRegionId(Long RegionId) {
+
+        LocalCurrencyVO vo = localCurrencyMapper.findByRegionId(RegionId);
+
+        if (vo == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
+
+        return LocalCurrencyDTO.of(vo);
+    }
+
+    public List<LocalCurrencyDTO> getLocalCurrencyList(LocalCurrencyFilterDTO filter) {
+
+        List<LocalCurrencyVO> voList = localCurrencyMapper.findByFilter(filter);
+
+        return voList.stream().map(LocalCurrencyDTO::of).toList();
+    }
 }
