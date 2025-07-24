@@ -7,7 +7,9 @@ import lombok.extern.log4j.Log4j2;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.dto.AvailableMerchantDTO;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
+import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -125,8 +127,8 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                     }
 
                     //지역화폐 이름으로 local_currency_id 조회
-                    Optional<LocalCurrencyVO> currencyOpt = localCurrencyMapper.findByName(localCurrencyName);
-                    if (currencyOpt.isEmpty()) {
+                    LocalCurrencyVO currencyOpt = localCurrencyMapper.findByName(localCurrencyName);
+                    if (currencyOpt == null) {
                         log.warn("등록되지 않은 지역화폐: {}", localCurrencyName);
                         continue;
                     }
@@ -145,7 +147,7 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                             .latitude(BigDecimal.ZERO)
                             .longitude(BigDecimal.ZERO)
                             .category(category)
-                            .localCurrencyId(currencyOpt.get().getLocalCurrencyId())
+                            .localCurrencyId(currencyOpt.getLocalCurrencyId())
                             .build();
 
                     merchantMapper.create(vo);

@@ -10,10 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LocalCurrencyMapper {
-
-    Optional<LocalCurrencyVO> findLocalCurrency(@Param("localCurrencyId") UUID localCurrencyId);
-    Optional<LocalCurrencyVO> findByName(@Param("name") String name);
-
+    LocalCurrencyVO findByName(String name);
     // Mybatis 에서는 Optional 반환이 안됨
     LocalCurrencyVO findById(UUID localCurrencyId);
 
