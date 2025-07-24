@@ -7,16 +7,20 @@ import lombok.NoArgsConstructor;
 import org.danji.localCurrency.enums.BenefitType;
 
 import java.util.UUID;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.domain.BaseVO;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class LocalCurrencyVO {
+public class LocalCurrencyVO extends BaseVO {
     private UUID localCurrencyId;
     private Long regionId;
     private String name;
     private BenefitType benefitType;
-    private Integer Maximum;
+    private Integer maximum;
     private Integer percentage;
 }

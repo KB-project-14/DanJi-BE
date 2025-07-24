@@ -4,18 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.danji.localCurrency.mapper.LocalCurrencyMapper">
-    <select id="findLocalCurrency" parameterType="java.util.UUID"
-            resultType="LocalCurrencyVO">
-        SELECT
-            local_currency_id,
-            region_id,
-            name,
-            benefit_type,
-            maximum,
-            percentage
-        FROM local_currency
-        WHERE local_currency_id = #{localCurrencyId}
+    <insert id="create">
+        insert into local_currency(local_currency_id, region_id, name, benefit_type, maximum, percentage, created_at, updated_at)
+            value (#{localCurrencyId}, #{regionId}, #{name}, #{benefitType}, #{maximum}, #{percentage}, now(), now())
+    </insert>
 
+
+    <select id="findById" resultMap="LocalCurrencyMap">
+        select * from local_currency where local_currency_id = #{localCurrencyId}
+    </select>
+
+    <select id="findByRegionId" resultMap="LocalCurrencyMap">
+        select * from local_currency where region_id = #{regionId}
     </select>
     <select id="findByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
         SELECT
@@ -29,5 +29,39 @@
         WHERE name = #{name}
     </select>
 
+
+    <select id="findByFilter" resultMap="LocalCurrencyMap">
+        SELECT lc.*
+        FROM local_currency lc LEFT JOIN region r on r.region_id = lc.region_id
+        <where>
+            <if test="localCurrencyId != null">
+                AND lc.local_currency_id = #{localCurrencyId}
+            </if>
+            <if test="regionId != null">
+                AND lc.region_id = #{regionId}
+            </if>
+            <if test="benefitType != null">
+                AND lc.benefit_type = #{benefitType}
+            </if>
+            <if test="province != null and province != ''">
+                AND r.province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                AND r.city #{city}
+            </if>
+        </where>
+    </select>
+
+
+    <resultMap id="LocalCurrencyMap" type="LocalCurrencyVO">
+        <id property="localCurrencyId" column="local_currency_id"/>
+        <result property="regionId" column="region_id"/>
+        <result property="name" column="name"/>
+        <result property="benefitType" column="benefit_type"/>
+        <result property="maximum" column="maximum"/>
+        <result property="percentage" column="percentage"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
 
 </mapper>
