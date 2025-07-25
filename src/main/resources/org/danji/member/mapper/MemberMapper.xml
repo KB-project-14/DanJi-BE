@@ -31,7 +31,7 @@
     WHERE m.username = #{username}
   </select>
 
-  <delete id="deleteByUsername" parameterType="String">
+  <delete id="deleteByUsername">
     DELETE FROM member
     WHERE username = #{username}
   </delete>

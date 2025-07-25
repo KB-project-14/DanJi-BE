@@ -87,7 +87,7 @@ class MemberServiceImplTest {
                 .username("test")
                 .password("1234")
                 .build();
-        memberService.delete(dto.getUsername());
+        memberService.delete(dto);
 
         // then
         assertThrows(NoSuchElementException.class, () -> {
