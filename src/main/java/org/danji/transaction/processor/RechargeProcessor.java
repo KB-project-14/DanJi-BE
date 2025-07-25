@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service("RECHARGE")
+@Service("CHARGE")
 @RequiredArgsConstructor
 @Log4j2
 public class RechargeProcessor implements TransferProcessor {
