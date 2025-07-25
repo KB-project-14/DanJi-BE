@@ -44,7 +44,7 @@ class WalletServiceImplTest {
         WalletDTO result = walletService.createWallet(createDTO);
 
         // then
-        WalletDTO checkWallet = WalletDTO.of(walletMapper.getWalletByUUId(result.getWalletId()));
+        WalletDTO checkWallet = WalletDTO.of(walletMapper.findById(result.getWalletId()));
         assertEquals(checkWallet, result);
     }
 }
