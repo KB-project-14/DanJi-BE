@@ -49,8 +49,11 @@ public class RechargeProcessor implements TransferProcessor {
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
         // 수수료 1% 도 감안해서 계산
-        if (mainWalletVO.getBalance() + mainWalletVO.getBalance() * RECHARGE_FEE_RATE < transferDTO.getAmount()) {
-            throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+        // 환전 요청 이라면 건너뛰기
+        if (transferDTO.isTransactionLogging()) {
+            if (mainWalletVO.getBalance() + mainWalletVO.getBalance() * RECHARGE_FEE_RATE < transferDTO.getAmount()) {
+                throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+            }
         }
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getToWalletId());
         if (LocalCurrencyWalletVO == null) {
@@ -64,11 +67,19 @@ public class RechargeProcessor implements TransferProcessor {
 
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트
-            walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
+            if (transferDTO.isTransactionLogging()) {
+                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
+            }else{
+                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
+            }
             walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)));
         } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
             // 요청 금액 업데이트 시키기
-            walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() +  (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
+            if (transferDTO.isTransactionLogging()) {
+                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
+            }else{
+                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
+            }
             walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount());
             //7일 뒤에 캐시백에 대한 부분 업데이트
 
@@ -80,15 +91,29 @@ public class RechargeProcessor implements TransferProcessor {
         }
         //transaction 테이블에 복식 부기
         //메인지갑 기준
-        TransactionVO mainTx = transactionConverter.toTransactionVO(
-                UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
-                mainWalletVO.getBalance() + (transferDTO.getAmount() +  (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)) , mainWalletVO.getBalance(),
-                transferDTO.getAmount() +  (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE) , Direction.EXPENSE, Type.CHARGE, "메인지갑(출금) -> 지역화폐 지갑"
-                ,mainWalletVO.getWalletId()
-                );
-        int successMainWalletCount = transactionMapper.insert(mainTx);
-        if (successMainWalletCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+        TransactionVO mainTx = null;
+        if (transferDTO.isTransactionLogging()) {
+             mainTx = transactionConverter.toTransactionVO(
+                    UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
+                    mainWalletVO.getBalance() + (transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)), mainWalletVO.getBalance(),
+                    transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE), Direction.EXPENSE, transferDTO.getType(), "메인지갑(출금) -> 지역화폐 지갑"
+                    , mainWalletVO.getWalletId()
+            );
+            int successMainWalletCount = transactionMapper.insert(mainTx);
+            if (successMainWalletCount != 1) {
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+            }
+        }else{
+            mainTx = transactionConverter.toTransactionVO(
+                    UUID.randomUUID(), mainWalletVO.getWalletId(), LocalCurrencyWalletVO.getWalletId(),
+                    mainWalletVO.getBalance() + (transferDTO.getAmount()), mainWalletVO.getBalance(),
+                    transferDTO.getAmount(), Direction.EXPENSE, transferDTO.getType(), "메인지갑(출금) -> 지역화폐 지갑"
+                    , mainWalletVO.getWalletId()
+            );
+            int successMainWalletCount = transactionMapper.insert(mainTx);
+            if (successMainWalletCount != 1) {
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+            }
         }
         //지역화폐 기준
         //인센티브 규정일때는 인센티브 금액까지 포함해서 transaction 테이블에 넣기
@@ -97,7 +122,7 @@ public class RechargeProcessor implements TransferProcessor {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance() - (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),  LocalCurrencyWalletVO.getBalance(),
-                    (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
+                    (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
                 throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
@@ -108,7 +133,7 @@ public class RechargeProcessor implements TransferProcessor {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance() - transferDTO.getAmount(), LocalCurrencyWalletVO.getBalance(),
-                    transferDTO.getAmount(), Direction.INCOME, Type.CHARGE, "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
+                    transferDTO.getAmount(), Direction.INCOME, transferDTO.getType(), "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
                 throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);

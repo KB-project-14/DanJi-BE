@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.dto.BaseDTO;
 import org.danji.transaction.annotation.MultipleOfHundred;
-import org.danji.transaction.enums.TransferType;
+import org.danji.transaction.enums.Type;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class TransferDTO extends BaseDTO {
     private UUID toWalletId;
 
     @NotNull(message = "transferType 값은 필수입니다.")
-    private TransferType transferType;
+    private Type type;
 
     @Min(value = 10000, message = "최소 충전 금액은 10,000원입니다.")
     @MultipleOfHundred
