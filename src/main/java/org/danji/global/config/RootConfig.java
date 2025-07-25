@@ -42,7 +42,8 @@ import javax.sql.DataSource;
         "org.danji.transaction.converter",
         "org.danji.region.service",
         "org.danji.localCurrency.service",
-        "org.danji.transaction.processor"
+        "org.danji.transaction.processor",
+        "org.danji.wallet.service"
 })
 @Log4j2
 @EnableTransactionManagement

@@ -1,22 +1,23 @@
 package org.danji.wallet.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.domain.BaseVO;
 import org.danji.wallet.enums.WalletType;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class WalletVO {
+public class WalletVO extends BaseVO {
     private UUID walletId;
     private UUID memberId;
     private UUID localCurrencyId;
     private WalletType walletType;
     private Integer balance;
+    private int displayOrder;
 }

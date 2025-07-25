@@ -16,6 +16,7 @@ public enum ErrorCode {
     //wallet
     WALLET_NOT_FOUND(HttpStatus.NOT_FOUND, "WL-01", "지갑을 찾을 수 없습니다"),
     WALLET_BALANCE_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "WL-02", "지갑의 잔액이 부족합니다"),
+    DUPLICATED_LOCAL_CURRENCY_WALLET(HttpStatus.CONFLICT, "WL-03", "해당 지역화폐 지갑이 존재합니다"),
 
     //localCurrency
     LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "LC-01", "지갑을 찾을 수 없습니다"),

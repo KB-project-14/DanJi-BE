@@ -21,7 +21,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "org.danji.availableMerchant.controller",
         "org.danji.transaction.controller",
         "org.danji.region.controller",
-        "org.danji.localCurrency.controller"
+        "org.danji.localCurrency.controller",
+        "org.danji.wallet.controller"
 })
 public class ServletConfig implements WebMvcConfigurer {
 

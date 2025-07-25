@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.common.pagination.Page;
 import org.danji.common.pagination.PageRequest;
-import org.danji.common.util.UploadFiles;
+import org.danji.common.utils.UploadFiles;
 import org.danji.travel.dto.TravelDTO;
 import org.danji.travel.dto.TravelImageDTO;
 import org.danji.travel.service.TravelService;
