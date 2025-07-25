@@ -21,7 +21,6 @@ public class MemberDTO extends BaseDTO {
 
     private UUID memberId;
     private String username;
-    private String password;
     private Role role;
     private String name;
 
@@ -29,7 +28,6 @@ public class MemberDTO extends BaseDTO {
     public static MemberDTO of(MemberVO m) {
         return MemberDTO.builder()
                 .username(m.getUsername())
-                .password(m.getPassword())
                 .role(m.getRole())
                 .name(m.getName())
                 .build();
@@ -38,7 +36,6 @@ public class MemberDTO extends BaseDTO {
     public MemberVO toVO() {
         return MemberVO.builder()
                 .username(username)
-                .password(password)
                 .role(role)
                 .name(name)
                 .build();
