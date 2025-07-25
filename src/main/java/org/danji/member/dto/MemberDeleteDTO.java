@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @Data
 
 public class MemberDeleteDTO {
