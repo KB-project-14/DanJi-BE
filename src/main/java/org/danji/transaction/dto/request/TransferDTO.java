@@ -29,4 +29,6 @@ public class TransferDTO extends BaseDTO {
     @MultipleOfHundred
     private Integer amount;
 
+    private boolean TransactionLogging;
+
 }
