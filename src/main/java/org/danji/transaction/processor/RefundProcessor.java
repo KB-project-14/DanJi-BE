@@ -64,7 +64,7 @@ public class RefundProcessor implements TransferProcessor {
         }
 
         //인센티브 시, 요청금액이 지역화폐 지갑의 잔액(잔액 - 잔액 * 인센티브 퍼센트) + 수수료 적용(1%) 보다 작다면 예외 처리
-        if (transferDTO.getAmount() < LocalCurrencyWalletVO.getBalance() * ((100 - localCurrencyVO.getPercentage()) / 100.0) + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
+        if (transferDTO.getAmount() > LocalCurrencyWalletVO.getBalance() * ((100 - localCurrencyVO.getPercentage()) / 100.0) + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
         //캐시백 시, 캐시백 테이블에서 walletId 조건 걸어서 모든 amount 합산 -> 이것을 잔액에서 빼기
