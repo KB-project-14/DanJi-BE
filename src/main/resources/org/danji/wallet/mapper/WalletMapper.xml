@@ -21,7 +21,7 @@
           AND wallet_type = 'CASH'
     </select>
 
-    <select id="getWalletByUUId" parameterType="java.util.UUID"
+    <select id="findById" parameterType="java.util.UUID"
             resultType="WalletVO">
         SELECT *
         FROM wallet
@@ -36,9 +36,22 @@
           AND local_currency_id = #{localCurrencyId}
     </select>
 
+    <select id="findByFilter" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        <where>
+            <if test="memberId != null">
+                AND member_id = #{memberId}
+            </if>
+            <if test="walletType != null">
+                AND wallet_type = #{walletType}
+            </if>
+        </where>
+    </select>
+
     <update id="updateWalletBalance" parameterType="java.util.UUID">
         UPDATE wallet
-        SET balance = balance + #{amount},
+        SET balance    = balance + #{amount},
             updated_at = NOW()
         WHERE wallet_id = #{walletId}
     </update>

@@ -18,7 +18,6 @@ import org.danji.transaction.mapper.TransactionMapper;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +43,7 @@ public class RechargeProcessor implements TransferProcessor {
         //-------------------------------------------
         UUID userId = UUID.randomUUID();
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
-        WalletVO mainWalletVO = walletMapper.getWalletByUUId(transferDTO.getFromWalletId());
+        WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
@@ -53,7 +52,7 @@ public class RechargeProcessor implements TransferProcessor {
         if (mainWalletVO.getBalance() + mainWalletVO.getBalance() * RECHARGE_FEE_RATE < transferDTO.getAmount()) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
-        WalletVO LocalCurrencyWalletVO = walletMapper.getWalletByUUId(transferDTO.getToWalletId());
+        WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getToWalletId());
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
