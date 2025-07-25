@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class, SecurityConfig.class})
+@ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
 @Transactional
 class LocalCurrencyServiceImplTest {

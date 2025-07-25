@@ -8,7 +8,7 @@ import org.danji.board.dto.BoardDTO;
 import org.danji.board.mapper.BoardMapper;
 import org.danji.common.pagination.Page;
 import org.danji.common.pagination.PageRequest;
-import org.danji.common.util.UploadFiles;
+import org.danji.common.utils.UploadFiles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

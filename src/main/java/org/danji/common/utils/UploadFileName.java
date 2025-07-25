@@ -1,4 +1,4 @@
-package org.danji.common.util;
+package org.danji.common.utils;
 
 public class UploadFileName {
 

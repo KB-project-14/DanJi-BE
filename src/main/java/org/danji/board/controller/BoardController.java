@@ -9,13 +9,12 @@ import org.danji.board.dto.BoardDTO;
 import org.danji.board.service.BoardService;
 import org.danji.common.pagination.Page;
 import org.danji.common.pagination.PageRequest;
-import org.danji.common.util.UploadFiles;
+import org.danji.common.utils.UploadFiles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-
 @RestController                    // REST API 컨트롤러 선언 (@Controller + @ResponseBody)
 @RequestMapping("/api/board")   // 기본 URL 매핑
 @RequiredArgsConstructor           // final 필드 생성자 자동 생성
@@ -240,6 +239,5 @@ public class BoardController {
             @PathVariable Long no) throws Exception {
         return ResponseEntity.ok(service.deleteAttachment(no));
     }
-
 
 }

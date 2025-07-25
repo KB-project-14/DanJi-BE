@@ -4,14 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
+    <insert id="create">
+        insert into wallet
+        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, now(), now())
+    </insert>
+
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"
             resultType="WalletVO">
-        SELECT
-            wallet_id,
-            member_id,
-            local_currency_id,
-            wallet_type,
-            balance
+        SELECT wallet_id,
+               member_id,
+               local_currency_id,
+               wallet_type,
+               balance
         FROM wallet
         WHERE member_id = #{userId}
           AND wallet_type = 'CASH'
@@ -19,15 +23,17 @@
 
     <select id="getWalletByUUId" parameterType="java.util.UUID"
             resultType="WalletVO">
-        SELECT
-            wallet_id,
-            member_id,
-            local_currency_id,
-            wallet_type,
-            balance
+        SELECT *
         FROM wallet
         WHERE wallet_id = #{walletId}
 
+    </select>
+
+    <select id="findByMemberIdAndLocalCurrencyId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND local_currency_id = #{localCurrencyId}
     </select>
 
     <update id="updateWalletBalance" parameterType="java.util.UUID">

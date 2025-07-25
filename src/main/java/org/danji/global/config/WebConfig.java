@@ -16,14 +16,10 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     final int FILE_SIZE_THRESHOLD = 1024 * 1024 * 5;
 
 
-//    @Override
-//    public Class<?>[] getRootConfigClasses() {
-//        return new Class[]{RootConfig.class, SecurityConfig.class};
-//    }
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[0];
+        return new Class[]{RootConfig.class};
     }
 
     @Override
