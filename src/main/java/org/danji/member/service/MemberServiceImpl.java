@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
+import org.danji.member.exception.PasswordMissmatchException;
 import org.danji.member.mapper.MemberMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,22 @@ public class MemberServiceImpl implements MemberService {
 //        auth.setAuth("USER");
 //        mapper.insertAuth(auth);
         return get(member.getUsername());
+    }
+
+    @Override
+    public MemberDTO update(MemberUpdateDTO member) {
+        MemberVO vo = mapper.get(member.getUsername());
+        if (!member.getPassword().equals(vo.getPassword())) {
+            throw new PasswordMissmatchException();
+        }
+
+        mapper.update(member.toVO());
+        return get(member.getUsername());
+    }
+
+    @Override
+    public void delete(String username) {
+        mapper.deleteByUsername(username);
     }
 
 }

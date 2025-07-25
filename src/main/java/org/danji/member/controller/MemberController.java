@@ -23,4 +23,11 @@ public class MemberController {
         return ResponseEntity.ok(service.join(member));
     }
 
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> delete(@PathVariable String username) {
+        service.delete(username);
+        return ResponseEntity.ok("삭제 완료");
+    }
+
+
 }

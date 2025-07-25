@@ -31,18 +31,24 @@
     WHERE m.username = #{username}
   </select>
 
-<!--  <select id="findByUsername" resultType="MemberVO">-->
+  <delete id="deleteByUsername" parameterType="String">
+    DELETE FROM member
+    WHERE username = #{username}
+  </delete>
+
+
+  <!--  <select id="findByUsername" resultType="MemberVO">-->
 <!--    SELECT *-->
 <!--    FROM member-->
 <!--    WHERE username = #{username}-->
 <!--  </select>-->
 
-<!--  <update id="update">-->
-<!--    UPDATE member-->
-<!--    SET name = #{name},-->
-<!--        updated_at = now()-->
-<!--    WHERE username = #{username}-->
-<!--  </update>-->
+  <update id="update">
+    UPDATE member
+    SET name = #{name},
+        updated_at = now()
+    WHERE username = #{username}
+  </update>
 
 <!--  <update id="updatePassword">-->
 <!--    UPDATE member-->
