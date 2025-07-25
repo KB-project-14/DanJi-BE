@@ -12,6 +12,6 @@ public interface MemberService {
 
     MemberDTO update(MemberUpdateDTO member);
 
-    void delete(String username);
+    void delete(MemberDeleteDTO member);
 
 }
