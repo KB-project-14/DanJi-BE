@@ -10,4 +10,8 @@ public interface MemberService {
 
     MemberDTO join(MemberJoinDTO member);
 
+    MemberDTO update(MemberUpdateDTO member);
+
+    void delete(String username);
+
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.danji.member.domain.MemberVO;
 import org.danji.member.enums.Role;
 
 @NoArgsConstructor
@@ -16,5 +17,16 @@ public class MemberUpdateDTO {
     private String password;
     private Role role;
     private String name;
+
+
+    public MemberVO toVO() {
+        return MemberVO.builder()
+                .username(username)
+                .password(password)
+                .role(role)
+                .name(name)
+                .build();
+    }
+
 }
 
