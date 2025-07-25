@@ -19,8 +19,9 @@ public enum ErrorCode {
     DUPLICATED_LOCAL_CURRENCY_WALLET(HttpStatus.CONFLICT, "WL-03", "해당 지역화폐 지갑이 존재합니다"),
     UNAUTHORIZED_WALLET_ACCESS(HttpStatus.FORBIDDEN, "WL-04",
             "요청한 지갑은 해당 사용자의 소유가 아닙니다."),
+    CAN_NOT_DELETE_WALLET_BALANCE_NOT_EMPTY(HttpStatus.BAD_REQUEST, "WL-05", "지갑 잔액이 0원이 아니므로 삭제할 수 없습니다."),
 
-            //localCurrency
+    //localCurrency
     LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "LC-01", "지갑을 찾을 수 없습니다"),
 
     //transaction
