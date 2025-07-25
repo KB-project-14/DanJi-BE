@@ -20,7 +20,7 @@
     <select id="findByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
         SELECT
             local_currency_id,
-            regiond_id,
+            region_id,
             name,
             benefit_type,
             maximum,
