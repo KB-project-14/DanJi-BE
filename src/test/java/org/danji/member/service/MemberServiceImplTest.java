@@ -1,5 +1,6 @@
 package org.danji.member.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
 import org.danji.member.domain.MemberVO;
@@ -13,17 +14,24 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.NoSuchElementException;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
+import org.danji.global.config.SecurityConfig;
+
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {RootConfig.class, SecurityConfig.class})
 @Log4j2
 @Transactional
 class MemberServiceImplTest {
@@ -33,6 +41,20 @@ class MemberServiceImplTest {
 
     @Autowired
     MemberMapper memberMapper;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Test
+    public void test1() {
+        String result1 = encoder.encode("1234");
+        log.info("result1: " + result1);
+        log.info(encoder.matches("1234", result1));
+
+        String result2 = encoder.encode("1234");
+        log.info("result2: " + result2);
+        log.info(encoder.matches("1234", result2));
+    }
 
     @Test
         // @Disabled
