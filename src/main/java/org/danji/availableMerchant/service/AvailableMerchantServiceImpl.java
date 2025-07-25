@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.dto.AvailableMerchantDTO;
+import org.danji.availableMerchant.dto.MerchantFilterDTO;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
@@ -160,8 +161,8 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
     }
 
     @Override
-    public List<AvailableMerchantDTO> getAll() {
-        List<AvailableMerchantVO> voList = merchantMapper.findAll();
+    public List<AvailableMerchantDTO> findByFilter(MerchantFilterDTO filterDTO) {
+        List<AvailableMerchantVO> voList = merchantMapper.findByFilter(filterDTO);
 
         //DTO로 변환해서 반환
         return voList.stream()

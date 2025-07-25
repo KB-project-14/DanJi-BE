@@ -2,6 +2,7 @@ package org.danji.availableMerchant.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
+import org.danji.availableMerchant.dto.MerchantFilterDTO;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface AvailableMerchantMapper {
     boolean existsByNameAndAddress(@Param("name") String name, @Param("address") String address);
 
     //전체 목록 조회
-    List<AvailableMerchantVO> findAll();
+    List<AvailableMerchantVO> findByFilter(MerchantFilterDTO filterDTO);
 }
