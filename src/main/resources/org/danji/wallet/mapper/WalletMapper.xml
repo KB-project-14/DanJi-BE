@@ -56,4 +56,25 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+    <update id="bulkUpdateDisplayOrder">
+        <foreach collection="list" item="wallet" separator=";">
+            UPDATE wallet
+            SET display_order = #{wallet.displayOrder}
+            WHERE wallet_id = #{wallet.walletId}
+        </foreach>
+    </update>
+
+    <update id="reorderDisplayOrder">
+        UPDATE wallet w
+            JOIN (
+                SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
+                FROM wallet
+                WHERE member_id = #{memberId}
+            ) t ON w.wallet_id = t.wallet_id
+        SET w.display_order = t.new_order
+    </update>
+
+    <delete id="delete">
+        DELETE FROM wallet WHERE wallet_id = #{walletId}
+    </delete>
 </mapper>
