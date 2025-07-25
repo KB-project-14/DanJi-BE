@@ -6,6 +6,7 @@ import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
 import org.danji.member.exception.PasswordMissmatchException;
 import org.danji.member.mapper.MemberMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
@@ -16,9 +17,11 @@ import java.util.UUID;
 @Log4j2
 @Service
 @RequiredArgsConstructor
+
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     // 사용자 조회
     @Override
@@ -32,6 +35,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberDTO join(MemberJoinDTO memberJoinDTO) {
+        String encodedPassword = passwordEncoder.encode(memberJoinDTO.getPassword());
+
+
         MemberVO member = MemberVO.builder()
                 .memberId(UUID.randomUUID())
                 .username(memberJoinDTO.getUsername())
