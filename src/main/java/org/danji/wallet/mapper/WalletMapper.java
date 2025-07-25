@@ -19,4 +19,5 @@ public interface WalletMapper {
 
     List<WalletVO> findByFilter(WalletFilterDTO filterDTO);
 
+    WalletVO findByMemberId(UUID memberId);
 }
