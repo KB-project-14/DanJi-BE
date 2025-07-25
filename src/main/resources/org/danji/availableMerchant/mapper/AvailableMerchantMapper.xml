@@ -5,17 +5,76 @@
 
 <mapper namespace="org.danji.availableMerchant.mapper.AvailableMerchantMapper">
     <insert id="create">
-        insert into available_merchant
-        values (
-                #{availableMerchantId},
+        INSERT INTO available_merchant (
+            available_merchant_id, name, address, latitude, longitude,
+            category, local_currency_id, created_at, updated_at
+        )
+        VALUES (
+                UUID_TO_BIN(#{availableMerchantId}),
                 #{name},
                 #{address},
                 #{latitude},
                 #{longitude},
                 #{category},
-                #{localCurrencyId},
+                UUID_TO_BIN(#{localCurrencyId}),
                 NOW(),
                 NOW()
                )
     </insert>
+    <select id="existsByNameAndAddress" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM available_merchant
+            WHERE name = #{name} AND address = #{address}
+        )
+    </select>
+    <select id="findByFilter" resultMap="availableMerchantMap">
+        SELECT
+            BIN_TO_UUID(am.available_merchant_id) AS available_merchant_id,
+            am.name,
+            am.address,
+            am.latitude,
+            am.longitude,
+            am.category,
+            BIN_TO_UUID(am.local_currency_id) AS local_currency_id,
+            am.created_at,
+            am.updated_at,
+            lc.name AS local_currency_name
+        FROM available_merchant am
+        LEFT JOIN
+            local_currency lc ON am.local_currency_id = lc.local_currency_id
+        <where>
+            <if test="name != null and name != ''">
+                AND am.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="latitude != null">
+                AND am.latitude = #{latitude}
+            </if>
+            <if test="longitude != null">
+                AND am.longitude = #{longitude}
+            </if>
+            <if test="category != null and category != ''">
+                AND am.category = #{category}
+            </if>
+            <if test="localCurrencyName != null and localCurrencyName != ''">
+                AND lc.name LIKE CONCAT('%', #{localCurrencyName}, '%')
+            </if>
+        </where>
+        ORDER BY am.created_at DESC
+    </select>
+
+    <resultMap id="availableMerchantMap" type="org.danji.availableMerchant.domain.AvailableMerchantVO">
+        <id column="available_merchant_id" property="availableMerchantId" javaType="java.util.UUID" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="latitude" property="latitude" />
+        <result column="longitude" property="longitude" />
+        <result column="category" property="category" />
+        <result column="local_currency_id" property="localCurrencyId" javaType="java.util.UUID"/>
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+
+        <result column="local_currency_name" property="localCurrencyName" />
+    </resultMap>
+
+
 </mapper>

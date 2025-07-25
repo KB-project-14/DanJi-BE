@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
+import org.danji.transaction.enums.TransferType;
 import org.danji.transaction.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

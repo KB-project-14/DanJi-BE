@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LocalCurrencyMapper {
-
+    LocalCurrencyVO findByName(String name);
     // Mybatis 에서는 Optional 반환이 안됨
     LocalCurrencyVO findById(UUID localCurrencyId);
 
