@@ -7,6 +7,7 @@ import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.mapper.WalletMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +16,25 @@ import java.util.List;
 import java.util.UUID;
 
 @Service("CONVERT")
-@RequiredArgsConstructor
 @Log4j2
 public class ConvertProcessor implements TransferProcessor {
 
-    private final RechargeProcessor rechargeProcessor;
-    private final RefundProcessor refundProcessor;
+    private final TransferProcessor rechargeProcessor;
+    private final TransferProcessor refundProcessor;
     private final WalletMapper walletMapper;
     private final TransactionConverter transactionConverter;
+
+    public ConvertProcessor(
+            @Qualifier("CHARGE") TransferProcessor rechargeProcessor,
+            @Qualifier("REFUND") TransferProcessor refundProcessor,
+            WalletMapper walletMapper,
+            TransactionConverter transactionConverter
+    ) {
+        this.rechargeProcessor = rechargeProcessor;
+        this.refundProcessor = refundProcessor;
+        this.walletMapper = walletMapper;
+        this.transactionConverter = transactionConverter;
+    }
 
     @Transactional
     @Override
