@@ -22,13 +22,13 @@ public class TransferDTO extends BaseDTO {
     @NotNull(message = "toWalletId 값은 필수입니다.")
     private UUID toWalletId;
 
-    @NotNull(message = "transferType 값은 필수입니다.")
+    @NotNull(message = "Type 값은 필수입니다.")
     private Type type;
 
     @Min(value = 10000, message = "최소 충전 금액은 10,000원입니다.")
     @MultipleOfHundred
     private Integer amount;
 
-    private boolean TransactionLogging;
+    private boolean transactionLogging;
 
 }

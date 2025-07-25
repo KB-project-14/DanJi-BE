@@ -2,10 +2,12 @@ package org.danji.transaction.processor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.global.error.ErrorCode;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.wallet.domain.WalletVO;
+import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -44,12 +46,18 @@ public class ConvertProcessor implements TransferProcessor {
         // 새로운 transferDTO를 만들어서 refundProcessor에 넘겨야함
         // transferDTO 에서 전달 받은 가격, from_wallet_id 랑, boolean 값을 false로 만든 transferDTO
         WalletVO fromLocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
+        if (fromLocalCurrencyWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
         //일단 현재는 로그인 구현이 안되었기 때문에, 이런식으로 번잡하게 찾아서 구현해놓음
         UUID memberId = fromLocalCurrencyWalletVO.getMemberId();
 
         WalletVO mainWalletVO = walletMapper.findByMemberId(memberId);
+        if (mainWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
         TransferDTO refundDTO = transactionConverter.toTransferDTO(transferDTO.getFromWalletId(), mainWalletVO.getWalletId()
-        , transferDTO.getType(), transferDTO.getAmount(), false);
+                , transferDTO.getType(), transferDTO.getAmount(), false);
 
         List<TransactionDTO> refundList = refundProcessor.process(refundDTO);
 

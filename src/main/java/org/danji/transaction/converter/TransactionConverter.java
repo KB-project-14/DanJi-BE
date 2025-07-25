@@ -50,7 +50,7 @@ public class TransactionConverter {
                .toWalletId(toWalletId)
                .type(type)
                .amount(amount)
-               .TransactionLogging(transactionLogging)
+               .transactionLogging(transactionLogging)
                .build();
     }
 }
