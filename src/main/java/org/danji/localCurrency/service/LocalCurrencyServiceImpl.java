@@ -20,6 +20,7 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
 
     private final LocalCurrencyMapper localCurrencyMapper;
 
+    @Override
     public LocalCurrencyDTO createLocalCurrency(LocalCurrencyDTO localCurrencyDTO) {
 
         // TODO region 조회 예외처리 로직
@@ -42,6 +43,7 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
     }
 
 
+    @Override
     public LocalCurrencyDTO getLocalCurrencyByRegionId(Long RegionId) {
 
         LocalCurrencyVO vo = localCurrencyMapper.findByRegionId(RegionId);
@@ -53,6 +55,7 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
         return LocalCurrencyDTO.of(vo);
     }
 
+    @Override
     public List<LocalCurrencyDTO> getLocalCurrencyList(LocalCurrencyFilterDTO filter) {
 
         List<LocalCurrencyVO> voList = localCurrencyMapper.findByFilter(filter);
