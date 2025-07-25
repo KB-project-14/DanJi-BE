@@ -2,7 +2,6 @@ package org.danji.localCurrency.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
-import org.danji.global.config.SecurityConfig;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
 import org.danji.localCurrency.enums.BenefitType;
@@ -10,6 +9,7 @@ import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;

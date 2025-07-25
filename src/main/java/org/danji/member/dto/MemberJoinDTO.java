@@ -4,8 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.danji.auth.account.domain.MemberVO;
+import org.danji.member.domain.MemberVO;
+import org.danji.member.enums.Role;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,15 +23,11 @@ public class MemberJoinDTO {
 
     private String username;
     private String password;
-    private String email;
+    private Role role;
+    private String name;
 
-    private MultipartFile avatar;
-
-    public MemberVO toVO() {
-        return MemberVO.builder()
-                .username(username)
-                .password(password)
-                .email(email)
-                .build();
+    // TODO 현재는 Role.USER만 등록
+    public Role getRole() {
+        return role != null ? role : Role.USER;
     }
 }

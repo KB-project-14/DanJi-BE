@@ -15,6 +15,7 @@
     <package name="org.danji.transaction.domain"/>
     <package name="org.danji.wallet.domain"/>
     <package name="org.danji.cashback.domain"/>
+    <package name="org.danji.member.domain"/>
   </typeAliases>
 
   <typeHandlers>
