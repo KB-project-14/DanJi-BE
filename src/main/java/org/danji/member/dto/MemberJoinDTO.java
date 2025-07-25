@@ -5,10 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danji.member.domain.MemberVO;
+import org.danji.member.enums.Role;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,20 +21,13 @@ import java.util.List;
 @Data
 public class MemberJoinDTO {
 
-    private Long memberId;
     private String username;
     private String password;
-    private String role;
+    private Role role;
     private String name;
-    private List<SimpleGrantedAuthority> authList;
 
-    public MemberVO toVO() {
-        return MemberVO.builder()
-                .username(username)
-                .password(password)
-                .role(role)
-                .name(name)
-                .build();
-
+    // TODO 현재는 Role.USER만 등록
+    public Role getRole() {
+        return role != null ? role : Role.USER;
     }
 }

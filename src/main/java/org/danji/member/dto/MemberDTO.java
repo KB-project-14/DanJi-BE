@@ -1,27 +1,29 @@
 package org.danji.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.danji.global.dto.BaseDTO;
 import org.danji.member.domain.MemberVO;
+import org.danji.member.enums.Role;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class MemberDTO {
 
-    private Long memberId;
+public class MemberDTO extends BaseDTO {
+
+    private UUID memberId;
     private String username;
     private String password;
-    private String role;
+    private Role role;
     private String name;
-    private List<SimpleGrantedAuthority> authList;
 
 
     public static MemberDTO of(MemberVO m) {
