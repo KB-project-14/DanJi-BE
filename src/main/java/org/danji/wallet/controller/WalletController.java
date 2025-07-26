@@ -45,7 +45,9 @@ public class WalletController {
     }
 
     @PatchMapping("/order")
-    public ResponseEntity<ApiResponse<List<WalletDTO>>> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList) {
+    public ResponseEntity<ApiResponse<List<WalletDTO>>> updateWalletOrder(
+            @RequestBody List<WalletOrderUpdateDTO> walletOrderList) {
+
         List<WalletDTO> walletList = walletService.updateWalletOrder(walletOrderList);
         return ResponseEntity.ok(ApiResponse.success(walletList));
     }
