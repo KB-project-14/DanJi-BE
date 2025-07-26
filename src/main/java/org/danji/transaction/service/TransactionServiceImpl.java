@@ -43,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public List<TransactionDTO> handleTransfer(TransferDTO transferDTO){
-        TransferProcessor processor = processorMap.get(transferDTO.getTransferType().name());
+        TransferProcessor processor = processorMap.get(transferDTO.getType().name());
 
         return processor.process(transferDTO);
     }

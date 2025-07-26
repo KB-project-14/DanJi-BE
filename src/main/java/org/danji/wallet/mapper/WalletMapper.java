@@ -20,10 +20,11 @@ public interface WalletMapper {
 
     List<WalletVO> findByFilter(WalletFilterDTO filterDTO);
 
+    WalletVO findByMemberId(UUID memberId);
+
     void bulkUpdateDisplayOrder(List<WalletOrderUpdateDTO> dtoList);
 
     void delete(UUID walletId);
 
     void reorderDisplayOrder(UUID memberId);
-
 }

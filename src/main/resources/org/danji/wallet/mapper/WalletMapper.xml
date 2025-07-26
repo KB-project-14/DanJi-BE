@@ -56,6 +56,13 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
     <update id="bulkUpdateDisplayOrder">
         <foreach collection="list" item="wallet" separator=";">
             UPDATE wallet
@@ -77,4 +84,5 @@
     <delete id="delete">
         DELETE FROM wallet WHERE wallet_id = #{walletId}
     </delete>
+
 </mapper>
