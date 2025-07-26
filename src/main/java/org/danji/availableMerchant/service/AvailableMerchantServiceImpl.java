@@ -15,6 +15,8 @@ import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
@@ -52,13 +54,6 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
         return AvailableMerchantDTO.of(vo);
     }
 
-    private RestTemplate buildNoProxyRestTemplate() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        // 프록시 전혀 사용 안 함
-        factory.setProxy(Proxy.NO_PROXY);
-        return new RestTemplate(factory);
-    }
-
     @Override
     public void importFromPublicAPI() {
         String serviceKey = "ed7g7lbmLTlBXvYw9LSGPrD6KW4ppvXNZrCWDHNKEzQDkHTRKE9XWeY6Q5uoNxhhwwtvoLP%2BHvL1VYFxicTm1g%3D%3D";
@@ -67,22 +62,34 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
 
         //공공데이터 API URL 구성
             try {
-                String url = UriComponentsBuilder
-                        .fromHttpUrl("http://api.data.go.kr/openapi/tn_pubr_public_local_bill_api")
-                        .queryParam("ServiceKey", serviceKey)
-                        .queryParam("pageNo", page) //페이지 번호
-                        .queryParam("numOfRows", numOfRows) //한 페이지 당 결과 수
-                        .queryParam("type", "json") //응답 형식
-                        .queryParam("CTPV_NM", URLEncoder.encode("울산광역시", StandardCharsets.UTF_8)) //시도명
-                        .queryParam("LOCAL_BILL", URLEncoder.encode("울산페이", StandardCharsets.UTF_8)) //지역화폐 이름
-                        .build(false)
-                        .toUriString();
+                String baseUrl = "http://api.data.go.kr/openapi/tn_pubr_public_local_bill_api";
+
+                DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+                factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
+                WebClient webClient = WebClient.builder()
+                        .uriBuilderFactory(factory)
+                        .build();
+
+                String encodedCity = URLEncoder.encode("부산광역시", StandardCharsets.UTF_8);
+                String encodedBill = URLEncoder.encode("동백전", StandardCharsets.UTF_8);
+
+                String url = baseUrl +
+                        "?ServiceKey=" + serviceKey +
+                        "&pageNo=" + page +
+                        "&numOfRows=" + numOfRows +
+                        "&type=json" +
+                        "&CTPV_NM=" + encodedCity +
+                        "&LOCAL_BILL=" + encodedBill;
+
 
                 log.info("▶ 호출 URL = {}", url);
 
-                //API 호출
-                RestTemplate restTemplate = buildNoProxyRestTemplate();
-                String response = restTemplate.getForObject(url, String.class);
+                String response = webClient.get()
+                        .uri(url)
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .block();
 
                 log.info("▶ API 응답 = {}", response);
 
@@ -128,11 +135,13 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                     }
 
                     //지역화폐 이름으로 local_currency_id 조회
-                    LocalCurrencyVO currencyOpt = localCurrencyMapper.findByName(localCurrencyName);
-                    if (currencyOpt == null) {
+                    List<LocalCurrencyVO> currencies = localCurrencyMapper.findAllByName(localCurrencyName);
+                    if (currencies.isEmpty()) {
                         log.warn("등록되지 않은 지역화폐: {}", localCurrencyName);
                         continue;
                     }
+
+                    LocalCurrencyVO currencyOpt = currencies.get(0);
 
                     //중복 가맹점 방지(이름 + 주소)
                     if (merchantMapper.existsByNameAndAddress(name, address)) {

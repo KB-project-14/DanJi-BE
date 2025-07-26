@@ -10,13 +10,13 @@
             category, local_currency_id, created_at, updated_at
         )
         VALUES (
-                UUID_TO_BIN(#{availableMerchantId}),
+                #{availableMerchantId},
                 #{name},
                 #{address},
                 #{latitude},
                 #{longitude},
                 #{category},
-                UUID_TO_BIN(#{localCurrencyId}),
+                #{localCurrencyId},
                 NOW(),
                 NOW()
                )
