@@ -56,4 +56,12 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
+
 </mapper>
