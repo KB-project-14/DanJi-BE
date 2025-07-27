@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+import static org.danji.transaction.validator.WalletValidator.checkOwnership;
+
 @Service("CHARGE")
 @RequiredArgsConstructor
 @Log4j2
@@ -63,15 +65,9 @@ public class RechargeProcessor implements TransferProcessor {
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
-        boolean checkParameter = false;
+
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
-        for(WalletVO walletVO : localWalletByUserIdVO) {
-            if (walletVO == LocalCurrencyWalletVO) {
-                checkParameter = true;
-                break;
-            }
-        }
-        if (!checkParameter){
+        if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
             throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
         }
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
