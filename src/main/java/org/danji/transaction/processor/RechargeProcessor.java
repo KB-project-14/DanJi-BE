@@ -120,7 +120,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
 
         int successMainWalletCount = transactionMapper.insert(mainTx);
         if (successMainWalletCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
 
         //지역화폐 기준
@@ -133,7 +133,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
                     (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "충전", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
-                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
             }
         }
         //캐시백 규정일때는 캐시백 포함하지 않은 금액을 transaction 테이블에 넣어주고, 캐시백이 발생될때 또 transaction 테이블에 넣어주기

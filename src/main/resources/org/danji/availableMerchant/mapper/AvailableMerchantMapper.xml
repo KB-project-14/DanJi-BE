@@ -76,5 +76,9 @@
         <result column="local_currency_name" property="localCurrencyName" />
     </resultMap>
 
-
+    <select id = "findById" parameterType="java.util.UUID" resultType="AvailableMerchantVO">
+            SELECT *
+            FROM available_merchant
+            WHERE available_merchant_id = #{availableMerchantId}
+    </select>
 </mapper>

@@ -5,6 +5,7 @@ import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.dto.MerchantFilterDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface AvailableMerchantMapper {
 
@@ -16,4 +17,6 @@ public interface AvailableMerchantMapper {
 
     //전체 목록 조회
     List<AvailableMerchantVO> findByFilter(MerchantFilterDTO filterDTO);
+
+    AvailableMerchantVO findById(UUID availableMerchantId);
 }

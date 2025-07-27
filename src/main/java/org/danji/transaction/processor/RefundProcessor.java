@@ -113,7 +113,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         int successMainWalletCount = transactionMapper.insert(mainTx);
 
         if (successMainWalletCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
 
         //지역화폐 기준
@@ -126,7 +126,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
             int successLocalWalletCount = transactionMapper.insert(localTx);
 
             if (successLocalWalletCount != 1) {
-                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
             }
 
 //        } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {

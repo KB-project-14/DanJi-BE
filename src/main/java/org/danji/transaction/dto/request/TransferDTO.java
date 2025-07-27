@@ -10,12 +10,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
+
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @Data
-public class TransferDTO extends BaseDTO {
+public class TransferDTO {
     @NotNull(message = "fromWalletId 값은 필수입니다.")
     private UUID fromWalletId;
 
