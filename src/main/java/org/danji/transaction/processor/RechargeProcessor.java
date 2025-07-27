@@ -50,7 +50,7 @@ public class RechargeProcessor implements TransferProcessor {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
-        if (mainWalletByUserIdVO != mainWalletVO) {
+        if (!mainWalletByUserIdVO.equals(mainWalletVO)) {
             throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기

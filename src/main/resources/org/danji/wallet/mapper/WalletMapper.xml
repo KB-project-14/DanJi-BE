@@ -89,7 +89,7 @@
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
-          AND wallet_type = 'CASH'
+          AND wallet_type = 'LOCAL'
     </select>
 
 </mapper>

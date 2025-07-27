@@ -64,7 +64,7 @@ public class RefundProcessor implements TransferProcessor {
         }
 
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
-        if (mainWalletByUserIdVO != mainWalletVO) {
+        if (!mainWalletByUserIdVO.equals(mainWalletVO)) {
             throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
         }
 
