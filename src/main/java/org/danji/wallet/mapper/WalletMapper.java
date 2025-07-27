@@ -27,4 +27,6 @@ public interface WalletMapper {
     void delete(UUID walletId);
 
     void reorderDisplayOrder(UUID memberId);
+
+    List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 }

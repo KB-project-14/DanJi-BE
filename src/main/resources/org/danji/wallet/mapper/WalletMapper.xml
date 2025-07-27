@@ -85,4 +85,11 @@
         DELETE FROM wallet WHERE wallet_id = #{walletId}
     </delete>
 
+    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
 </mapper>
