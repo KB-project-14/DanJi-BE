@@ -94,7 +94,7 @@
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
-          AND wallet_type = 'CASH'
+          AND wallet_type = 'LOCAL'
     </select>
 
 >>>>>>> a50ca23 (refactor: 충전 로직에 TransferDTO의 fromWalletId와 toWalletId가 사용자 소유의 지갑인지 검증하는 로직을 추가)
