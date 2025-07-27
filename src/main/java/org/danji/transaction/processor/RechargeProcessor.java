@@ -29,7 +29,7 @@ import static org.danji.transaction.validator.WalletValidator.checkOwnership;
 @Service("CHARGE")
 @RequiredArgsConstructor
 @Log4j2
-public class RechargeProcessor implements TransferProcessor {
+public class RechargeProcessor implements TransferProcessor<TransferDTO> {
 
     private static final double RECHARGE_FEE_RATE = 0.00;
 

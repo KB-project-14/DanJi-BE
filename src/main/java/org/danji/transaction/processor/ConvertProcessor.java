@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service("CONVERT")
 @Log4j2
-public class ConvertProcessor implements TransferProcessor {
+public class ConvertProcessor implements TransferProcessor<TransferDTO> {
 
     private final TransferProcessor rechargeProcessor;
     private final TransferProcessor refundProcessor;

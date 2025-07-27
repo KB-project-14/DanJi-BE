@@ -30,7 +30,7 @@ import static org.danji.transaction.validator.WalletValidator.checkOwnership;
 @Service("REFUND")
 @RequiredArgsConstructor
 @Log4j2
-public class RefundProcessor implements TransferProcessor {
+public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
     private static final double RECHARGE_FEE_RATE = 0.00;
 
