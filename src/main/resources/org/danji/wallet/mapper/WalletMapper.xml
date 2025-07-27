@@ -86,6 +86,16 @@
           AND wallet_type = 'CASH'
     </select>
 
+<<<<<<< HEAD
 
 >>>>>>> 918ae14 (feat: 지역화폐 끼리 환전 로직 구현)
+=======
+    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
+>>>>>>> a50ca23 (refactor: 충전 로직에 TransferDTO의 fromWalletId와 toWalletId가 사용자 소유의 지갑인지 검증하는 로직을 추가)
 </mapper>

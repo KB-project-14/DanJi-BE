@@ -40,12 +40,16 @@ public class RechargeProcessor implements TransferProcessor {
     @Override
     public List<TransactionDTO> process(TransferDTO transferDTO) {
         // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
-        // TODO userID로 transferDTO 안에 있는 fromwalletId, towalletId 로 로그인한 사용자의 지갑인지 확인 하는 작업
+        // TODO 현재는 userId를 랜덤으로 만들어서 임시로 넣어뒀지만, Authentication 객체에서 꺼내는 작업 필수
         UUID userId = UUID.randomUUID();
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
+        WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
+        if (mainWalletByUserIdVO != mainWalletVO) {
+            throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
         // 수수료 1% 도 감안해서 계산
@@ -58,6 +62,17 @@ public class RechargeProcessor implements TransferProcessor {
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getToWalletId());
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
+        boolean checkParameter = false;
+        List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
+        for(WalletVO walletVO : localWalletByUserIdVO) {
+            if (walletVO == LocalCurrencyWalletVO) {
+                checkParameter = true;
+                break;
+            }
+        }
+        if (!checkParameter){
+            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
         }
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
         LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());

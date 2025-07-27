@@ -28,6 +28,10 @@ public interface WalletMapper {
     void reorderDisplayOrder(UUID memberId);
 
 
+
     WalletVO findByMemberId(UUID memberId);
+
+
+    List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
 }

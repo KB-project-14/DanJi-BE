@@ -30,7 +30,7 @@ import java.util.UUID;
 @Log4j2
 public class RefundProcessor implements TransferProcessor {
 
-    private static final double RECHARGE_FEE_RATE = 0.01;
+    private static final double RECHARGE_FEE_RATE = 0.00;
 
     private final WalletMapper walletMapper;
     private final LocalCurrencyMapper localCurrencyMapper;
