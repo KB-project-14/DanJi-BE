@@ -29,7 +29,7 @@ import java.util.UUID;
 @Log4j2
 public class RechargeProcessor implements TransferProcessor {
 
-    private static final double RECHARGE_FEE_RATE = 0.01;
+    private static final double RECHARGE_FEE_RATE = 0.00;
 
     private final WalletMapper walletMapper;
     private final LocalCurrencyMapper localCurrencyMapper;
@@ -40,7 +40,7 @@ public class RechargeProcessor implements TransferProcessor {
     @Override
     public List<TransactionDTO> process(TransferDTO transferDTO) {
         // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
-        //-------------------------------------------
+        // TODO userID로 transferDTO 안에 있는 fromwalletId, towalletId 로 로그인한 사용자의 지갑인지 확인 하는 작업
         UUID userId = UUID.randomUUID();
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
@@ -52,7 +52,7 @@ public class RechargeProcessor implements TransferProcessor {
         // 환전 요청 이라면 건너뛰기
         if (transferDTO.isTransactionLogging()) {
             if (mainWalletVO.getBalance() < transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
-                throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+              throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
             }
         }
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getToWalletId());
@@ -73,14 +73,14 @@ public class RechargeProcessor implements TransferProcessor {
                 walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
             }
             walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)));
-        } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
-            // 요청 금액 업데이트 시키기
-            if (transferDTO.isTransactionLogging()) {
-                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
-            }else{
-                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
-            }
-            walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount());
+//        } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
+//            // 요청 금액 업데이트 시키기
+//            if (transferDTO.isTransactionLogging()) {
+//                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
+//            }else{
+//                walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
+//            }
+//            walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), transferDTO.getAmount());
             //7일 뒤에 캐시백에 대한 부분 업데이트
 
             // TODO converter로 구현한거 빌더패턴으로 바꾸기
@@ -103,7 +103,7 @@ public class RechargeProcessor implements TransferProcessor {
                 totalAmount,
                 Direction.EXPENSE,
                 transferDTO.getType(),
-                "메인지갑(출금) -> 지역화폐 지갑",
+                "충전",
                 mainWalletVO.getWalletId()
         );
 
@@ -119,23 +119,23 @@ public class RechargeProcessor implements TransferProcessor {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance() - (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),  LocalCurrencyWalletVO.getBalance(),
-                    (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
+                    (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "충전", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
                 throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
             }
         }
         //캐시백 규정일때는 캐시백 포함하지 않은 금액을 transaction 테이블에 넣어주고, 캐시백이 발생될때 또 transaction 테이블에 넣어주기
-        else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
-            localTx = transactionConverter.toTransactionVO(
-                    UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
-                    LocalCurrencyWalletVO.getBalance() - transferDTO.getAmount(), LocalCurrencyWalletVO.getBalance(),
-                    transferDTO.getAmount(), Direction.INCOME, transferDTO.getType(), "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
-            int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
-            if (successLocalCurrencyWalletCount != 1) {
-                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
-            }
-        }
+//        else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
+//            localTx = transactionConverter.toTransactionVO(
+//                    UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
+//                    LocalCurrencyWalletVO.getBalance() - transferDTO.getAmount(), LocalCurrencyWalletVO.getBalance(),
+//                    transferDTO.getAmount(), Direction.INCOME, transferDTO.getType(), "메인지갑 -> 지역화폐 지갑(입금)", LocalCurrencyWalletVO.getWalletId());
+//            int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
+//            if (successLocalCurrencyWalletCount != 1) {
+//                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+//            }
+//        }
 
         return List.of(
                 transactionConverter.toTransactionDTO(mainTx),
