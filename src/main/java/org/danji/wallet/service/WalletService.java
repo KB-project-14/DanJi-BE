@@ -1,5 +1,6 @@
 package org.danji.wallet.service;
 
+import org.danji.wallet.dto.WalletCreateDTO;
 import org.danji.wallet.dto.WalletDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
 import org.danji.wallet.dto.WalletOrderUpdateDTO;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 public interface WalletService {
 
-    WalletDTO createWallet(WalletDTO walletDTO);
+    WalletDTO createWallet(WalletCreateDTO walletCreateDTO);
 
     WalletDTO getWallet(UUID walletId);
 

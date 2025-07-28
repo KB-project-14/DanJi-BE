@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.danji.global.domain.BaseVO;
 import org.danji.wallet.enums.WalletType;
 
+import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -20,4 +21,7 @@ public class WalletVO extends BaseVO {
     private WalletType walletType;
     private Integer balance;
     private int displayOrder;
+
+    @Pattern(regexp = "^[0-9]{4}$")
+    private String walletPin;
 }
