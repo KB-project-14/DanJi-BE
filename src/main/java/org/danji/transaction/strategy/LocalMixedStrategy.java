@@ -59,7 +59,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
         }
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
-            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
 
         if (paymentDTO.getInputAmount() > LocalCurrencyWalletVO.getBalance()) {

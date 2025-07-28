@@ -55,7 +55,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
         System.out.println(mainWalletByUserIdVO);
         if (!mainWalletByUserIdVO.getWalletId().equals(mainWalletVO.getWalletId())) {
-            throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
         // 수수료 1% 도 감안해서 계산
@@ -72,7 +72,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
 
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
-            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
         LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());

@@ -56,7 +56,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
-            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
         //transferDto의 to_wallet_id 필드로 메인지갑 찾기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getToWalletId());
@@ -66,7 +66,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
         if (!mainWalletByUserIdVO.getWalletId().equals(mainWalletVO.getWalletId())) {
-            throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
 
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
