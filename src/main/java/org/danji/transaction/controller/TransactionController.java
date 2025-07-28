@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
+import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.service.TransactionService;
@@ -29,6 +30,12 @@ public class TransactionController {
     @PostMapping("/transfer")
     public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO) {
         List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
+    }
+
+    @PostMapping("/payment")
+    public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyPayment(@RequestBody PaymentDTO paymentDTO) {
+        List<TransactionDTO> result = transactionService.handlePayment(paymentDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 }

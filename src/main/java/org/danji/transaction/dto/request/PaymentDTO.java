@@ -25,5 +25,10 @@ public class PaymentDTO {
     private PaymentType type;
 
     @NotNull(message = "결제 금액은 필수입니다.")
-    private Integer amount;
+    private Integer merchantAmount;
+
+    private Integer inputAmount;
+
+    @NotNull(message = "결제 비밀번호는 필수 입니다.")
+    private String walletPin;
 }

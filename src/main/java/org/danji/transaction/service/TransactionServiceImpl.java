@@ -15,6 +15,7 @@ import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
+import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
@@ -43,8 +44,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public List<TransactionDTO> handleTransfer(TransferDTO transferDTO){
-        TransferProcessor processor = processorMap.get(transferDTO.getType().name());
+        TransferProcessor<TransferDTO> processor = processorMap.get(transferDTO.getType().name());
 
         return processor.process(transferDTO);
+    }
+
+    public List<TransactionDTO> handlePayment(PaymentDTO paymentDTO){
+        TransferProcessor<PaymentDTO> processor = processorMap.get("PAYMENT");
+        return processor.process(paymentDTO);
     }
 }

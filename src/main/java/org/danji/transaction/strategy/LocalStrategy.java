@@ -1,7 +1,6 @@
-package org.danji.transaction.processor;
+package org.danji.transaction.strategy;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
@@ -15,93 +14,82 @@ import org.danji.transaction.enums.PaymentType;
 import org.danji.transaction.enums.Type;
 import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
-import org.danji.transaction.strategy.PaymentStrategy;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.danji.transaction.validator.WalletValidator.checkOwnership;
 
-@Service("PAYMENT")
+@Component
 @RequiredArgsConstructor
-@Log4j2
-public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
+public class LocalStrategy implements PaymentStrategy {
 
-    private final WalletMapper walletMapper;
-    private final TransactionMapper transactionMapper;
-    private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
-
-    private final List<PaymentStrategy> strategies;
-
+    private final WalletMapper walletMapper;
+    private final TransactionConverter transactionConverter;
+    private final TransactionMapper transactionMapper;
 
     @Override
-    public List<TransactionDTO> process(PaymentDTO paymentDTO) {
-
-        //TODO 지갑 비밀번호 일치하는지 확인하는 로직 추가
-
-        if (paymentDTO.getType() == PaymentType.GENERAL) {
-            return processGeneral(paymentDTO);
-        }
-
-        // 지역화폐는 전략을 통해 분기
-        return strategies.stream()
-                .filter(strategy -> strategy.supports(paymentDTO))
-                .findFirst()
-                .orElseThrow(() -> new WalletException(ErrorCode.STRATEGY_NOT_FOUND))
-                .process(paymentDTO);
-
+    public boolean supports(PaymentDTO paymentDTO) {
+        return paymentDTO.getType() == PaymentType.LOCAL_CURRENCY &&
+                paymentDTO.getInputAmount().equals(paymentDTO.getMerchantAmount());
     }
 
-    private List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
-        // 일반 결제 처리 로직 (예: 메인지갑 차감)
+    @Override
+    @Transactional
+    public List<TransactionDTO> process(PaymentDTO paymentDTO) {
+
         //테스트용 userId
         UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
-        WalletVO mainWalletVO = walletMapper.findByMemberId(userId);
-        if (mainWalletVO == null) {
-            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
-        }
-
-        if (mainWalletVO.getBalance() < paymentDTO.getMerchantAmount()) {
-            throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
-        }
-
-        walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -paymentDTO.getMerchantAmount());
-
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
         if (availableMerchantVO == null) {
             throw new AvailableMerchantException(ErrorCode.AVAILABLE_MERCHANT_NOT_FOUND);
         }
 
-        TransactionVO mainTx = transactionConverter.toTransactionVO(
+
+        WalletVO LocalCurrencyWalletVO = walletMapper.findById(paymentDTO.getLocalWalletId());
+        if (LocalCurrencyWalletVO == null) {
+            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
+        }
+
+        List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
+        if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)) {
+            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
+        }
+
+        if (LocalCurrencyWalletVO.getBalance() < paymentDTO.getMerchantAmount()) {
+            throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+        }
+
+        walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), -paymentDTO.getMerchantAmount());
+
+        TransactionVO LocalTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(),
-                mainWalletVO.getWalletId(),
+                LocalCurrencyWalletVO.getWalletId(),
                 null,
-                mainWalletVO.getBalance(),
-                mainWalletVO.getBalance() - paymentDTO.getMerchantAmount(),
+                LocalCurrencyWalletVO.getBalance(),
+                LocalCurrencyWalletVO.getBalance() - paymentDTO.getMerchantAmount(),
                 paymentDTO.getMerchantAmount(),
                 Direction.EXPENSE,
                 Type.PAYMENT,
                 availableMerchantVO.getName(),
-                mainWalletVO.getWalletId()
+                LocalCurrencyWalletVO.getWalletId()
         );
 
-        int successLocalTxCount = transactionMapper.insert(mainTx);
+        int successLocalTxCount = transactionMapper.insert(LocalTx);
         if (successLocalTxCount != 1) {
             throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
 
         TransactionVO merchantTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(),
-                mainWalletVO.getWalletId(),
+                LocalCurrencyWalletVO.getWalletId(),
                 null,
                 null,
                 null,
@@ -118,9 +106,10 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
         }
 
         return List.of(
-                transactionConverter.toTransactionDTO(mainTx),
+                transactionConverter.toTransactionDTO(LocalTx),
                 transactionConverter.toTransactionDTO(merchantTx)
         );
-
     }
+
+
 }
