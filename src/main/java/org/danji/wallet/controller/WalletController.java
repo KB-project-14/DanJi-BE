@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
+import org.danji.wallet.dto.WalletCreateDTO;
 import org.danji.wallet.dto.WalletDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
 import org.danji.wallet.dto.WalletOrderUpdateDTO;
@@ -29,7 +30,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<WalletDTO>> createWallet(@RequestBody WalletDTO dto) {
+    public ResponseEntity<ApiResponse<WalletDTO>> createWallet(@RequestBody WalletCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(walletService.createWallet(dto)));
     }
 

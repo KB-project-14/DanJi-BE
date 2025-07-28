@@ -29,4 +29,6 @@ public interface WalletMapper {
     void reorderDisplayOrder(UUID memberId);
 
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
+
+    int findMaxDisplayOrderByMemberId(UUID memberId);
 }
