@@ -6,7 +6,7 @@
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <insert id="create">
         insert into wallet
-        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, now(), now())
+        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, #{walletPin}, now(), now())
     </insert>
 
     <select id="getCashWalletByUserId" parameterType="java.util.UUID" resultType= "WalletVO">
@@ -91,4 +91,9 @@
           AND wallet_type = 'LOCAL'
     </select>
 
+    <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
+        SELECT COALESCE(MAX(display_order), 0)
+        FROM wallet
+        WHERE member_id = #{memberId}
+    </select>
 </mapper>
