@@ -34,4 +34,7 @@ public interface WalletMapper {
 
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
+
+    int findMaxDisplayOrderByMemberId(UUID memberId);
+
 }

@@ -6,7 +6,7 @@
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <insert id="create">
         insert into wallet
-        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, now(), now())
+        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, #{walletPin}, now(), now())
     </insert>
 
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"
@@ -97,5 +97,13 @@
           AND wallet_type = 'LOCAL'
     </select>
 
+<<<<<<< HEAD
 >>>>>>> a50ca23 (refactor: 충전 로직에 TransferDTO의 fromWalletId와 toWalletId가 사용자 소유의 지갑인지 검증하는 로직을 추가)
+=======
+    <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
+        SELECT COALESCE(MAX(display_order), 0)
+        FROM wallet
+        WHERE member_id = #{memberId}
+    </select>
+>>>>>>> eb47854 (fix: walletCreateDTO 생성, wallet_pin 컬럼 추가)
 </mapper>
