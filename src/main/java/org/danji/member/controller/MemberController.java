@@ -38,8 +38,8 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<String> update(@RequestBody MemberUpdateDTO member) {
-        service.update(member);
+    public ResponseEntity<String> update(@RequestBody MemberUpdateDTO dto) {
+        service.update(dto);
         return ResponseEntity.ok("수정 완료");
     }
 

@@ -10,7 +10,7 @@ public interface MemberService {
 
     MemberDTO join(MemberJoinDTO member);
 
-    MemberDTO update(MemberUpdateDTO member);
+     MemberDTO update(MemberUpdateDTO member);
 
     void delete(MemberDeleteDTO member);
 

@@ -76,23 +76,25 @@ class MemberServiceImplTest {
 
     @Test
     void update() {
-        // given
+        // given: 먼저 가입하고
         memberService.join(MemberJoinDTO.builder()
                 .username("testuser")
                 .password("1234")
                 .name("기존이름")
                 .build());
 
-        // when
-        MemberUpdateDTO dto = new MemberUpdateDTO();
-        dto.setUsername("testuser");
-        dto.setPassword("1234");
-        dto.setName("변경된이름");
+        // when: DTO 하나로만 업데이트 요청
+        MemberUpdateDTO updateDto = MemberUpdateDTO.builder()
+                .username("testuser")
+                .password("1234")         // 본인 확인용 비밀번호
+                .name("변경된이름")        // 바꿀 새 이름
+                .build();
 
-        MemberDTO result = memberService.update(dto);
+        MemberDTO result = memberService.update(updateDto);
 
-        // then
+        // then: 이름이 잘 바뀌었는지, username은 그대로인지 확인
         assertEquals("변경된이름", result.getName());
+        assertEquals("testuser", result.getUsername());
     }
 
     @Test
