@@ -28,8 +28,17 @@ public enum ErrorCode {
 
     //transaction
     TRANSACTION_SAVE_FAILED_MAIN(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "메인 지갑 거래 내역 저장에 실패했습니다."),
-    TRANSACTION_SAVE_FAILED_LOCAL(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "지역화폐 지갑 거래 내역 저장에 실패했습니다.");
+    TRANSACTION_SAVE_FAILED_LOCAL(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "지역화폐 지갑 거래 내역 저장에 실패했습니다."),
+
+    // member
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "MB-01", "사용자를 찾을 수 없습니다."),
+    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "MB-02", "이미 존재하는 사용자명입니다."),
+
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "MB-03", "비밀번호가 일치하지 않습니다."),
+    UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "MB-04", "권한이 없습니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
 }

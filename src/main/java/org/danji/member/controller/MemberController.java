@@ -38,9 +38,9 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<String> update(@RequestBody MemberUpdateDTO dto) {
-        service.update(dto);
-        return ResponseEntity.ok("수정 완료");
+    public ResponseEntity<MemberDTO> update(@RequestBody MemberUpdateDTO dto) {
+        MemberDTO updated = service.update(dto);
+        return ResponseEntity.ok(updated);
     }
 
 }
