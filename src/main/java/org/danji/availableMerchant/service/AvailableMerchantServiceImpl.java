@@ -3,30 +3,22 @@ package org.danji.availableMerchant.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.log4j.Log4j2;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.dto.AvailableMerchantDTO;
 import org.danji.availableMerchant.dto.MerchantFilterDTO;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
-import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
-import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
-import java.net.Proxy;
-import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +29,10 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
     private final AvailableMerchantMapper merchantMapper;
     private final LocalCurrencyMapper localCurrencyMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final KakaoApiClient kakaoApiClient;
+
+    @Value("${public.api.service-key}")
+    private String serviceKey;
 
     @Override
     public AvailableMerchantDTO create(AvailableMerchantDTO dto) {
@@ -56,7 +52,7 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
 
     @Override
     public void importFromPublicAPI() {
-        String serviceKey = "ed7g7lbmLTlBXvYw9LSGPrD6KW4ppvXNZrCWDHNKEzQDkHTRKE9XWeY6Q5uoNxhhwwtvoLP%2BHvL1VYFxicTm1g%3D%3D";
+
         int page = 1;
         int numOfRows = 100;
 
@@ -141,6 +137,7 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                         continue;
                     }
 
+                    //예를 들어 동백전 데이터가 여러 개일 때 하나만 가져옴
                     LocalCurrencyVO currencyOpt = currencies.get(0);
 
                     //중복 가맹점 방지(이름 + 주소)
@@ -149,19 +146,37 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
                         continue;
                     }
 
-                    //VO 생성 후 DB 저장
-                    AvailableMerchantVO vo = AvailableMerchantVO.builder()
-                            .availableMerchantId(UUID.randomUUID())
-                            .name(name)
-                            .address(address)
-                            .latitude(BigDecimal.ZERO)
-                            .longitude(BigDecimal.ZERO)
-                            .category(category)
-                            .localCurrencyId(currencyOpt.getLocalCurrencyId())
-                            .build();
+                    //주소에서 층수 정보 제거
+                    String cleanedAddressForApi = address.replaceAll("\\s*(지하)?\\d+층", "").trim();
 
-                    merchantMapper.create(vo);
-                    log.info("새 가맹점 저장: {}", name);
+                    //초기화
+                    BigDecimal latitude = BigDecimal.ZERO;
+                    BigDecimal longitude = BigDecimal.ZERO;
+
+                    //KakaoApiClient를 사용해 위경도 좌표 가져오기
+                    BigDecimal[] coords = kakaoApiClient.getCoordinates(cleanedAddressForApi);
+                    if (coords != null) {
+                        latitude = coords[0];
+                        longitude = coords[1];
+                        log.info("주소 변환 성공: '{}' -> [{}, {}]", address, latitude, longitude);
+
+                        //좌표 변환에 성공한 경우에만 VO 생성 후 DB 저장
+                        AvailableMerchantVO vo = AvailableMerchantVO.builder()
+                                .availableMerchantId(UUID.randomUUID())
+                                .name(name)
+                                .address(address)
+                                .latitude(latitude)
+                                .longitude(longitude)
+                                .category(category)
+                                .localCurrencyId(currencyOpt.getLocalCurrencyId())
+                                .build();
+
+                        merchantMapper.create(vo);
+                        log.info("새 가맹점 저장: {}", name);
+
+                    } else {
+                        log.warn("주소 변환 실패: {}", address, cleanedAddressForApi);
+                    }
                 }
             } catch (Exception e) {
                 log.error("공공 API 수집 중 예외 발생 ▶ 원인: {}", e.getMessage(), e);

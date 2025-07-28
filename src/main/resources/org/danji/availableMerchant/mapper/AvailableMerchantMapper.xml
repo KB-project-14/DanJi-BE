@@ -21,6 +21,24 @@
                 NOW()
                )
     </insert>
+    <insert id="createBatch" parameterType="java.util.List">
+        INSERT INTO available_merchant (
+            available_merchant_id, name, address, latitude, longitude, category, local_currency_id
+        ) VALUES
+        <foreach collection="list" item="merchant" separator=",">
+            (
+             #{merchant.availableMerchantId},
+             #{merchant.name},
+             #{merchant.address},
+             #{merchant.latitude},
+             #{merchant.longitude},
+             #{merchant.category},
+             #{merchant.localCurrencyId},
+             NOW(),
+             NOW()
+            )
+        </foreach>
+    </insert>
     <select id="existsByNameAndAddress" resultType="java.lang.Boolean">
         SELECT EXISTS(
             SELECT 1 FROM available_merchant
@@ -43,6 +61,7 @@
         LEFT JOIN
             local_currency lc ON am.local_currency_id = lc.local_currency_id
         <where>
+            AND (latitude != 0.000000 OR longitude != 0.000000)
             <if test="name != null and name != ''">
                 AND am.name LIKE CONCAT('%', #{name}, '%')
             </if>
@@ -53,7 +72,7 @@
                 AND am.longitude = #{longitude}
             </if>
             <if test="category != null and category != ''">
-                AND am.category = #{category}
+                AND am.category LIKE CONCAT('%', #{category}, '%')
             </if>
             <if test="localCurrencyName != null and localCurrencyName != ''">
                 AND lc.name LIKE CONCAT('%', #{localCurrencyName}, '%')
