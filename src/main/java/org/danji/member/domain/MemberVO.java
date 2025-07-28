@@ -24,4 +24,6 @@ public class MemberVO extends BaseVO {
     private Role role;
     private String name;
 
+
+
 }
