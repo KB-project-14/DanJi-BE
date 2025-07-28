@@ -20,6 +20,8 @@ public interface WalletMapper {
 
     List<WalletVO> findByFilter(WalletFilterDTO filterDTO);
 
+    WalletVO findByMemberId(UUID memberId);
+
 
     void bulkUpdateDisplayOrder(List<WalletOrderUpdateDTO> dtoList);
 
@@ -29,11 +31,16 @@ public interface WalletMapper {
 
 
 
+
     WalletVO findByMemberId(UUID memberId);
 
 
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
+
+    int findMaxDisplayOrderByMemberId(UUID memberId);
+
+    List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
     int findMaxDisplayOrderByMemberId(UUID memberId);
 
