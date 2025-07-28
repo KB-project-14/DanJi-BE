@@ -9,7 +9,7 @@ public class WalletValidator {
 
     public static boolean checkOwnership(List<WalletVO> wallets, WalletVO targetWalletVO) {
         for (WalletVO wallet : wallets) {
-            if (wallet.equals(targetWalletVO)) {
+            if (wallet.getWalletId().equals(targetWalletVO.getWalletId())) {
                 return true;
             }
         }

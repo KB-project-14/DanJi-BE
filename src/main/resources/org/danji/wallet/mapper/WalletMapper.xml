@@ -9,8 +9,7 @@
         values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, now(), now())
     </insert>
 
-    <select id="getCashWalletByUserId" parameterType="java.util.UUID"
-            resultType="WalletVO">
+    <select id="getCashWalletByUserId" parameterType="java.util.UUID" resultType= "WalletVO">
         SELECT wallet_id,
                member_id,
                local_currency_id,
@@ -22,14 +21,14 @@
     </select>
 
     <select id="findById" parameterType="java.util.UUID"
-            resultType="WalletVO">
+            resultType= "WalletVO">
         SELECT *
         FROM wallet
         WHERE wallet_id = #{walletId}
 
     </select>
 
-    <select id="findByMemberIdAndLocalCurrencyId" parameterType="java.util.UUID" resultType="WalletVO">
+    <select id="findByMemberIdAndLocalCurrencyId" parameterType="java.util.UUID" resultType= "WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
@@ -49,14 +48,14 @@
         </where>
     </select>
 
-    <update id="updateWalletBalance" parameterType="java.util.UUID">
+    <update id="updateWalletBalance">
         UPDATE wallet
         SET balance    = balance + #{amount},
             updated_at = NOW()
         WHERE wallet_id = #{walletId}
     </update>
 
-    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+    <select id="findByMemberId" parameterType="java.util.UUID" resultType= "WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
@@ -85,7 +84,7 @@
         DELETE FROM wallet WHERE wallet_id = #{walletId}
     </delete>
 
-    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType= "WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}

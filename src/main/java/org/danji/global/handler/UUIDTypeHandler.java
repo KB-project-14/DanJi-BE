@@ -44,6 +44,7 @@ public class UUIDTypeHandler implements TypeHandler<UUID> {
     }
 
     private UUID asUuid(byte[] bytes) {
+        if (bytes == null) return null;
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         return new UUID(buffer.getLong(), buffer.getLong());
     }

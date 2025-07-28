@@ -43,14 +43,18 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
     public List<TransactionDTO> process(TransferDTO transferDTO) {
         // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
         // TODO 현재는 userId를 랜덤으로 만들어서 임시로 넣어뒀지만, Authentication 객체에서 꺼내는 작업 필수
-        UUID userId = UUID.randomUUID();
+        //UUID userId = UUID.randomUUID();
+        //테스트용 userId
+        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
+        System.out.println(mainWalletVO);
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
-        if (!mainWalletByUserIdVO.equals(mainWalletVO)) {
+        System.out.println(mainWalletByUserIdVO);
+        if (!mainWalletByUserIdVO.getWalletId().equals(mainWalletVO.getWalletId())) {
             throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
@@ -109,8 +113,8 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
                 UUID.randomUUID(),
                 mainWalletVO.getWalletId(),
                 LocalCurrencyWalletVO.getWalletId(),
-                mainWalletVO.getBalance() + totalAmount,
                 mainWalletVO.getBalance(),
+                mainWalletVO.getBalance() - totalAmount,
                 totalAmount,
                 Direction.EXPENSE,
                 transferDTO.getType(),
@@ -129,7 +133,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
-                    LocalCurrencyWalletVO.getBalance() - (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),  LocalCurrencyWalletVO.getBalance(),
+                    LocalCurrencyWalletVO.getBalance() ,  LocalCurrencyWalletVO.getBalance() +(int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),
                     (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "충전", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {

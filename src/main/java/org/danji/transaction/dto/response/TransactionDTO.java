@@ -17,7 +17,6 @@ public class TransactionDTO{
     private UUID transactionId;
     private UUID fromWalletId;
     private UUID toWalletId;
-    private UUID memberId;
     private Integer beforeBalance;
     private Integer amount;
     private Integer afterBalance;
