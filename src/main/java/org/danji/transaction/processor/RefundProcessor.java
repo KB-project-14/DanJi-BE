@@ -47,7 +47,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         //-------------------------------------------
         //UUID userId = UUID.randomUUID();
         //테스트용 userId
-        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
+        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
         // transferDto의 from_wallet_id 필드로 지역화폐 지갑 찾기
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (LocalCurrencyWalletVO == null) {
