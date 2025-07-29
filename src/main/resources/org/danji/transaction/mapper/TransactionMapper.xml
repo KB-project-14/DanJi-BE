@@ -47,8 +47,8 @@
 
         ORDER BY created_at
         <choose>
-            <when test="filter.sortOrder == 'NEW'">DESC</when>
-            <when test="filter.sortOrder == 'OLD'">ASC</when>
+            <when test="filter.sortOrder == 'DESC'">DESC</when>
+            <when test="filter.sortOrder == 'ASC'">ASC</when>
             <otherwise>DESC</otherwise>
         </choose>
     </select>
