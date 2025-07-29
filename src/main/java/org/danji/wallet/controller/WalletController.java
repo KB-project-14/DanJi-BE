@@ -4,8 +4,10 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
+import org.danji.wallet.dto.WalletCreateDTO;
 import org.danji.wallet.dto.WalletDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
+import org.danji.wallet.dto.WalletOrderUpdateDTO;
 import org.danji.wallet.service.WalletService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<WalletDTO>> createWallet(@RequestBody WalletDTO dto) {
+    public ResponseEntity<ApiResponse<WalletDTO>> createWallet(@RequestBody WalletCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(walletService.createWallet(dto)));
     }
 
@@ -41,5 +43,19 @@ public class WalletController {
     public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
         List<WalletDTO> walletList = walletService.getWalletList(filter);
         return ResponseEntity.ok(ApiResponse.success(walletList));
+    }
+
+    @PatchMapping("/order")
+    public ResponseEntity<ApiResponse<List<WalletDTO>>> updateWalletOrder(
+            @RequestBody List<WalletOrderUpdateDTO> walletOrderList) {
+
+        List<WalletDTO> walletList = walletService.updateWalletOrder(walletOrderList);
+        return ResponseEntity.ok(ApiResponse.success(walletList));
+    }
+
+    @DeleteMapping("/{walletId}")
+    public ResponseEntity<Void> deleteWallet(@PathVariable UUID walletId) {
+        walletService.deleteWallet(walletId);
+        return ResponseEntity.noContent().build();
     }
 }

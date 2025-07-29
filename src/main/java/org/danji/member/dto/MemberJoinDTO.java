@@ -28,6 +28,6 @@ public class MemberJoinDTO {
 
     // TODO 현재는 Role.USER만 등록
     public Role getRole() {
-        return role != null ? role : Role.USER;
+        return role != null ? role : Role.ROLE_USER;
     }
 }

@@ -6,7 +6,7 @@
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <insert id="create">
         insert into wallet
-        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, now(), now())
+        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, #{walletPin}, now(), now())
     </insert>
 
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"
@@ -56,4 +56,45 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
+    <update id="bulkUpdateDisplayOrder">
+        <foreach collection="list" item="wallet" separator=";">
+            UPDATE wallet
+            SET display_order = #{wallet.displayOrder}
+            WHERE wallet_id = #{wallet.walletId}
+        </foreach>
+    </update>
+
+    <update id="reorderDisplayOrder">
+        UPDATE wallet w
+            JOIN (
+                SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
+                FROM wallet
+                WHERE member_id = #{memberId}
+            ) t ON w.wallet_id = t.wallet_id
+        SET w.display_order = t.new_order
+    </update>
+
+    <delete id="delete">
+        DELETE FROM wallet WHERE wallet_id = #{walletId}
+    </delete>
+
+    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'LOCAL'
+    </select>
+
+    <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
+        SELECT COALESCE(MAX(display_order), 0)
+        FROM wallet
+        WHERE member_id = #{memberId}
+    </select>
 </mapper>

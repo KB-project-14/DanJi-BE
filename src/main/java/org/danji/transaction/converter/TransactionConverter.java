@@ -1,13 +1,12 @@
 package org.danji.transaction.converter;
 
-import org.apache.ibatis.transaction.Transaction;
 import org.danji.transaction.domain.TransactionVO;
+import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
 import org.danji.transaction.enums.Type;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
@@ -43,5 +42,15 @@ public class TransactionConverter {
                 .comment(transactionVO.getComment())
                 .ownerWalletId(transactionVO.getOwnerWalletId())
                 .build();
+    }
+
+    public TransferDTO toTransferDTO(UUID fromWalletId, UUID toWalletId, Type type, Integer amount, Boolean transactionLogging){
+       return TransferDTO.builder()
+               .fromWalletId(fromWalletId)
+               .toWalletId(toWalletId)
+               .type(type)
+               .amount(amount)
+               .transactionLogging(transactionLogging)
+               .build();
     }
 }
