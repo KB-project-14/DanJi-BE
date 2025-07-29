@@ -35,7 +35,8 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "MB-04", "권한이 없습니다."),
 
     //availableMerchant
-    AVAILABLE_MERCHANT_NOT_FOUND(HttpStatus.NOT_FOUND, "AM-01", "가맹점을 찾을 수 없습니다.");
+    AVAILABLE_MERCHANT_NOT_FOUND(HttpStatus.NOT_FOUND, "AM-01", "가맹점을 찾을 수 없습니다."),
+    INPUT_AMOUNT_EXCEEDS_MERCHANT_AMOUNT(HttpStatus.BAD_REQUEST, "AM-02", "입력한 금액이 가맹점 요청 금액을 초과했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
