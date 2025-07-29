@@ -56,12 +56,14 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+
     <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
           AND wallet_type = 'CASH'
     </select>
+
 
     <update id="bulkUpdateDisplayOrder">
         <foreach collection="list" item="wallet" separator=";">
@@ -85,6 +87,14 @@
         DELETE FROM wallet WHERE wallet_id = #{walletId}
     </delete>
 
+    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+        SELECT *
+        FROM wallet
+        WHERE member_id = #{memberId}
+          AND wallet_type = 'CASH'
+    </select>
+
+
     <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
         SELECT *
         FROM wallet
@@ -92,9 +102,11 @@
           AND wallet_type = 'LOCAL'
     </select>
 
+
     <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
         SELECT COALESCE(MAX(display_order), 0)
         FROM wallet
         WHERE member_id = #{memberId}
     </select>
+
 </mapper>

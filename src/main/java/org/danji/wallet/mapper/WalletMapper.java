@@ -22,13 +22,26 @@ public interface WalletMapper {
 
     WalletVO findByMemberId(UUID memberId);
 
+
     void bulkUpdateDisplayOrder(List<WalletOrderUpdateDTO> dtoList);
 
     void delete(UUID walletId);
 
     void reorderDisplayOrder(UUID memberId);
 
+
+
+
+    WalletVO findByMemberId(UUID memberId);
+
+
+    List<WalletVO> findLocalWalletByMemberId(UUID memberId);
+
+
+    int findMaxDisplayOrderByMemberId(UUID memberId);
+
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
     int findMaxDisplayOrderByMemberId(UUID memberId);
+
 }
