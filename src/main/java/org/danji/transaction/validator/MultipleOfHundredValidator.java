@@ -1,7 +1,5 @@
 package org.danji.transaction.validator;
 
-import org.danji.transaction.annotation.MultipleOfHundred;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
