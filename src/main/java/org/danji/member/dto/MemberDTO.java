@@ -24,12 +24,14 @@ public class MemberDTO extends BaseDTO {
     private Role role;
     private String name;
 
-
     public static MemberDTO of(MemberVO m) {
         return MemberDTO.builder()
+                .memberId(m.getMemberId())
                 .username(m.getUsername())
                 .role(m.getRole())
                 .name(m.getName())
+                .createdAt(m.getCreatedAt())
+                .updatedAt(m.getUpdatedAt())
                 .build();
     }
 

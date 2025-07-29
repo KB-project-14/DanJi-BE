@@ -1,8 +1,6 @@
 package org.danji.wallet.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import org.danji.transaction.dto.request.TransactionFilterDTO;
-import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.dto.WalletFilterDTO;
 import org.danji.wallet.dto.WalletOrderUpdateDTO;
@@ -24,13 +22,13 @@ public interface WalletMapper {
 
     WalletVO findByMemberId(UUID memberId);
 
-
     void bulkUpdateDisplayOrder(List<WalletOrderUpdateDTO> dtoList);
 
     void delete(UUID walletId);
 
     void reorderDisplayOrder(UUID memberId);
 
+    // TODO findByFilter 로 해결 가능
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
     int findMaxDisplayOrderByMemberId(UUID memberId);

@@ -57,35 +57,48 @@ public class MemberServiceImpl implements MemberService {
     // 3) 수정
     @Override
     public MemberDTO update(MemberUpdateDTO dto) {
-        MemberVO existing = Optional.ofNullable(mapper.get(dto.getUsername()))
-                .orElseThrow(() -> new MemberException(ErrorCode.USER_NOT_FOUND));
+        MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
 
-        if (!passwordEncoder.matches(dto.getPassword(), existing.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD);
+        if (mapper.get(dto.getUsername()) != null) {
+            throw new MemberException(ErrorCode.DUPLICATED_USERNAME);
         }
 
-        existing.setName(dto.getName());
+        member.setName(dto.getName());
 
-        mapper.update(existing);
+        mapper.update(member);
 
-        return MemberDTO.of(mapper.get(existing.getUsername()));
+        return MemberDTO.of(mapper.get(member.getUsername()));
 
     }
-
 
     // 4) 삭제
     @Override
     @Transactional
     public void delete(MemberDeleteDTO dto) {
-        MemberVO member = mapper.get(dto.getUsername());
+        MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
+
+        mapper.deleteByUsername(member.getUsername());
+    }
+
+
+    @Override
+    public MemberDTO login(LoginDTO loginDTO) {
+        MemberVO vo = validateMember(loginDTO.getUsername(), loginDTO.getPassword());
+
+        return MemberDTO.of(vo);
+    }
+
+
+    private MemberVO validateMember(String username, String rawPassword) {
+        MemberVO member = mapper.get(username);
         if (member == null) {
             throw new MemberException(ErrorCode.USER_NOT_FOUND);
         }
 
-        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD);  // 또는 IllegalArgumentException
+        if (!passwordEncoder.matches(rawPassword, member.getPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
-        mapper.deleteByUsername(dto.getUsername());
+        return member;
     }
 }
