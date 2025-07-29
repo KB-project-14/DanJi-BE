@@ -29,22 +29,22 @@ class WalletServiceImplTest {
     @Autowired
     private WalletMapper walletMapper;
 
-    @Test
-    @Disabled
-    void createWallet() {
-        // given
-        WalletDTO createDTO = WalletDTO.builder()
-                .localCurrencyId(UUID.randomUUID())
-                .walletType(WalletType.CASH)
-                .balance(0)
-                .displayOrder(1)
-                .build();
-
-        // when
-        WalletDTO result = walletService.createWallet(createDTO);
-
-        // then
-        WalletDTO checkWallet = WalletDTO.of(walletMapper.findById(result.getWalletId()));
-        assertEquals(checkWallet, result);
-    }
+//    @Test
+//    @Disabled
+//    void createWallet() {
+//        // given
+//        WalletDTO createDTO = WalletDTO.builder()
+//                .localCurrencyId(UUID.randomUUID())
+//                .walletType(WalletType.CASH)
+//                .balance(0)
+//                .displayOrder(1)
+//                .build();
+//
+//        // when
+////        WalletDTO result = walletService.createWallet(createDTO);
+//
+//        // then
+//        WalletDTO checkWallet = WalletDTO.of(walletMapper.findById(result.getWalletId()));
+//        assertEquals(checkWallet, result);
+//    }
 }

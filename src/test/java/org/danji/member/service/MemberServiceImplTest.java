@@ -126,7 +126,7 @@ class MemberServiceImplTest {
                 .memberId(UUID.randomUUID())
                 .username("test")
                 .password("1234")
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .name("조회용 유저")
                 .build();
 
