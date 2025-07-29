@@ -24,6 +24,7 @@ public interface WalletMapper {
 
     WalletVO findByMemberId(UUID memberId);
 
+
     void bulkUpdateDisplayOrder(List<WalletOrderUpdateDTO> dtoList);
 
     void delete(UUID walletId);
@@ -33,4 +34,5 @@ public interface WalletMapper {
     List<WalletVO> findLocalWalletByMemberId(UUID memberId);
 
     int findMaxDisplayOrderByMemberId(UUID memberId);
+
 }
