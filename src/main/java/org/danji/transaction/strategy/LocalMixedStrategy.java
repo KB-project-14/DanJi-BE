@@ -1,7 +1,6 @@
 package org.danji.transaction.strategy;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.patterns.IfPointcut;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
