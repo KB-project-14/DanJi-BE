@@ -3,6 +3,9 @@ package org.danji.transaction.processor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.error.ErrorCode;
+import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.exception.LocalCurrencyException;
+import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
@@ -19,23 +22,26 @@ import java.util.UUID;
 
 @Service("CONVERT")
 @Log4j2
-public class ConvertProcessor implements TransferProcessor {
+public class ConvertProcessor implements TransferProcessor<TransferDTO> {
 
     private final TransferProcessor rechargeProcessor;
     private final TransferProcessor refundProcessor;
     private final WalletMapper walletMapper;
     private final TransactionConverter transactionConverter;
+    private final LocalCurrencyMapper localCurrencyMapper;
 
     public ConvertProcessor(
             @Qualifier("CHARGE") TransferProcessor rechargeProcessor,
             @Qualifier("REFUND") TransferProcessor refundProcessor,
             WalletMapper walletMapper,
-            TransactionConverter transactionConverter
+            TransactionConverter transactionConverter,
+            LocalCurrencyMapper localCurrencyMapper
     ) {
         this.rechargeProcessor = rechargeProcessor;
         this.refundProcessor = refundProcessor;
         this.walletMapper = walletMapper;
         this.transactionConverter = transactionConverter;
+        this.localCurrencyMapper = localCurrencyMapper;
     }
 
     @Transactional
@@ -49,6 +55,13 @@ public class ConvertProcessor implements TransferProcessor {
         if (fromLocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
+
+        // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
+        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(fromLocalCurrencyWalletVO.getLocalCurrencyId());
+        if (localCurrencyVO == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
+
         //일단 현재는 로그인 구현이 안되었기 때문에, 이런식으로 번잡하게 찾아서 구현해놓음
         UUID memberId = fromLocalCurrencyWalletVO.getMemberId();
 
@@ -61,8 +74,11 @@ public class ConvertProcessor implements TransferProcessor {
 
         List<TransactionDTO> refundList = refundProcessor.process(refundDTO);
 
+
+        double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
+
         TransferDTO rechargeDTO = transactionConverter.toTransferDTO(mainWalletVO.getWalletId(), transferDTO.getToWalletId(),
-                transferDTO.getType(), transferDTO.getAmount(), false);
+                transferDTO.getType(), (int) Math.round(rawValue), false);
 
         List<TransactionDTO> rechargeList = rechargeProcessor.process(rechargeDTO);
 

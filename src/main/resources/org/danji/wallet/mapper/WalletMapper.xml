@@ -49,7 +49,7 @@
         </where>
     </select>
 
-    <update id="updateWalletBalance" parameterType="java.util.UUID">
+    <update id="updateWalletBalance">
         UPDATE wallet
         SET balance    = balance + #{amount},
             updated_at = NOW()
@@ -86,14 +86,6 @@
     <delete id="delete">
         DELETE FROM wallet WHERE wallet_id = #{walletId}
     </delete>
-
-    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
-        SELECT *
-        FROM wallet
-        WHERE member_id = #{memberId}
-          AND wallet_type = 'CASH'
-    </select>
-
 
     <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
         SELECT *
