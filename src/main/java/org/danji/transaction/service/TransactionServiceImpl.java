@@ -16,6 +16,7 @@ import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.PaymentDTO;
+import org.danji.transaction.dto.request.TransactionFilterDTO;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
@@ -30,9 +31,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,8 @@ import java.util.UUID;
 public class TransactionServiceImpl implements TransactionService {
 
     private final Map<String, TransferProcessor> processorMap;
+    private final TransactionMapper transactionMapper;
+    private final TransactionConverter transactionConverter;
 
     @Transactional
     @Override
@@ -52,5 +57,13 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionDTO> handlePayment(PaymentDTO paymentDTO){
         TransferProcessor<PaymentDTO> processor = processorMap.get("PAYMENT");
         return processor.process(paymentDTO);
+    }
+
+    @Override
+    public List<TransactionDTO> getTransactionsByWalletId(UUID walletId, TransactionFilterDTO transactionFilterDTO) {
+        List<TransactionVO> transactionVOList = transactionMapper.findbyWalletId(walletId, transactionFilterDTO);
+        return transactionVOList.stream()
+                .map(transactionConverter::toTransactionDTO)
+                .collect(Collectors.toList());
     }
 }

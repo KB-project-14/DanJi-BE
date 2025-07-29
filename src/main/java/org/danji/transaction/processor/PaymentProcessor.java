@@ -51,7 +51,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
             return processGeneral(paymentDTO);
         }
 
-        // 지역화폐는 전략을 통해 분기
+        // 지역화폐는 strategy를 통해 분기
         return strategies.stream()
                 .filter(strategy -> strategy.supports(paymentDTO))
                 .findFirst()

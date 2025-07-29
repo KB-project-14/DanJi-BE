@@ -35,5 +35,23 @@
                )
     </insert>
 
+    <select id = "findbyWalletId" resultType="TransactionVO">
+        SELECT *
+        FROM transaction
+        WHERE wallet_id = #{walletId}
+        AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
+
+        <if test="filter.direction != null and filter.direction != 'ALL'">
+            AND direction = #{filter.direction}
+        </if>
+
+        ORDER BY created_at
+        <choose>
+            <when test="filter.sortOrder == 'NEW'">DESC</when>
+            <when test="filter.sortOrder == 'OLD'">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+    </select>
+
 
 </mapper>
