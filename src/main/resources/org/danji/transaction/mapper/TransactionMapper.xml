@@ -35,10 +35,10 @@
                )
     </insert>
 
-    <select id = "findbyWalletId" resultType="TransactionVO">
+    <select id = "findByFilter" resultType="TransactionVO">
         SELECT *
         FROM transaction
-        WHERE owner_wallet_id = #{walletId}
+        WHERE owner_wallet_id = #{filter.walletId}
         AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
 
         <if test="filter.direction != null">

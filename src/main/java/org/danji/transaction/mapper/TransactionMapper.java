@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface TransactionMapper {
     int insert(TransactionVO transactionVO);
 
-    List<TransactionVO> findbyWalletId(@Param("walletId") UUID walletId, @Param("filter") TransactionFilterDTO transactionFilterDTO);
+    List<TransactionVO> findByFilter(TransactionFilterDTO transactionFilterDTO);
 }

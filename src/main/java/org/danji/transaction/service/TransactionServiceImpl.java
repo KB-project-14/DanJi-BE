@@ -61,7 +61,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDTO> getTransactionsByWalletId(UUID walletId, TransactionFilterDTO transactionFilterDTO) {
-        List<TransactionVO> transactionVOList = transactionMapper.findbyWalletId(walletId, transactionFilterDTO);
+        transactionFilterDTO.setWalletId(walletId);
+
+        List<TransactionVO> transactionVOList = transactionMapper.findByFilter(transactionFilterDTO);
         return transactionVOList.stream()
                 .map(transactionConverter::toTransactionDTO)
                 .collect(Collectors.toList());

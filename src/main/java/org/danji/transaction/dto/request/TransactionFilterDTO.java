@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,16 +18,16 @@ import java.time.LocalDate;
 @Data
 public class TransactionFilterDTO {
 
-    @NotNull(message = "시작날짜 값은 필수입니다.")
+
+    private UUID walletId;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull(message = "종료날짜 값은 필수입니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastDate;
 
     private Direction direction;
 
-    @NotNull(message = "거래내역 정렬 기준 값은 필수입니다.")
     private SortOrder sortOrder;
 }
