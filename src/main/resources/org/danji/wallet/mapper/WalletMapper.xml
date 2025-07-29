@@ -49,7 +49,7 @@
         </where>
     </select>
 
-    <update id="updateWalletBalance" parameterType="java.util.UUID">
+    <update id="updateWalletBalance">
         UPDATE wallet
         SET balance    = balance + #{amount},
             updated_at = NOW()
