@@ -47,7 +47,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         //-------------------------------------------
         //UUID userId = UUID.randomUUID();
         //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
         // transferDto의 from_wallet_id 필드로 지역화폐 지갑 찾기
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (LocalCurrencyWalletVO == null) {
@@ -78,8 +78,8 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         //int amount = cashbackMapper.sumAmountByWalletId(LocalCurrencyWalletVO.getWalletId());
         //인센티브 시, 요청금액이 지역화폐 지갑의 잔액(잔액 - 잔액 * 인센티브 퍼센트) + 수수료 적용(1%) 보다 작다면 예외 처리
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
-            double rawValue = LocalCurrencyWalletVO.getBalance() * (100.0 / (100 + localCurrencyVO.getPercentage()));
-            if (transferDTO.getAmount() > (int) Math.round(rawValue) + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
+            //double rawValue = LocalCurrencyWalletVO.getBalance() * (100.0 / (100 + localCurrencyVO.getPercentage()));
+            if (transferDTO.getAmount() > LocalCurrencyWalletVO.getBalance()) {
                 throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
             }
         }
@@ -96,9 +96,10 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
          **/
         //인센티브인 경우
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
-            double rawValue = transferDTO.getAmount() * ((100.0 + localCurrencyVO.getPercentage()) / 100.0);
-            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
-            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), transferDTO.getAmount());
+            double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
+            //-((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE))
+            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -transferDTO.getAmount());
+            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), (int) Math.round(rawValue));
         }
         //캐시백인 경우
 //        else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
@@ -109,10 +110,11 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         //transaction 테이블에 복식 부기
         //메인지갑 기준
+        double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
         TransactionVO mainTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
-                mainWalletVO.getBalance(), mainWalletVO.getBalance() + transferDTO.getAmount(),
-                transferDTO.getAmount(), Direction.INCOME, transferDTO.getType(), "환불", mainWalletVO.getWalletId());
+                mainWalletVO.getBalance(), mainWalletVO.getBalance() + (int) Math.round(rawValue),
+                (int) Math.round(rawValue), Direction.INCOME, transferDTO.getType(), "환불", mainWalletVO.getWalletId());
         int successMainWalletCount = transactionMapper.insert(mainTx);
 
         if (successMainWalletCount != 1) {
@@ -122,12 +124,11 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         //지역화폐 기준
         TransactionVO localTx = null;
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
-            double rawValue = transferDTO.getAmount() * ((100.0 + localCurrencyVO.getPercentage()) / 100.0);
 
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
-                    LocalCurrencyWalletVO.getBalance(), LocalCurrencyWalletVO.getBalance() - ((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)),
-                    ((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)), Direction.EXPENSE, transferDTO.getType(), "환불", LocalCurrencyWalletVO.getWalletId());
+                    LocalCurrencyWalletVO.getBalance(), LocalCurrencyWalletVO.getBalance() - transferDTO.getAmount(),
+                    transferDTO.getAmount(), Direction.EXPENSE, transferDTO.getType(), "환불", LocalCurrencyWalletVO.getWalletId());
             int successLocalWalletCount = transactionMapper.insert(localTx);
 
             if (successLocalWalletCount != 1) {
