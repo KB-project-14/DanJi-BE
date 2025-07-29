@@ -3,6 +3,9 @@ package org.danji.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -10,6 +13,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @EnableWebMvc
 @ComponentScan(basePackages = {
@@ -71,6 +77,16 @@ public class ServletConfig implements WebMvcConfigurer {
         DispatcherServlet servlet = new DispatcherServlet();
         servlet.setThrowExceptionIfNoHandlerFound(true);  // ✅ 여기에
         return servlet;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new Converter<String, LocalDate>() {
+            @Override
+            public LocalDate convert(String source) {
+                return LocalDate.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+        });
     }
 
 

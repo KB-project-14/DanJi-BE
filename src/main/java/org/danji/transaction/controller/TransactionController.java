@@ -42,7 +42,7 @@ public class TransactionController {
     }
 
     @GetMapping("/wallets/{walletId}/transactions")
-    public ResponseEntity<ApiResponse<List<TransactionDTO>>> getTransactions(@PathVariable UUID walletId, @RequestBody TransactionFilterDTO transactionFilterDTO) {
+    public ResponseEntity<ApiResponse<List<TransactionDTO>>> getTransactions(@PathVariable UUID walletId, @ModelAttribute TransactionFilterDTO transactionFilterDTO) {
         List<TransactionDTO> result = transactionService.getTransactionsByWalletId(walletId, transactionFilterDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(result));
     }

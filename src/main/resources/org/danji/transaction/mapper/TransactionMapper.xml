@@ -38,18 +38,23 @@
     <select id = "findbyWalletId" resultType="TransactionVO">
         SELECT *
         FROM transaction
-        WHERE wallet_id = #{walletId}
+        WHERE owner_wallet_id = #{walletId}
         AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
 
         <if test="filter.direction != null">
             AND direction = #{filter.direction}
         </if>
 
-        ORDER BY created_at
         <choose>
-            <when test="filter.sortOrder == 'DESC'">DESC</when>
-            <when test="filter.sortOrder == 'ASC'">ASC</when>
-            <otherwise>DESC</otherwise>
+            <when test="filter.sortOrder.name() == 'DESC'">
+                ORDER BY created_at DESC
+            </when>
+            <when test="filter.sortOrder.name() == 'ASC'">
+                ORDER BY created_at ASC
+            </when>
+            <otherwise>
+                ORDER BY created_at DESC
+            </otherwise>
         </choose>
     </select>
 
