@@ -36,6 +36,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
     private final TransactionMapper transactionMapper;
     @Override
     public boolean supports(PaymentDTO paymentDTO) {
+
         return paymentDTO.getType() == PaymentType.LOCAL_CURRENCY &&
                 paymentDTO.getInputAmount() < paymentDTO.getMerchantAmount();
     }
@@ -51,7 +52,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
         }
 
         //테스트용 userId
-        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
+        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(paymentDTO.getLocalWalletId());
         if (LocalCurrencyWalletVO == null) {

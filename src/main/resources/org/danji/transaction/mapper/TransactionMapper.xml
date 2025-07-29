@@ -41,7 +41,7 @@
         WHERE wallet_id = #{walletId}
         AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
 
-        <if test="filter.direction != null and filter.direction != 'ALL'">
+        <if test="filter.direction != null">
             AND direction = #{filter.direction}
         </if>
 

@@ -36,6 +36,7 @@ public class LocalStrategy implements PaymentStrategy {
 
     @Override
     public boolean supports(PaymentDTO paymentDTO) {
+
         return paymentDTO.getType() == PaymentType.LOCAL_CURRENCY &&
                 paymentDTO.getInputAmount().equals(paymentDTO.getMerchantAmount());
     }
@@ -45,7 +46,7 @@ public class LocalStrategy implements PaymentStrategy {
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
         //테스트용 userId
-        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
+        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
         if (availableMerchantVO == null) {

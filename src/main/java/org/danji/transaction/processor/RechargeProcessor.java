@@ -45,7 +45,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         // TODO 현재는 userId를 랜덤으로 만들어서 임시로 넣어뒀지만, Authentication 객체에서 꺼내는 작업 필수
         //UUID userId = UUID.randomUUID();
         //테스트용 userId
-        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
+        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         System.out.println(mainWalletVO);

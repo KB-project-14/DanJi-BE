@@ -45,7 +45,8 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //TODO 지갑 비밀번호 일치하는지 확인하는 로직 추가
+        //TODO AuthTils에서 memberId 꺼내서, 지갑찾고 비밀번호 가져와서
+        // paymentDTO 의 walletPin과 일치하는지 확인하는 로직 추가
 
         if (paymentDTO.getType() == PaymentType.GENERAL) {
             return processGeneral(paymentDTO);
@@ -63,7 +64,8 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     private List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
         // 일반 결제 처리 로직 (예: 메인지갑 차감)
         //테스트용 userId
-        UUID userId = UUID.fromString("946c74bf-3b31-4b51-876a-4a1b3a9a346c");
+
+        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
         WalletVO mainWalletVO = walletMapper.findByMemberId(userId);
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);

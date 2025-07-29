@@ -15,9 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LocalOverPaidStrategy implements PaymentStrategy{
     @Override
-    public boolean supports(PaymentDTO dto) {
-        return dto.getType() == PaymentType.LOCAL_CURRENCY &&
-                dto.getInputAmount() > dto.getMerchantAmount();
+    public boolean supports(PaymentDTO paymentDTO) {
+        return paymentDTO.getType() == PaymentType.LOCAL_CURRENCY &&
+                paymentDTO.getInputAmount() > paymentDTO.getMerchantAmount();
     }
 
     @Override
