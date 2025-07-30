@@ -14,7 +14,4 @@ import java.util.UUID;
 public class WalletCreateDTO {
     private UUID localCurrencyId;
     private WalletType walletType;
-
-    @Pattern(regexp = "^[0-9]{4}$", message = "결제 비밀번호는 4자리 숫자만 가능합니다.")
-    private String walletPin;
 }

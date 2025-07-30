@@ -21,7 +21,4 @@ public class WalletVO extends BaseVO {
     private WalletType walletType;
     private Integer balance;
     private int displayOrder;
-
-    @Pattern(regexp = "^[0-9]{4}$")
-    private String walletPin;
 }

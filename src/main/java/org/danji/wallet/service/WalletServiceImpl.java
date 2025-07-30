@@ -31,8 +31,6 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(WalletCreateDTO walletCreateDTO) {
 
-        // TODO security 완성되면 수정 필요
-        // securityContextHolder에서 memberId 꺼내오기
         UUID memberId = AuthUtils.getMemberId();
 
         // 유저의 지역화폐 존재 여부 체크
@@ -57,7 +55,6 @@ public class WalletServiceImpl implements WalletService {
                 .walletType(walletCreateDTO.getWalletType())
                 .balance(0)
                 .displayOrder(displayOrder)
-                .walletPin(walletCreateDTO.getWalletPin())
                 .build();
 
         walletMapper.create(createVo);
@@ -76,7 +73,6 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public List<WalletDTO> getWalletList(WalletFilterDTO filterDTO) {
 
-        // TODO security 완성되면 수정 필요
         UUID memberId = AuthUtils.getMemberId();
 
         filterDTO.setMemberId(memberId);
@@ -90,7 +86,6 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public List<WalletDTO> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList) {
 
-        // TODO security 완성되면 수정 필요
         UUID memberId = AuthUtils.getMemberId();
 
         List<UUID> walletIds = walletOrderList.stream()

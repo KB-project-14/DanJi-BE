@@ -19,5 +19,6 @@ public class MemberVO extends BaseVO {
     private String password;
     private Role role;
     private String name;
+    private String paymentPin;
 
 }
