@@ -1,6 +1,7 @@
 package org.danji.wallet.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.exception.LocalCurrencyException;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class WalletServiceImpl implements WalletService {
 
     private final WalletMapper walletMapper;

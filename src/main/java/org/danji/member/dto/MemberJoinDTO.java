@@ -30,4 +30,12 @@ public class MemberJoinDTO {
     public Role getRole() {
         return role != null ? role : Role.ROLE_USER;
     }
+
+    public MemberVO toVO() {
+        return MemberVO.builder()
+                .username(username)
+                .role(getRole())
+                .name(name)
+                .build();
+    }
 }

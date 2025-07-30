@@ -7,11 +7,11 @@ import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
 import org.danji.member.exception.MemberException;
 import org.danji.member.mapper.MemberMapper;
+import org.danji.wallet.service.WalletService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -26,9 +26,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO get(String username) {
-        MemberVO member = Optional.ofNullable(mapper.get(username))
-                .orElseThrow(() -> new MemberException(ErrorCode.USER_NOT_FOUND));
-        return MemberDTO.of(member);
+        MemberVO vo = mapper.get(username);
+        if (vo == null) {
+            throw new MemberException(ErrorCode.USER_NOT_FOUND);
+        }
+        return MemberDTO.of(vo);
     }
 
 
@@ -40,16 +42,15 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberException(ErrorCode.DUPLICATED_USERNAME);
         }
 
-        String encoded = passwordEncoder.encode(dto.getPassword());
-        MemberVO member = MemberVO.builder()
-                .memberId(UUID.randomUUID())
-                .username(dto.getUsername())
-                .password(encoded)
-                .name(dto.getName())
-                .role(dto.getRole())
-                .build();
+        MemberVO member = dto.toVO();
+
+        member.setMemberId(UUID.randomUUID());
+        member.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         mapper.insert(member);
+
+//        walletService.createWallet();
+
         return get(member.getUsername());
     }
 
@@ -57,35 +58,44 @@ public class MemberServiceImpl implements MemberService {
     // 3) 수정
     @Override
     public MemberDTO update(MemberUpdateDTO dto) {
-        MemberVO existing = Optional.ofNullable(mapper.get(dto.getUsername()))
-                .orElseThrow(() -> new MemberException(ErrorCode.USER_NOT_FOUND));
+        MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
 
-        if (!passwordEncoder.matches(dto.getPassword(), existing.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD);
-        }
+        member.setName(dto.getName());
 
-        existing.setName(dto.getName());
+        mapper.update(member);
 
-        mapper.update(existing);
-
-        return MemberDTO.of(mapper.get(existing.getUsername()));
+        return MemberDTO.of(mapper.get(member.getUsername()));
 
     }
-
 
     // 4) 삭제
     @Override
     @Transactional
     public void delete(MemberDeleteDTO dto) {
-        MemberVO member = mapper.get(dto.getUsername());
+        MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
+
+        mapper.deleteByUsername(member.getUsername());
+    }
+
+
+    @Override
+    public MemberDTO login(LoginDTO loginDTO) {
+        MemberVO vo = validateMember(loginDTO.getUsername(), loginDTO.getPassword());
+
+        return MemberDTO.of(vo);
+    }
+
+
+    private MemberVO validateMember(String username, String rawPassword) {
+        MemberVO member = mapper.get(username);
         if (member == null) {
             throw new MemberException(ErrorCode.USER_NOT_FOUND);
         }
 
-        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD);  // 또는 IllegalArgumentException
+        if (!passwordEncoder.matches(rawPassword, member.getPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
-        mapper.deleteByUsername(dto.getUsername());
+        return member;
     }
 }
