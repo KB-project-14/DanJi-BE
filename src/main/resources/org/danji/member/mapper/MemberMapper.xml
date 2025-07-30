@@ -61,7 +61,7 @@
   <select id = "findById" parameterType="java.util.UUID" resultMap="memberMap">
         SELECT *
         FROM member
-        WHERE member_id = #{memberId}
+        WHERE member_id = #{userId}
   </select>
 
 </mapper>

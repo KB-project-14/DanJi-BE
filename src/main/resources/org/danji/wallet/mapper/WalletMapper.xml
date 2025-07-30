@@ -124,6 +124,13 @@
         WHERE w.wallet_id = #{walletId}
     </select>
 
+    <update id = "updateWalletTotalPayment">
+        UPDATE wallet
+        SET total_payment = total_payment + #{totalAmount},
+            updated_at = NOW()
+        WHERE wallet_id = #{walletId}
+    </update>
+
     <resultMap id="walletDetailMap" type="WalletDetailDTO">
         <id property="walletId" column="wallet_id"/>
         <result property="memberId" column="member_id"/>

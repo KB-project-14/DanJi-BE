@@ -50,8 +50,8 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
         //결제 비밀번호 확인 로직
-        UUID memberId = AuthUtils.getMemberId();
-        MemberVO memberVO = memberMapper.findById(memberId);
+        UUID userId = AuthUtils.getMemberId();
+        MemberVO memberVO = memberMapper.findById(userId);
         if (!paymentDTO.getWalletPin().equals(memberVO.getPaymentPin())){
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
         }
@@ -65,7 +65,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
                 .filter(strategy -> strategy.supports(paymentDTO))
                 .findFirst()
                 .orElseThrow(() -> new WalletException(ErrorCode.STRATEGY_NOT_FOUND))
-                .process(paymentDTO);
+                .process(paymentDTO, userId);
 
     }
 

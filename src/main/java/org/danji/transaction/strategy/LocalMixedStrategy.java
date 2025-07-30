@@ -33,6 +33,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
     private final TransactionMapper transactionMapper;
+
     @Override
     public boolean supports(PaymentDTO paymentDTO) {
 
@@ -42,7 +43,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO paymentDTO) {
+    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId) {
 
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
@@ -50,15 +51,13 @@ public class LocalMixedStrategy implements PaymentStrategy {
             throw new AvailableMerchantException(ErrorCode.AVAILABLE_MERCHANT_NOT_FOUND);
         }
 
-        //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(paymentDTO.getLocalWalletId());
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
-        if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
+        if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)) {
             throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
 
@@ -67,6 +66,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
         }
 
         walletMapper.updateWalletBalance(paymentDTO.getLocalWalletId(), -paymentDTO.getInputAmount());
+        walletMapper.updateWalletTotalPayment(paymentDTO.getLocalWalletId(), paymentDTO.getInputAmount());
 
         TransactionVO localTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), paymentDTO.getLocalWalletId(), null,
@@ -94,7 +94,7 @@ public class LocalMixedStrategy implements PaymentStrategy {
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
-        if (mainWalletVO.getBalance() < leftBalance){
+        if (mainWalletVO.getBalance() < leftBalance) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
 
