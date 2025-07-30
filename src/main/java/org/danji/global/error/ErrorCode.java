@@ -24,7 +24,7 @@ public enum ErrorCode {
     INVALID_PAYMENT_PASSWORD(HttpStatus.BAD_REQUEST, "WL-07", "결제 비밀번호가 일치하지 않습니다"),
     //localCurrency
     LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "LC-01", "지갑을 찾을 수 없습니다"),
-
+    LOCAL_WALLET_EXCEEDS_MONTHLY_MAX(HttpStatus.BAD_REQUEST, "LC-02", "지역화폐 월 최대 금액을 초과한 금액입니다."),
     //transaction
     TRANSACTION_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "TX-01", "거래 내역 저장에 실패했습니다."),
 

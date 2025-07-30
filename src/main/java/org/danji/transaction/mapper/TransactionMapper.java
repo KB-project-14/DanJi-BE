@@ -12,4 +12,6 @@ public interface TransactionMapper {
     int insert(TransactionVO transactionVO);
 
     List<TransactionVO> findByFilter(TransactionFilterDTO transactionFilterDTO);
+
+    int findTotalChargeAmountByMonth(@Param("localWalletId") UUID localWalletId, @Param("month") Integer month);
 }
