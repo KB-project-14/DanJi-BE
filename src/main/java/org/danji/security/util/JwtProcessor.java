@@ -6,8 +6,8 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
-import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.MemberDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -20,11 +20,14 @@ import java.util.Date;
 public class JwtProcessor {
 
     // 토큰 만료 시간 (5분)
-    static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 5;
+    static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 60;
 
-    private final String secretKey = "kb_It's_your_life_팀_프로젝트_14반_2팀_danji";
-    // 문자열 -> 바이트배열로 변환
-    private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    private final Key key;
+
+    public JwtProcessor(@Value("${jwt.secret.key}") String secretKey) {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     // 토큰 만들기
     public String generateToken(MemberDTO member) {
@@ -73,7 +76,7 @@ public class JwtProcessor {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .get("username", String.class);
     }
 
     /**
