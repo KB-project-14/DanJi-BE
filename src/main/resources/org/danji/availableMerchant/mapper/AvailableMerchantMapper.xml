@@ -81,7 +81,7 @@
         ORDER BY am.created_at DESC
     </select>
 
-    <resultMap id="availableMerchantMap" type="org.danji.availableMerchant.domain.AvailableMerchantVO">
+    <resultMap id="availableMerchantMap" type="AvailableMerchantDTO">
         <id column="available_merchant_id" property="availableMerchantId" javaType="java.util.UUID" />
         <result column="name" property="name" />
         <result column="address" property="address" />
