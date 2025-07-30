@@ -2,6 +2,7 @@ package org.danji.wallet.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
+import org.danji.wallet.dto.WalletCreateDTO;
 import org.danji.wallet.dto.WalletDTO;
 import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.mapper.WalletMapper;
@@ -33,11 +34,9 @@ class WalletServiceImplTest {
     @Disabled
     void createWallet() {
         // given
-        WalletDTO createDTO = WalletDTO.builder()
+        WalletCreateDTO createDTO = WalletCreateDTO.builder()
                 .localCurrencyId(UUID.randomUUID())
                 .walletType(WalletType.CASH)
-                .balance(0)
-                .displayOrder(1)
                 .build();
 
         // when
