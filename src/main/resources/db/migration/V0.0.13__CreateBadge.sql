@@ -17,15 +17,16 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 
 -- 서울특별시
 (UUID_TO_BIN(UUID()), '서울특별시', 'NORMAL', 11000, NOW(), NOW(),
- '도심 속 한강 바람을 타고, 네 마음도 잠시 쉬어가요.'),
+ '도심 속 한강 바람을 타고, 마음도 잠시 쉬어가요.'),
 (UUID_TO_BIN(UUID()), '불꽃축제의 밤', 'SPECIAL', 11000, NOW(), NOW(),
- '밤하늘을 가득 메운 불꽃처럼, 너와의 순간도 반짝입니다.'),
+ '서울의 밤을 장식하는 화려한 불꽃, 잠시 멈춰 서서 바라봅니다.'),
 
 -- 부산광역시
 (UUID_TO_BIN(UUID()), '반짝반짝 광안대교', 'NORMAL', 26000, NOW(), NOW(),
- '파도 소리를 머금은 대교 위, 부산의 밤이 너를 반깁니다.'),
+ '파도 소리를 머금은 대교 위, 부산의 밤이 반깁니다.'),
 (UUID_TO_BIN(UUID()), '부산 불꽃축제', 'SPECIAL', 26000, NOW(), NOW(),
- '광안리 바다 위에 터지는 불꽃, 그 설렘을 담아왔어요.'),
+ '광안리 해변을 가르는 불꽃, 여름 밤의 부산을 느껴보세요.
+'),
 
 -- 대구광역시
 (UUID_TO_BIN(UUID()), '수줍은 사과', 'NORMAL', 27000, NOW(), NOW(),
@@ -35,9 +36,9 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 
 -- 인천광역시
 (UUID_TO_BIN(UUID()), '떴다떴다 비행기', 'NORMAL', 28000, NOW(), NOW(),
- '푸른 바다 위를 나는 비행기, 설렘 가득한 인천의 시작점이에요.'),
+ '푸른 바다 위를 나는 비행기, 설렘 가득한 여행의 시작이에요.'),
 (UUID_TO_BIN(UUID()), '인천 펜타포트', 'SPECIAL', 28000, NOW(), NOW(),
- '락의 리듬과 바닷바람이 만나는, 여름의 뜨거운 무대입니다.'),
+ '바닷바람과 락의 리듬이 만나는, 여름의 뜨거운 무대입니다.'),
 
 -- 광주광역시
 (UUID_TO_BIN(UUID()), '빛고을 반짝이', 'NORMAL', 29000, NOW(), NOW(),
@@ -47,19 +48,19 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 
 -- 대전광역시
 (UUID_TO_BIN(UUID()), '공공칠빵', 'NORMAL', 30000, NOW(), NOW(),
- '칠판 위 분필가루처럼, 대전의 추억도 하얗게 남아요.'),
+ '따뜻한 빵 냄새처럼, 대전의 하루가 마음에 스며듭니다.'),
 (UUID_TO_BIN(UUID()), '대전 사이언스 페스타', 'SPECIAL', 30000, NOW(), NOW(),
- '별빛과 과학이 만나는 축제, 아이 같은 호기심을 깨워요.'),
+ '과학과 예술이 함께 빛나는 거리, 아이 같은 호기심을 깨워요.'),
 
 -- 울산광역시
 (UUID_TO_BIN(UUID()), '고래의 콧바람', 'NORMAL', 31000, NOW(), NOW(),
- '푸른 바다를 가르는 고래의 숨결처럼 시원한 울산이에요.'),
+ '푸른 바다를 가르는 고래의 숨결처럼 시원해요.'),
 (UUID_TO_BIN(UUID()), '울산 고래축제', 'SPECIAL', 31000, NOW(), NOW(),
  '고래가 뛰노는 바다 위, 환호와 물보라가 가득합니다.'),
 
 -- 세종특별자치시
 (UUID_TO_BIN(UUID()), '세종대왕의 붓끝', 'NORMAL', 36000, NOW(), NOW(),
- '한 글자 한 글자, 마음을 담아 세종의 숨결을 전합니다.'),
+ '한 글자 한 글자, 마음을 담아 세종의 불꽃을 전합니다.'),
 (UUID_TO_BIN(UUID()), '세종 문화축제', 'SPECIAL', 36000, NOW(), NOW(),
  '역사와 미래가 공존하는 무대, 빛나는 세종의 밤이에요.'),
 
@@ -67,19 +68,19 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 (UUID_TO_BIN(UUID()), '별빛 수원화성', 'NORMAL', 41000, NOW(), NOW(),
  '성벽 위 반짝이는 별빛처럼, 경기도의 밤이 포근합니다.'),
 (UUID_TO_BIN(UUID()), '수원화성문화제', 'SPECIAL', 41000, NOW(), NOW(),
- '행궁의 불빛 속 행렬, 시간 여행 같은 축제가 펼쳐져요.'),
+ '행궁의 불빛 속 행렬, 시간 여행이 펼쳐져요.'),
 
 -- 강원도
 (UUID_TO_BIN(UUID()), '행운의 감자', 'NORMAL', 42000, NOW(), NOW(),
- '소박한 감자 속 포근함, 강원의 따뜻함을 담았어요.'),
+ '포슬포슬 감자 속에 숨어 있던 행운을 콕 집어냈어요.'),
 (UUID_TO_BIN(UUID()), '강릉 단오제', 'SPECIAL', 42000, NOW(), NOW(),
  '푸른 하늘 아래 풍년을 기원하는 흥겨운 단오의 춤사위.'),
 
 -- 충청북도
 (UUID_TO_BIN(UUID()), '퐁퐁 포도알', 'NORMAL', 43000, NOW(), NOW(),
- '달콤하게 톡 터지는 포도알, 청정한 충북의 맛이에요.'),
+ '달콤한 포도알 속에 충북의 싱그러움이 톡톡 터져요.'),
 (UUID_TO_BIN(UUID()), '청원 생명축제', 'SPECIAL', 43000, NOW(), NOW(),
- '풍요로운 생명의 노래가 울려 퍼지는 축제의 들판입니다.'),
+ '풍요로운 생명의 노래가 울려 퍼지는 축제의 들판.'),
 
 -- 충청남도
 (UUID_TO_BIN(UUID()), '행복한 딸기요정', 'NORMAL', 44000, NOW(), NOW(),
@@ -95,7 +96,7 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 
 -- 전라남도
 (UUID_TO_BIN(UUID()), '영광스런 굴비', 'NORMAL', 46000, NOW(), NOW(),
- '바닷바람에 말린 굴비처럼 깊은 전남의 맛과 향을 전해요.'),
+ '바닷바람 타고 익은 굴비 한 마리, 영광의 맛을 전해요.'),
 (UUID_TO_BIN(UUID()), '보성 녹차대축제', 'SPECIAL', 46000, NOW(), NOW(),
  '푸른 차밭 위로 불어오는 바람, 싱그러운 축제가 시작돼요.'),
 
