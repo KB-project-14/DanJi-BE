@@ -1,14 +1,14 @@
 package org.danji.member.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.dto.BaseDTO;
 import org.danji.member.domain.MemberVO;
 import org.danji.member.enums.Role;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -35,12 +35,4 @@ public class MemberDTO extends BaseDTO {
                 .build();
     }
 
-    public MemberVO toVO() {
-        return MemberVO.builder()
-                .username(username)
-                .role(role)
-                .name(name)
-                .build();
-
-    }
 }

@@ -7,11 +7,11 @@ import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
 import org.danji.member.exception.MemberException;
 import org.danji.member.mapper.MemberMapper;
+import org.danji.wallet.service.WalletService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -26,9 +26,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO get(String username) {
-        MemberVO member = Optional.ofNullable(mapper.get(username))
-                .orElseThrow(() -> new MemberException(ErrorCode.USER_NOT_FOUND));
-        return MemberDTO.of(member);
+        MemberVO vo = mapper.get(username);
+        if (vo == null) {
+            throw new MemberException(ErrorCode.USER_NOT_FOUND);
+        }
+        return MemberDTO.of(vo);
     }
 
 
@@ -40,16 +42,15 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberException(ErrorCode.DUPLICATED_USERNAME);
         }
 
-        String encoded = passwordEncoder.encode(dto.getPassword());
-        MemberVO member = MemberVO.builder()
-                .memberId(UUID.randomUUID())
-                .username(dto.getUsername())
-                .password(encoded)
-                .name(dto.getName())
-                .role(dto.getRole())
-                .build();
+        MemberVO member = dto.toVO();
+
+        member.setMemberId(UUID.randomUUID());
+        member.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         mapper.insert(member);
+
+//        walletService.createWallet();
+
         return get(member.getUsername());
     }
 
@@ -58,10 +59,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO update(MemberUpdateDTO dto) {
         MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
-
-        if (mapper.get(dto.getUsername()) != null) {
-            throw new MemberException(ErrorCode.DUPLICATED_USERNAME);
-        }
 
         member.setName(dto.getName());
 

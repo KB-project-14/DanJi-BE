@@ -3,6 +3,7 @@ package org.danji.member.controller;
 import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.common.ApiResponse;
 import org.danji.member.dto.*;
 import org.danji.member.service.MemberService;
@@ -45,7 +46,8 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MemberDTO> get(@RequestParam String username) {
+    public ResponseEntity<MemberDTO> get() {
+        String username = AuthUtils.getUsername();
         MemberDTO dto = service.get(username);
         return ResponseEntity.ok(dto);
     }
