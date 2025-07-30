@@ -23,6 +23,7 @@
     <result column="password" property="password"/>
     <result column="role" property="role"/>
     <result column="name" property="name"/>
+    <result column="payment_pin" property="paymentPin"/>
   </resultMap>
 
   <select id="get" resultMap="memberMap">
@@ -56,5 +57,11 @@
 <!--        updated_at = now()-->
 <!--    WHERE username = #{username}-->
 <!--  </update>-->
+
+  <select id = "findById" parameterType="java.util.UUID" resultMap="memberMap">
+        SELECT *
+        FROM member
+        WHERE member_id = #{memberId}
+  </select>
 
 </mapper>

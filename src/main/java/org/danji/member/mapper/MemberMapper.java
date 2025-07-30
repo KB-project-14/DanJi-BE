@@ -2,6 +2,8 @@ package org.danji.member.mapper;
 
 import org.danji.member.domain.MemberVO;
 
+import java.util.UUID;
+
 
 public interface MemberMapper {
 
@@ -13,4 +15,5 @@ public interface MemberMapper {
 
     void deleteByUsername(String username);
 
+    MemberVO findById(UUID memberId);
 }

@@ -20,7 +20,8 @@ public enum ErrorCode {
     UNAUTHORIZED_WALLET_ACCESS(HttpStatus.FORBIDDEN, "WL-04",
             "요청한 지갑은 해당 사용자의 소유가 아닙니다."),
     CAN_NOT_DELETE_WALLET_BALANCE_NOT_EMPTY(HttpStatus.BAD_REQUEST, "WL-05", "지갑 잔액이 0원이 아니므로 삭제할 수 없습니다."),
-    STRATEGY_NOT_FOUND(HttpStatus.NOT_FOUND, "WL-08", "해당 결제 조건에 맞는 전략이 존재하지 않습니다."),
+    STRATEGY_NOT_FOUND(HttpStatus.NOT_FOUND, "WL-06", "해당 결제 조건에 맞는 전략이 존재하지 않습니다."),
+    INVALID_PAYMENT_PASSWORD(HttpStatus.BAD_REQUEST, "WL-07", "결제 비밀번호가 일치하지 않습니다"),
     //localCurrency
     LOCAL_CURRENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "LC-01", "지갑을 찾을 수 없습니다"),
 
