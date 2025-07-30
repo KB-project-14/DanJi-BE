@@ -6,10 +6,7 @@ import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.wallet.domain.WalletVO;
-import org.danji.wallet.dto.WalletCreateDTO;
-import org.danji.wallet.dto.WalletDTO;
-import org.danji.wallet.dto.WalletFilterDTO;
-import org.danji.wallet.dto.WalletOrderUpdateDTO;
+import org.danji.wallet.dto.*;
 import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
@@ -64,9 +61,9 @@ public class WalletServiceImpl implements WalletService {
 
 
     @Override
-    public WalletDTO getWallet(UUID walletId) {
+    public WalletDetailDTO getWallet(UUID walletId) {
         WalletVO vo = validateWallet(walletId);
-        return WalletDTO.of(vo);
+        return walletMapper.selectWalletDetailByWalletId(vo.getWalletId());
     }
 
 

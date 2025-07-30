@@ -2,6 +2,7 @@ package org.danji.wallet.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.danji.wallet.domain.WalletVO;
+import org.danji.wallet.dto.WalletDetailDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
 import org.danji.wallet.dto.WalletOrderUpdateDTO;
 
@@ -33,4 +34,5 @@ public interface WalletMapper {
 
     int findMaxDisplayOrderByMemberId(UUID memberId);
 
+    WalletDetailDTO selectWalletDetailByWalletId(UUID walletId);
 }
