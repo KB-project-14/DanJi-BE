@@ -4,8 +4,6 @@ import org.danji.member.dto.*;
 
 public interface MemberService {
 
-//    boolean checkDuplicate(String username);
-
     MemberDTO get(String username);
 
     MemberDTO join(MemberJoinDTO member);
@@ -16,4 +14,5 @@ public interface MemberService {
 
     MemberDTO login(LoginDTO loginDTO);
 
+    boolean checkPaymentPin(String paymentPin);
 }

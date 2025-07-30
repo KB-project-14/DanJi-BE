@@ -23,7 +23,6 @@ public class WalletDTO extends BaseDTO {
     private WalletType walletType;
     private Integer balance;
     private int displayOrder;
-    private String walletPin;
 
     public static WalletDTO of(WalletVO vo) {
         return vo == null ? null : WalletDTO.builder()
@@ -46,7 +45,6 @@ public class WalletDTO extends BaseDTO {
                 .walletType(walletType)
                 .balance(balance)
                 .displayOrder(displayOrder)
-                .walletPin(walletPin)
                 .build();
     }
 }

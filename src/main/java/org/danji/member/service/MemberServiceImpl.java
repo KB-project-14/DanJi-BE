@@ -2,6 +2,7 @@ package org.danji.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
@@ -83,6 +84,20 @@ public class MemberServiceImpl implements MemberService {
         MemberVO vo = validateMember(loginDTO.getUsername(), loginDTO.getPassword());
 
         return MemberDTO.of(vo);
+    }
+
+    // 결제 시 사용 할 서비스
+    @Override
+    public boolean checkPaymentPin(String paymentPin) {
+        String username = AuthUtils.getUsername();
+        MemberVO member = mapper.get(username);
+
+        int result = 0;
+        for (int i = 0; i < paymentPin.length(); i++) {
+            result |= paymentPin.charAt(i) ^ member.getPaymentPin().charAt(i);
+        }
+
+        return result == 0;
     }
 
 
