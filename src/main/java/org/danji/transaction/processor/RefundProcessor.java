@@ -3,6 +3,7 @@ package org.danji.transaction.processor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.cashback.mapper.CashbackMapper;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.enums.BenefitType;
@@ -43,11 +44,8 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
     @Override
     @Transactional
     public List<TransactionDTO> process(TransferDTO transferDTO) {
-        // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
-        //-------------------------------------------
-        //UUID userId = UUID.randomUUID();
-        //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        UUID userId = AuthUtils.getMemberId();
         // transferDto의 from_wallet_id 필드로 지역화폐 지갑 찾기
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (LocalCurrencyWalletVO == null) {

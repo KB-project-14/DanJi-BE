@@ -7,8 +7,8 @@
 
 
   <insert id="insert" parameterType="MemberVO">
-    INSERT INTO member(member_id, username, password, role, name, created_at, updated_at)
-    VALUES (#{memberId}, #{username}, #{password}, #{role}, #{name}, now(), now())
+    INSERT INTO member(member_id, username, password, role,name, payment_pin, created_at, updated_at)
+    VALUES (#{memberId}, #{username}, #{password}, #{role}, #{name}, #{paymentPin}, now(), now())
   </insert>
 
 

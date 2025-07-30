@@ -2,6 +2,7 @@ package org.danji.transaction.processor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.enums.BenefitType;
@@ -43,9 +44,8 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
     public List<TransactionDTO> process(TransferDTO transferDTO) {
         // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
         // TODO 현재는 userId를 랜덤으로 만들어서 임시로 넣어뒀지만, Authentication 객체에서 꺼내는 작업 필수
-        //UUID userId = UUID.randomUUID();
-        //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        UUID userId = AuthUtils.getMemberId();
+
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         System.out.println(mainWalletVO);
