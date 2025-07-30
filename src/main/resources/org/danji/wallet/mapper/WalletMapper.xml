@@ -5,8 +5,12 @@
 
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <insert id="create">
-        insert into wallet
-        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, #{walletPin}, now(), now())
+        INSERT INTO wallet
+        (wallet_id, member_id, local_currency_id, wallet_type, balance,
+         display_order, created_at, updated_at)
+        VALUES
+            (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance},
+             #{displayOrder}, NOW(), NOW())
     </insert>
 
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"

@@ -49,8 +49,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //TODO AuthTils에서 memberId 꺼내서, 지갑찾고 비밀번호 가져와서
-        // paymentDTO 의 walletPin과 일치하는지 확인하는 로직 추가
+        //결제 비밀번호 확인 로직
         UUID memberId = AuthUtils.getMemberId();
         MemberVO memberVO = memberMapper.findById(memberId);
         if (!paymentDTO.getWalletPin().equals(memberVO.getPaymentPin())){
