@@ -57,6 +57,19 @@
             am.created_at,
             am.updated_at,
             lc.name AS local_currency_name
+            <if test="latitude != null and longitude != null">
+                , ROUND(6371 * ACOS(
+                LEAST(1,
+                COS(RADIANS(#{latitude})) * COS(RADIANS(am.latitude)) *
+                COS(RADIANS(am.longitude) - RADIANS(#{longitude})) +
+                SIN(RADIANS(#{latitude})) * SIN(RADIANS(am.latitude))
+                )
+                ), 1) AS distance
+            </if>
+            <if test="latitude == null or longitude == null">
+                , 0 AS distance
+            </if>
+
         FROM available_merchant am
         LEFT JOIN
             local_currency lc ON am.local_currency_id = lc.local_currency_id
@@ -65,12 +78,6 @@
             <if test="name != null and name != ''">
                 AND am.name LIKE CONCAT('%', #{name}, '%')
             </if>
-            <if test="latitude != null">
-                AND am.latitude = #{latitude}
-            </if>
-            <if test="longitude != null">
-                AND am.longitude = #{longitude}
-            </if>
             <if test="category != null and category != ''">
                 AND am.category LIKE CONCAT('%', #{category}, '%')
             </if>
@@ -78,10 +85,21 @@
                 AND lc.name LIKE CONCAT('%', #{localCurrencyName}, '%')
             </if>
         </where>
-        ORDER BY am.created_at DESC
+        <if test="latitude != null and longitude != null">
+            HAVING distance &lt;= 3
+        </if>
+        ORDER BY
+            <choose>
+                <when test="latitude != null and longitude != null">
+                    distance ASC
+                </when>
+                <otherwise>
+                    am.created_at DESC
+                </otherwise>
+            </choose>
     </select>
 
-    <resultMap id="availableMerchantMap" type="org.danji.availableMerchant.domain.AvailableMerchantVO">
+    <resultMap id="availableMerchantMap" type="AvailableMerchantDTO">
         <id column="available_merchant_id" property="availableMerchantId" javaType="java.util.UUID" />
         <result column="name" property="name" />
         <result column="address" property="address" />
@@ -93,6 +111,7 @@
         <result column="updated_at" property="updatedAt" />
 
         <result column="local_currency_name" property="localCurrencyName" />
+        <result column="distance" property="distance" />
     </resultMap>
 
     <select id = "findById" parameterType="java.util.UUID" resultType="AvailableMerchantVO">

@@ -18,6 +18,7 @@
     <package name="org.danji.cashback.domain"/>
     <package name="org.danji.member.domain"/>
     <package name="org.danji.availableMerchant.domain"/>
+    <package name="org.danji.availableMerchant.dto"/>
   </typeAliases>
 
   <typeHandlers>
