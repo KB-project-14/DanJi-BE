@@ -35,4 +35,6 @@ public interface WalletMapper {
     int findMaxDisplayOrderByMemberId(UUID memberId);
 
     WalletDetailDTO selectWalletDetailByWalletId(UUID walletId);
+
+    void updateWalletTotalPayment(@Param("walletId") UUID walletId, @Param("totalAmount") int totalAmount);
 }

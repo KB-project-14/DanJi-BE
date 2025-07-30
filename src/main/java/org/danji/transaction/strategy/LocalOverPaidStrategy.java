@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class LocalOverPaidStrategy implements PaymentStrategy{
+public class LocalOverPaidStrategy implements PaymentStrategy {
     @Override
     public boolean supports(PaymentDTO paymentDTO) {
         return paymentDTO.getType() == PaymentType.LOCAL_CURRENCY &&
@@ -23,7 +24,7 @@ public class LocalOverPaidStrategy implements PaymentStrategy{
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO dto) {
+    public List<TransactionDTO> process(PaymentDTO dto, UUID userId) {
         throw new AvailableMerchantException(ErrorCode.INPUT_AMOUNT_EXCEEDS_MERCHANT_AMOUNT);
     }
 }

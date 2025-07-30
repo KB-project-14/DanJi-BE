@@ -2,6 +2,7 @@ package org.danji.transaction.processor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.enums.BenefitType;
@@ -21,6 +22,7 @@ import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,11 +43,9 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
     @Transactional
     @Override
     public List<TransactionDTO> process(TransferDTO transferDTO) {
-        // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
-        // TODO 현재는 userId를 랜덤으로 만들어서 임시로 넣어뒀지만, Authentication 객체에서 꺼내는 작업 필수
-        //UUID userId = UUID.randomUUID();
-        //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        UUID userId = AuthUtils.getMemberId();
+
         // transferDTO의 fromWalletId 로 메인지갑 불러오기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         System.out.println(mainWalletVO);
@@ -57,14 +57,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         if (!mainWalletByUserIdVO.getWalletId().equals(mainWalletVO.getWalletId())) {
             throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
-        // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
-        // 수수료 1% 도 감안해서 계산
-        // 환전 요청 이라면 건너뛰기
-        if (transferDTO.isTransactionLogging()) {
-            if (mainWalletVO.getBalance() < transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
-              throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
-            }
-        }
+
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getToWalletId());
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
@@ -79,6 +72,28 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         if (localCurrencyVO == null) {
             throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
         }
+
+        //TODO 월 누적 충전 금액 확인해서 크다면 충전 못하도록 막는 로직 추가
+        // 지역화폐에서 월 최대 금액 가져오기
+        // transaction 에서 지금 시간을 가져와서 월을 넘겨서 해당 월에 해당 지역화폐에 충전한 총 값 가져오기
+        // 총 값 가져와서 해당 인센티브로 곱해주기
+        // 요청 금액이 월 최대금액 - 총 값 보다 크다면 예외 터뜨리기
+        int MaxChargeAmount = localCurrencyVO.getMaximum();
+        int monthValue = LocalDateTime.now().getMonthValue();
+        int totalChargeAmountByMonth = transactionMapper.findTotalChargeAmountByMonth(LocalCurrencyWalletVO.getWalletId(), monthValue);
+        int exactAmount = (int)(totalChargeAmountByMonth * (100.0 / (100.0 + localCurrencyVO.getPercentage())));
+        if (transferDTO.getAmount() > MaxChargeAmount - exactAmount){
+            throw new LocalCurrencyException(ErrorCode.LOCAL_WALLET_EXCEEDS_MONTHLY_MAX);
+        }
+        // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
+        // 수수료 1% 도 감안해서 계산
+        // 환전 요청 이라면 건너뛰기
+        if (transferDTO.isTransactionLogging()) {
+            if (mainWalletVO.getBalance() < transferDTO.getAmount() + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
+              throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+            }
+        }
+
 
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트

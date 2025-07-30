@@ -43,10 +43,8 @@ public class LocalStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO paymentDTO) {
+    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId) {
 
-        //테스트용 userId
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
         if (availableMerchantVO == null) {
@@ -69,6 +67,7 @@ public class LocalStrategy implements PaymentStrategy {
         }
 
         walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), -paymentDTO.getMerchantAmount());
+        walletMapper.updateWalletTotalPayment(LocalCurrencyWalletVO.getWalletId(), paymentDTO.getInputAmount());
 
         TransactionVO LocalTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(),

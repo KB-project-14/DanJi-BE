@@ -5,7 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
+import org.danji.member.domain.MemberVO;
+import org.danji.member.mapper.MemberMapper;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.PaymentDTO;
@@ -38,6 +41,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     private final TransactionMapper transactionMapper;
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
+    private final MemberMapper memberMapper;
 
     private final List<PaymentStrategy> strategies;
 
@@ -45,8 +49,12 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //TODO AuthTils에서 memberId 꺼내서, 지갑찾고 비밀번호 가져와서
-        // paymentDTO 의 walletPin과 일치하는지 확인하는 로직 추가
+        //결제 비밀번호 확인 로직
+        UUID userId = AuthUtils.getMemberId();
+        MemberVO memberVO = memberMapper.findById(userId);
+        if (!paymentDTO.getWalletPin().equals(memberVO.getPaymentPin())){
+            throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
+        }
 
         if (paymentDTO.getType() == PaymentType.GENERAL) {
             return processGeneral(paymentDTO);
@@ -57,15 +65,14 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
                 .filter(strategy -> strategy.supports(paymentDTO))
                 .findFirst()
                 .orElseThrow(() -> new WalletException(ErrorCode.STRATEGY_NOT_FOUND))
-                .process(paymentDTO);
+                .process(paymentDTO, userId);
 
     }
 
     private List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
         // 일반 결제 처리 로직 (예: 메인지갑 차감)
-        //테스트용 userId
 
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        UUID userId = AuthUtils.getMemberId();
         WalletVO mainWalletVO = walletMapper.findByMemberId(userId);
         if (mainWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
