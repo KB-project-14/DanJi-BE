@@ -5,37 +5,33 @@
 
 <mapper namespace="org.danji.transaction.mapper.TransactionMapper">
     <insert id="insert" parameterType="TransactionVO">
-        INSERT INTO transaction (
-            transaction_id
-            ,from_wallet_id
-            ,to_wallet_id
-            ,before_balance
-            ,after_balance
-            ,amount
-            ,direction
-            ,type
-            ,comment
-            ,owner_wallet_id
-            ,created_at
-            ,updated_at
-        )
-        VALUES (
-                   #{transactionId},
-                   #{fromWalletId},
-                   #{toWalletId},
-                   #{beforeBalance},
-                   #{afterBalance},
-                   #{amount},
-                   #{direction},
-                   #{type},
-                   #{comment},
-                   #{ownerWalletId},
-                   now(),
-                   now()
-               )
+        INSERT INTO transaction ( transaction_id
+                                , from_wallet_id
+                                , to_wallet_id
+                                , before_balance
+                                , after_balance
+                                , amount
+                                , direction
+                                , type
+                                , comment
+                                , owner_wallet_id
+                                , created_at
+                                , updated_at)
+        VALUES (#{transactionId},
+                #{fromWalletId},
+                #{toWalletId},
+                #{beforeBalance},
+                #{afterBalance},
+                #{amount},
+                #{direction},
+                #{type},
+                #{comment},
+                #{ownerWalletId},
+                now(),
+                now())
     </insert>
 
-    <select id = "findByFilter" resultType="TransactionVO">
+    <select id="findByFilter" resultType="TransactionVO">
         SELECT *
         FROM transaction
         WHERE owner_wallet_id = #{filter.walletId}
@@ -46,11 +42,8 @@
         </if>
 
         <choose>
-            <when test="filter.sortOrder.name() == 'DESC'">
-                ORDER BY created_at DESC
-            </when>
-            <when test="filter.sortOrder.name() == 'ASC'">
-                ORDER BY created_at ASC
+            <when test="filter.sortOrder != null">
+                ORDER BY created_at ${filter.sortOrder.name()}
             </when>
             <otherwise>
                 ORDER BY created_at DESC
