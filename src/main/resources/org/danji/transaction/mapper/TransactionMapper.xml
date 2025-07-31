@@ -35,5 +35,37 @@
                )
     </insert>
 
+    <select id = "findByFilter" resultType="TransactionVO">
+        SELECT *
+        FROM transaction
+        WHERE owner_wallet_id = #{filter.walletId}
+        AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
+
+        <if test="filter.direction != null">
+            AND direction = #{filter.direction}
+        </if>
+
+        <choose>
+            <when test="filter.sortOrder.name() == 'DESC'">
+                ORDER BY created_at DESC
+            </when>
+            <when test="filter.sortOrder.name() == 'ASC'">
+                ORDER BY created_at ASC
+            </when>
+            <otherwise>
+                ORDER BY created_at DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id = "findTotalChargeAmountByMonth" resultType="int">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM transaction
+        WHERE owner_wallet_id = #{localWalletId}
+          AND type = 'CHARGE'
+          AND direction = 'INCOME'
+          AND MONTH(created_at) = #{month}
+    </select>
+
 
 </mapper>

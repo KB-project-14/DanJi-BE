@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+s<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
@@ -14,10 +14,13 @@
     <package name="org.danji.localCurrency.domain"/>
     <package name="org.danji.transaction.domain"/>
     <package name="org.danji.wallet.domain"/>
+    <package name="org.danji.wallet.dto"/>
     <package name="org.danji.cashback.domain"/>
     <package name="org.danji.member.domain"/>
     <package name="org.danji.badge.domain"/>
 
+    <package name="org.danji.availableMerchant.domain"/>
+    <package name="org.danji.availableMerchant.dto"/>
   </typeAliases>
 
   <typeHandlers>

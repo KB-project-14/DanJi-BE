@@ -5,8 +5,12 @@
 
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
     <insert id="create">
-        insert into wallet
-        values (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance}, #{displayOrder}, #{walletPin}, now(), now())
+        INSERT INTO wallet
+        (wallet_id, member_id, local_currency_id, wallet_type, balance,
+         display_order, created_at, updated_at)
+        VALUES
+            (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance},
+             #{displayOrder}, NOW(), NOW())
     </insert>
 
     <select id="getCashWalletByUserId" parameterType="java.util.UUID"
@@ -56,12 +60,14 @@
         WHERE wallet_id = #{walletId}
     </update>
 
+
     <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
           AND wallet_type = 'CASH'
     </select>
+
 
     <update id="bulkUpdateDisplayOrder">
         <foreach collection="list" item="wallet" separator=";">
@@ -73,28 +79,71 @@
 
     <update id="reorderDisplayOrder">
         UPDATE wallet w
-            JOIN (
-                SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
-                FROM wallet
-                WHERE member_id = #{memberId}
-            ) t ON w.wallet_id = t.wallet_id
+            JOIN (SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
+                  FROM wallet
+                  WHERE member_id = #{memberId}) t ON w.wallet_id = t.wallet_id
         SET w.display_order = t.new_order
     </update>
 
     <delete id="delete">
-        DELETE FROM wallet WHERE wallet_id = #{walletId}
+        DELETE
+        FROM wallet
+        WHERE wallet_id = #{walletId}
     </delete>
 
-    <select id = "findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+    <select id="findLocalWalletByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
         SELECT *
         FROM wallet
         WHERE member_id = #{memberId}
           AND wallet_type = 'LOCAL'
     </select>
 
+
     <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
         SELECT COALESCE(MAX(display_order), 0)
         FROM wallet
         WHERE member_id = #{memberId}
     </select>
+
+    <select id="selectWalletDetailByWalletId" resultMap="walletDetailMap">
+        SELECT w.wallet_id,
+               w.member_id,
+               w.local_currency_id,
+               w.wallet_type,
+               w.balance,
+               w.display_order,
+               lc.name AS local_currency_name,
+               lc.benefit_type,
+               lc.maximum,
+               lc.percentage,
+               w.created_at,
+               w.updated_at
+        FROM wallet w
+                 JOIN local_currency lc
+                      ON w.local_currency_id = lc.local_currency_id
+        WHERE w.wallet_id = #{walletId}
+    </select>
+
+    <update id = "updateWalletTotalPayment">
+        UPDATE wallet
+        SET total_payment = total_payment + #{totalAmount},
+            updated_at = NOW()
+        WHERE wallet_id = #{walletId}
+    </update>
+
+    <resultMap id="walletDetailMap" type="WalletDetailDTO">
+        <id property="walletId" column="wallet_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="localCurrencyId" column="local_currency_id"/>
+        <result property="walletType" column="wallet_type"/>
+        <result property="balance" column="balance"/>
+        <result property="displayOrder" column="display_order"/>
+
+        <result property="localCurrencyName" column="local_currency_name"/>
+        <result property="benefitType" column="benefit_type"/>
+        <result property="maximum" column="maximum"/>
+        <result property="percentage" column="percentage"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
 </mapper>

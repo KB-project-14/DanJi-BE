@@ -17,14 +17,8 @@
     <select id="findByRegionId" resultMap="LocalCurrencyMap">
         select * from local_currency where region_id = #{regionId}
     </select>
-    <select id="findByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
-        SELECT
-            local_currency_id,
-            region_id,
-            name,
-            benefit_type,
-            maximum,
-            percentage
+    <select id="findAllByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
+        SELECT *
         FROM local_currency
         WHERE name = #{name}
     </select>

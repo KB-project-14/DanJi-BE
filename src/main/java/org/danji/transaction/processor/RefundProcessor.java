@@ -3,6 +3,7 @@ package org.danji.transaction.processor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.cashback.mapper.CashbackMapper;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.enums.BenefitType;
@@ -30,7 +31,7 @@ import static org.danji.transaction.validator.WalletValidator.checkOwnership;
 @Service("REFUND")
 @RequiredArgsConstructor
 @Log4j2
-public class RefundProcessor implements TransferProcessor {
+public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
     private static final double RECHARGE_FEE_RATE = 0.00;
 
@@ -43,10 +44,8 @@ public class RefundProcessor implements TransferProcessor {
     @Override
     @Transactional
     public List<TransactionDTO> process(TransferDTO transferDTO) {
-        // TODO Authentication 객체에서 userID 정보 꺼내는 코드 작성
-        //-------------------------------------------
-        UUID userId = UUID.randomUUID();
 
+        UUID userId = AuthUtils.getMemberId();
         // transferDto의 from_wallet_id 필드로 지역화폐 지갑 찾기
         WalletVO LocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (LocalCurrencyWalletVO == null) {
@@ -55,7 +54,7 @@ public class RefundProcessor implements TransferProcessor {
 
         List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
-            throw new WalletException(ErrorCode.NOT_OWNED_LOCAL_WALLET);
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
         //transferDto의 to_wallet_id 필드로 메인지갑 찾기
         WalletVO mainWalletVO = walletMapper.findById(transferDTO.getToWalletId());
@@ -64,8 +63,8 @@ public class RefundProcessor implements TransferProcessor {
         }
 
         WalletVO mainWalletByUserIdVO = walletMapper.findByMemberId(userId);
-        if (!mainWalletByUserIdVO.equals(mainWalletVO)) {
-            throw new WalletException(ErrorCode.NOT_OWNED_MAIN_WALLET);
+        if (!mainWalletByUserIdVO.getWalletId().equals(mainWalletVO.getWalletId())) {
+            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
 
         // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
@@ -74,10 +73,11 @@ public class RefundProcessor implements TransferProcessor {
             throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
         }
 
-        int amount = cashbackMapper.sumAmountByWalletId(LocalCurrencyWalletVO.getWalletId());
+        //int amount = cashbackMapper.sumAmountByWalletId(LocalCurrencyWalletVO.getWalletId());
         //인센티브 시, 요청금액이 지역화폐 지갑의 잔액(잔액 - 잔액 * 인센티브 퍼센트) + 수수료 적용(1%) 보다 작다면 예외 처리
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
-            if (transferDTO.getAmount() > LocalCurrencyWalletVO.getBalance() * ((100 - localCurrencyVO.getPercentage()) / 100.0) + transferDTO.getAmount() * RECHARGE_FEE_RATE) {
+            //double rawValue = LocalCurrencyWalletVO.getBalance() * (100.0 / (100 + localCurrencyVO.getPercentage()));
+            if (transferDTO.getAmount() > LocalCurrencyWalletVO.getBalance()) {
                 throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
             }
         }
@@ -94,8 +94,10 @@ public class RefundProcessor implements TransferProcessor {
          **/
         //인센티브인 경우
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
-            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -((int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
-            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), transferDTO.getAmount());
+            double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
+            //-((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE))
+            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -transferDTO.getAmount());
+            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), (int) Math.round(rawValue));
         }
         //캐시백인 경우
 //        else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
@@ -106,27 +108,29 @@ public class RefundProcessor implements TransferProcessor {
 
         //transaction 테이블에 복식 부기
         //메인지갑 기준
+        double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
         TransactionVO mainTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
-                mainWalletVO.getBalance() - transferDTO.getAmount(), mainWalletVO.getBalance(),
-                transferDTO.getAmount(), Direction.INCOME, transferDTO.getType(), "환불", mainWalletVO.getWalletId());
+                mainWalletVO.getBalance(), mainWalletVO.getBalance() + (int) Math.round(rawValue),
+                (int) Math.round(rawValue), Direction.INCOME, transferDTO.getType(), "환불", mainWalletVO.getWalletId());
         int successMainWalletCount = transactionMapper.insert(mainTx);
 
         if (successMainWalletCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_MAIN);
+            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
 
         //지역화폐 기준
         TransactionVO localTx = null;
         if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
-                    LocalCurrencyWalletVO.getBalance() + ((int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)), LocalCurrencyWalletVO.getBalance(),
-                    ((int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)), Direction.EXPENSE, transferDTO.getType(), "환불", LocalCurrencyWalletVO.getWalletId());
+                    LocalCurrencyWalletVO.getBalance(), LocalCurrencyWalletVO.getBalance() - transferDTO.getAmount(),
+                    transferDTO.getAmount(), Direction.EXPENSE, transferDTO.getType(), "환불", LocalCurrencyWalletVO.getWalletId());
             int successLocalWalletCount = transactionMapper.insert(localTx);
 
             if (successLocalWalletCount != 1) {
-                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
+                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
             }
 
 //        } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {

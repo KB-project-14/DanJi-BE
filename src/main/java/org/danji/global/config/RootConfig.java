@@ -37,13 +37,15 @@ import javax.sql.DataSource;
         "org.danji.member.service",
         "org.danji.travel.service",
         "org.danji.availableMerchant.service",
+        "org.danji.availableMerchant.util",
         "org.danji.transaction.service",
         "org.danji.cashback.converter",
         "org.danji.transaction.converter",
         "org.danji.region.service",
         "org.danji.localCurrency.service",
         "org.danji.transaction.processor",
-        "org.danji.wallet.service"
+        "org.danji.wallet.service",
+        "org.danji.transaction.strategy"
 })
 @Log4j2
 @EnableTransactionManagement

@@ -6,10 +6,7 @@ import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
 import java.nio.ByteBuffer;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 @MappedTypes(UUID.class)
@@ -18,7 +15,11 @@ public class UUIDTypeHandler implements TypeHandler<UUID> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, UUID parameter, JdbcType jdbcType) throws SQLException {
-        ps.setBytes(i, asBytes(parameter));
+        if (parameter == null) {
+            ps.setNull(i, Types.BINARY);
+        } else {
+            ps.setBytes(i, asBytes(parameter));
+        }
     }
 
     @Override
@@ -44,6 +45,7 @@ public class UUIDTypeHandler implements TypeHandler<UUID> {
     }
 
     private UUID asUuid(byte[] bytes) {
+        if (bytes == null) return null;
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         return new UUID(buffer.getLong(), buffer.getLong());
     }

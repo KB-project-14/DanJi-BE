@@ -24,6 +24,9 @@ public class AvailableMerchantDTO extends BaseDTO {
 
     //JOIN을 통해 조회된 지역화폐 이름
     private String localCurrencyName;
+
+    //현재 위치로부터의 거리를 담을 필드
+    private BigDecimal distance;
     
     //VO -> DTO 변환
     public static AvailableMerchantDTO of(AvailableMerchantVO vo) {

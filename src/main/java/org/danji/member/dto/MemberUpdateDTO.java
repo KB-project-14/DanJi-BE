@@ -15,18 +15,6 @@ public class MemberUpdateDTO {
 
     private String username;
     private String password;
-    private Role role;
     private String name;
-
-
-    public MemberVO toVO() {
-        return MemberVO.builder()
-                .username(username)
-                .password(password)
-                .role(role)
-                .name(name)
-                .build();
-    }
-
 }
 

@@ -7,8 +7,8 @@
 
 
   <insert id="insert" parameterType="MemberVO">
-    INSERT INTO member(member_id, username, password, role, name, created_at, updated_at)
-    VALUES (#{memberId}, #{username}, #{password}, #{role}, #{name}, now(), now())
+    INSERT INTO member(member_id, username, password, role,name, payment_pin, created_at, updated_at)
+    VALUES (#{memberId}, #{username}, #{password}, #{role}, #{name}, #{paymentPin}, now(), now())
   </insert>
 
 
@@ -23,6 +23,7 @@
     <result column="password" property="password"/>
     <result column="role" property="role"/>
     <result column="name" property="name"/>
+    <result column="payment_pin" property="paymentPin"/>
   </resultMap>
 
   <select id="get" resultMap="memberMap">
@@ -56,5 +57,11 @@
 <!--        updated_at = now()-->
 <!--    WHERE username = #{username}-->
 <!--  </update>-->
+
+  <select id = "findById" parameterType="java.util.UUID" resultMap="memberMap">
+        SELECT *
+        FROM member
+        WHERE member_id = #{userId}
+  </select>
 
 </mapper>

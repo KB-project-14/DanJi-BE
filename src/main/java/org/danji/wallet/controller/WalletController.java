@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
-import org.danji.wallet.dto.WalletCreateDTO;
-import org.danji.wallet.dto.WalletDTO;
-import org.danji.wallet.dto.WalletFilterDTO;
-import org.danji.wallet.dto.WalletOrderUpdateDTO;
+import org.danji.wallet.dto.*;
 import org.danji.wallet.service.WalletService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +32,7 @@ public class WalletController {
     }
 
     @GetMapping("/{walletId}")
-    public ResponseEntity<ApiResponse<WalletDTO>> getWallet(@PathVariable UUID walletId) {
+    public ResponseEntity<ApiResponse<WalletDetailDTO>> getWallet(@PathVariable UUID walletId) {
         return ResponseEntity.ok(ApiResponse.success(walletService.getWallet(walletId)));
     }
 

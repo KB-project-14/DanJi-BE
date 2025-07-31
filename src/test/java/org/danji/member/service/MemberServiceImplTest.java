@@ -1,6 +1,5 @@
 package org.danji.member.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
 import org.danji.member.domain.MemberVO;
@@ -10,24 +9,20 @@ import org.danji.member.dto.MemberJoinDTO;
 import org.danji.member.dto.MemberUpdateDTO;
 import org.danji.member.enums.Role;
 import org.danji.member.mapper.MemberMapper;
-import org.junit.jupiter.api.Disabled;
+import org.danji.security.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
-import org.danji.global.config.SecurityConfig;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @ExtendWith(SpringExtension.class)
@@ -133,7 +128,7 @@ class MemberServiceImplTest {
         memberMapper.insert(member); // 실제 DB에 insert
 
         // when
-        MemberVO result = memberService.get("test").toVO();
+        MemberVO result = memberMapper.get("test");
 
         // then
         assertEquals("test", result.getUsername());  // username가 test인가

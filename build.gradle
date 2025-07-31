@@ -127,6 +127,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    //webClient
+    implementation 'org.springframework:spring-webflux:5.3.37' // Spring 5.x 호환 WebClient
+    implementation 'io.projectreactor:reactor-core:3.4.33'      // Reactor 필요
+    implementation 'io.projectreactor.netty:reactor-netty-http:1.0.40'
+
 }
 
 

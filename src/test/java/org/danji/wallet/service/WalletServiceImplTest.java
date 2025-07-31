@@ -2,6 +2,7 @@ package org.danji.wallet.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.config.RootConfig;
+import org.danji.wallet.dto.WalletCreateDTO;
 import org.danji.wallet.dto.WalletDTO;
 import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.mapper.WalletMapper;
@@ -29,22 +30,20 @@ class WalletServiceImplTest {
     @Autowired
     private WalletMapper walletMapper;
 
-//    @Test
-//    @Disabled
-//    void createWallet() {
-//        // given
-//        WalletDTO createDTO = WalletDTO.builder()
-//                .localCurrencyId(UUID.randomUUID())
-//                .walletType(WalletType.CASH)
-//                .balance(0)
-//                .displayOrder(1)
-//                .build();
-//
-//        // when
-////        WalletDTO result = walletService.createWallet(createDTO);
-//
-//        // then
-//        WalletDTO checkWallet = WalletDTO.of(walletMapper.findById(result.getWalletId()));
-//        assertEquals(checkWallet, result);
-//    }
+    @Test
+    @Disabled
+    void createWallet() {
+        // given
+        WalletCreateDTO createDTO = WalletCreateDTO.builder()
+                .localCurrencyId(UUID.randomUUID())
+                .walletType(WalletType.CASH)
+                .build();
+
+        // when
+        WalletDTO result = walletService.createWallet(createDTO);
+
+        // then
+        WalletDTO checkWallet = WalletDTO.of(walletMapper.findById(result.getWalletId()));
+        assertEquals(checkWallet, result);
+    }
 }
