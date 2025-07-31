@@ -29,9 +29,6 @@ public interface WalletMapper {
 
     void reorderDisplayOrder(UUID memberId);
 
-    // TODO findByFilter 로 해결 가능
-    List<WalletVO> findLocalWalletByMemberId(UUID memberId);
-
     int findMaxDisplayOrderByMemberId(UUID memberId);
 
     WalletDetailDTO selectWalletDetailByWalletId(UUID walletId);

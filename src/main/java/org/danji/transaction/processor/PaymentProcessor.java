@@ -9,6 +9,7 @@ import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.member.domain.MemberVO;
 import org.danji.member.mapper.MemberMapper;
+import org.danji.member.service.MemberService;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.PaymentDTO;
@@ -41,7 +42,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     private final TransactionMapper transactionMapper;
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
-    private final MemberMapper memberMapper;
+    private final MemberService memberService;
 
     private final List<PaymentStrategy> strategies;
 
@@ -51,8 +52,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
 
         //결제 비밀번호 확인 로직
         UUID userId = AuthUtils.getMemberId();
-        MemberVO memberVO = memberMapper.findById(userId);
-        if (!paymentDTO.getWalletPin().equals(memberVO.getPaymentPin())){
+        if (!memberService.checkPaymentPin(paymentDTO.getWalletPin())){
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
         }
 
