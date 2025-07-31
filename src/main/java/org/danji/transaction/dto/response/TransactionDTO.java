@@ -9,11 +9,12 @@ import org.danji.transaction.enums.Type;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class TransactionDTO{
+public class TransactionDTO extends BaseDTO{
     private UUID transactionId;
     private UUID fromWalletId;
     private UUID toWalletId;

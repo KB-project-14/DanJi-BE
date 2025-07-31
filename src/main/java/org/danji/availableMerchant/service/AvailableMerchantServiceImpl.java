@@ -186,11 +186,6 @@ public class AvailableMerchantServiceImpl implements AvailableMerchantService {
 
     @Override
     public List<AvailableMerchantDTO> findByFilter(MerchantFilterDTO filterDTO) {
-        List<AvailableMerchantVO> voList = merchantMapper.findByFilter(filterDTO);
-
-        //DTO로 변환해서 반환
-        return voList.stream()
-                .map(AvailableMerchantDTO::of)
-                .collect(Collectors.toList());
+        return merchantMapper.findByFilter(filterDTO);
     }
 }

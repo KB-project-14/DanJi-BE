@@ -41,6 +41,8 @@ public class TransactionConverter {
                 .type(transactionVO.getType())
                 .comment(transactionVO.getComment())
                 .ownerWalletId(transactionVO.getOwnerWalletId())
+                .createdAt(transactionVO.getCreatedAt())
+                .updatedAt(transactionVO.getUpdatedAt())
                 .build();
     }
 

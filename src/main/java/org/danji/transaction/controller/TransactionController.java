@@ -11,6 +11,7 @@ import org.danji.security.account.domain.CustomUser;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransactionFilterDTO;
 import org.danji.transaction.dto.request.TransferDTO;
+import org.danji.transaction.dto.response.TransactionAggregateDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.service.TransactionService;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,6 @@ public class TransactionController {
         List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
-
     @ApiOperation(
             value = "결제 API",
             notes = "결제 타입(LOCAL_CURRENCY, GENERAL) 에 따라 결제를 진행합니다."
@@ -77,8 +77,9 @@ public class TransactionController {
                     allowableValues = "ASC,DESC", example = "DESC")
     })
     @GetMapping("/wallets/{walletId}/transactions")
-    public ResponseEntity<ApiResponse<List<TransactionDTO>>> getTransactions(@PathVariable UUID walletId, @ApiIgnore @ModelAttribute TransactionFilterDTO transactionFilterDTO) {
-        List<TransactionDTO> result = transactionService.getTransactionsByWalletId(walletId, transactionFilterDTO);
+    public ResponseEntity<ApiResponse<TransactionAggregateDTO>> getTransactions(@PathVariable UUID walletId, @ApiIgnore @ModelAttribute TransactionFilterDTO transactionFilterDTO) {
+        transactionFilterDTO.setWalletId(walletId);
+        TransactionAggregateDTO result = transactionService.getTransactionAggregate(transactionFilterDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(result));
     }
 }

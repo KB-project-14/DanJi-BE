@@ -5,18 +5,24 @@
 
 <mapper namespace="org.danji.localCurrency.mapper.LocalCurrencyMapper">
     <insert id="create">
-        insert into local_currency(local_currency_id, region_id, name, benefit_type, maximum, percentage, created_at, updated_at)
+        insert into local_currency(local_currency_id, region_id, name, benefit_type, maximum, percentage, created_at,
+                                   updated_at)
             value (#{localCurrencyId}, #{regionId}, #{name}, #{benefitType}, #{maximum}, #{percentage}, now(), now())
     </insert>
 
 
     <select id="findById" resultMap="LocalCurrencyMap">
-        select * from local_currency where local_currency_id = #{localCurrencyId}
+        select *
+        from local_currency
+        where local_currency_id = #{localCurrencyId}
     </select>
 
     <select id="findByRegionId" resultMap="LocalCurrencyMap">
-        select * from local_currency where region_id = #{regionId}
+        select *
+        from local_currency
+        where region_id = #{regionId}
     </select>
+
     <select id="findAllByName" resultType="org.danji.localCurrency.domain.LocalCurrencyVO">
         SELECT *
         FROM local_currency
@@ -46,6 +52,20 @@
         </where>
     </select>
 
+    <select id="findByWalletId" resultMap="LocalCurrencyMap">
+        SELECT lc.local_currency_id,
+               lc.region_id,
+               lc.name,
+               lc.benefit_type,
+               lc.maximum,
+               lc.percentage,
+               lc.created_at,
+               lc.updated_at
+        FROM wallet w
+                 INNER JOIN local_currency lc
+                            ON w.local_currency_id = lc.local_currency_id
+        WHERE w.wallet_id = #{walletId}
+    </select>
 
     <resultMap id="LocalCurrencyMap" type="LocalCurrencyVO">
         <id property="localCurrencyId" column="local_currency_id"/>
