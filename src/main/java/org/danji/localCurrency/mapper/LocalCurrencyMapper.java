@@ -17,4 +17,6 @@ public interface LocalCurrencyMapper {
 
     void create(LocalCurrencyVO localCurrency);
 
+    LocalCurrencyVO findByWalletId(UUID walletId);
+
 }
