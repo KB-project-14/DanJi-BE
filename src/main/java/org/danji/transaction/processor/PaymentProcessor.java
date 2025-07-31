@@ -42,8 +42,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     private final TransactionMapper transactionMapper;
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
-    private final MemberMapper memberMapper;
-    private final MemberService memberServiceImpl;
+    private final MemberService memberService;
 
     private final List<PaymentStrategy> strategies;
 
@@ -53,7 +52,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
 
         //결제 비밀번호 확인 로직
         UUID userId = AuthUtils.getMemberId();
-        if (!memberServiceImpl.checkPaymentPin(paymentDTO.getWalletPin())){
+        if (!memberService.checkPaymentPin(paymentDTO.getWalletPin())){
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
         }
 

@@ -18,6 +18,8 @@ import org.danji.transaction.enums.Type;
 import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
 import org.danji.wallet.domain.WalletVO;
+import org.danji.wallet.dto.WalletFilterDTO;
+import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Service;
@@ -51,8 +53,9 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
+        WalletFilterDTO walletFilterDTO = WalletFilterDTO.builder().memberId(userId).walletType(WalletType.LOCAL).build();
+        List<WalletVO> localWalletByUserIdVO = walletMapper.findByFilter(walletFilterDTO);
 
-        List<WalletVO> localWalletByUserIdVO = walletMapper.findLocalWalletByMemberId(userId);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)){
             throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
         }
