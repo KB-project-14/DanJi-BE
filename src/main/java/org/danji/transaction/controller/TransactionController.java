@@ -8,6 +8,7 @@ import org.danji.security.account.domain.CustomUser;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransactionFilterDTO;
 import org.danji.transaction.dto.request.TransferDTO;
+import org.danji.transaction.dto.response.TransactionAggregateDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.service.TransactionService;
 import org.springframework.http.HttpStatus;
@@ -46,8 +47,9 @@ public class TransactionController {
     }
 
     @GetMapping("/wallets/{walletId}/transactions")
-    public ResponseEntity<ApiResponse<List<TransactionDTO>>> getTransactions(@PathVariable UUID walletId, @ModelAttribute TransactionFilterDTO transactionFilterDTO) {
-        List<TransactionDTO> result = transactionService.getTransactionsByWalletId(walletId, transactionFilterDTO);
+    public ResponseEntity<ApiResponse<TransactionAggregateDTO>> getTransactions(@PathVariable UUID walletId, @ModelAttribute TransactionFilterDTO transactionFilterDTO) {
+        transactionFilterDTO.setWalletId(walletId);
+        TransactionAggregateDTO result = transactionService.getTransactionAggregate(transactionFilterDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(result));
     }
 }
