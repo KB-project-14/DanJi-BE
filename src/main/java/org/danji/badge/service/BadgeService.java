@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface BadgeService {
     BadgeDTO get(UUID badgeId);
 
-//    List<BadgeDTO> getList();
+    List<BadgeDTO> getBadgeList();
 }
