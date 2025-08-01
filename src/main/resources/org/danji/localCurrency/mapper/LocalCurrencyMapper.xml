@@ -66,6 +66,14 @@
                             ON w.local_currency_id = lc.local_currency_id
         WHERE w.wallet_id = #{walletId}
     </select>
+    <select id="findAll" resultType="LocalCurrencyVO">
+        SELECT
+            lc.name, r.province AS region_name
+        FROM
+            local_currency lc
+        JOIN region r
+        ON lc.region_id = r.region_id
+    </select>
 
     <resultMap id="LocalCurrencyMap" type="LocalCurrencyVO">
         <id property="localCurrencyId" column="local_currency_id"/>
