@@ -31,7 +31,8 @@ import javax.sql.DataSource;
         "org.danji.transaction.mapper",
         "org.danji.localCurrency.mapper",
         "org.danji.cashback.mapper",
-        "org.danji.region.mapper"
+        "org.danji.region.mapper",
+        "org.danji.badge.mapper"
 })
 @ComponentScan(basePackages = {"org.danji.board.service",
         "org.danji.member.service",
@@ -45,7 +46,8 @@ import javax.sql.DataSource;
         "org.danji.localCurrency.service",
         "org.danji.transaction.processor",
         "org.danji.wallet.service",
-        "org.danji.transaction.strategy"
+        "org.danji.transaction.strategy",
+        "org.danji.badge.service"
 })
 @Log4j2
 @EnableTransactionManagement
