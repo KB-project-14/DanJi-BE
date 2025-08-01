@@ -18,6 +18,7 @@ public class BadgeServiceImpl implements BadgeService {
     @Override
     public BadgeDTO get(UUID badgeId){
 
+    return null;
     }
 
 
