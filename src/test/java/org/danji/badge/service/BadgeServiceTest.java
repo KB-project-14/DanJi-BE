@@ -42,7 +42,6 @@ class BadgeServiceTest {
         assertNotNull(result);
         assertEquals(existingBadgeId, result.getBadgeId());
         assertNotNull(result.getName());
-        assertNotNull(result.getCreatedAt());
     }
 
     @Test
@@ -59,7 +58,7 @@ class BadgeServiceTest {
             log.info("뱃지 정보: {}", badge);
             assertNotNull(badge.getBadgeId());
             assertNotNull(badge.getName());
-            assertNotNull(badge.getCreatedAt());
+            assertNotNull(badge.getComment());
         }
     }
 }

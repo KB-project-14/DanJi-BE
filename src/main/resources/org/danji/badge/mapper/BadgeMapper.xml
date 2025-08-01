@@ -6,17 +6,23 @@
 <mapper namespace="org.danji.badge.mapper.BadgeMapper">
 
     <resultMap id="badgeMap" type="BadgeVO">
-        <id column="badge_id" property="badgeId"/>
-        <result column="name" property="name"/>
-        <result column="badgeType" property="badgeType"/>
-        <result column="regionId" property="regionId"/>
-        <result column="comment" property="comment"/>
+        <id property="badgeId" column="badge_id"/>
+        <result property="name" column="name"/>
+        <result property="badgeType" column="badge_type"/>
+        <result property="regionId" column="region_id"/>
+        <result property="comment" column="comment"/>
     </resultMap>
 
     <select id="findById" parameterType="java.util.UUID" resultType="BadgeVO">
-        SELECT *
+        SELECT badge_id as badgeId,
+               name,
+               badge_type as badgeType,
+               region_id as regionId,
+               created_at as createdAt,
+               updated_at as updatedAt,
+               comment
         FROM badge b
-        WHERE b.badgeId = #{badgeId}
+        WHERE b.badge_id = #{badgeId}
     </select>
 
     <select id="findAll" resultMap="badgeMap">
