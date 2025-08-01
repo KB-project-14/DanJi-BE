@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.danji.badge.dto.BadgeDTO;
 
 import org.danji.global.config.RootConfig;
+import org.danji.security.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {RootConfig.class, SecurityConfig.class})
 @Log4j2
 @Transactional
 class BadgeServiceTest {
@@ -46,7 +47,7 @@ class BadgeServiceTest {
 
     @Test
     void getBadgeList() {
-// when
+        // when
         List<BadgeDTO> badgeList = badgeService.getBadgeList();
 
         // then
