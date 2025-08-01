@@ -19,4 +19,5 @@ public interface LocalCurrencyMapper {
 
     LocalCurrencyVO findByWalletId(UUID walletId);
 
+    List<LocalCurrencyVO> findAll();
 }
