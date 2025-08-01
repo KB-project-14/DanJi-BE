@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/local-currencies")
@@ -25,9 +26,9 @@ public class LocalCurrencyController {
 
     private final LocalCurrencyService localCurrencyService;
 
-    @GetMapping("/{regionId}")
-    public ResponseEntity<ApiResponse<LocalCurrencyDTO>> getLocalCurrencyByRegionId(@PathVariable("regionId") Long regionId) {
-        LocalCurrencyDTO localCurrency = localCurrencyService.getLocalCurrencyByRegionId(regionId);
+    @GetMapping("/{localCurrencyId}")
+    public ResponseEntity<ApiResponse<LocalCurrencyDTO>> getLocalCurrency(@PathVariable("localCurrencyId") UUID localCurrencyId) {
+        LocalCurrencyDTO localCurrency = localCurrencyService.getLocalCurrency(localCurrencyId);
         return ResponseEntity.ok(ApiResponse.success(localCurrency));
     }
 

@@ -16,37 +16,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LocalCurrencyServiceImpl implements LocalCurrencyService {
 
-//    private final RegionMapper regionMapper;
-
     private final LocalCurrencyMapper localCurrencyMapper;
 
     @Override
     public LocalCurrencyDTO createLocalCurrency(LocalCurrencyDTO localCurrencyDTO) {
 
-        // TODO region 조회 예외처리 로직
-        /*
-        if (regionMapper.get(localCurrencyDTO.getRegionId()).isEmpty()) {
-            throw new RegionException();
-        }
-         */
         UUID localCurrencyId = UUID.randomUUID();
         localCurrencyDTO.setLocalCurrencyId(localCurrencyId);
 
         localCurrencyMapper.create(localCurrencyDTO.toVo());
 
-        LocalCurrencyVO vo = localCurrencyMapper.findById(localCurrencyId);
-        if (vo == null) {
-            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
-        }
-
-        return LocalCurrencyDTO.of(vo);
+        return getLocalCurrency(localCurrencyId);
     }
 
 
     @Override
-    public LocalCurrencyDTO getLocalCurrencyByRegionId(Long RegionId) {
+    public LocalCurrencyDTO getLocalCurrency(UUID localCurrencyId) {
 
-        LocalCurrencyVO vo = localCurrencyMapper.findByRegionId(RegionId);
+        LocalCurrencyVO vo = localCurrencyMapper.findById(localCurrencyId);
 
         if (vo == null) {
             throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
