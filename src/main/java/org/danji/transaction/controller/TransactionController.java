@@ -82,4 +82,10 @@ public class TransactionController {
         TransactionAggregateDTO result = transactionService.getTransactionAggregate(transactionFilterDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(result));
     }
+
+    //서버 배포 시, 헬스 체크를 위한 api
+    @GetMapping("/health")
+    public String home() {
+        return "ok";
+    }
 }
