@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -21,6 +22,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
+@PropertySource("classpath:/application-${spring.profiles.active}.properties")
 @MapperScan(basePackages = {"org.danji.board.mapper",
         "org.danji.member.mapper",
         "org.danji.travel.mapper",
@@ -45,7 +47,8 @@ import javax.sql.DataSource;
         "org.danji.localCurrency.service",
         "org.danji.transaction.processor",
         "org.danji.wallet.service",
-        "org.danji.transaction.strategy"
+        "org.danji.transaction.strategy",
+        "org.danji.batch"
 })
 @Log4j2
 @EnableTransactionManagement
@@ -109,6 +112,11 @@ public class RootConfig {
         flyway.migrate();
 
         return flyway;
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
 }

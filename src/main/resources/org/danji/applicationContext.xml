@@ -13,6 +13,4 @@
             location="classpath:application.properties"
             system-properties-mode="ENVIRONMENT"/>
 
-    <!-- 예: DataSource 빈도 여기에 -->
-
 </beans>
