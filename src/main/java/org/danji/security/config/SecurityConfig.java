@@ -78,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler);           // 403 에러 처리
 
         //  HTTP 보안 설정
-        http.httpBasic().disable()      // 기본 HTTP 인증 비활성화
+        http.cors().and()
+                .httpBasic().disable()      // 기본 HTTP 인증 비활성화
                 .csrf().disable()           // CSRF 보호 비활성화 (REST API에서는 불필요)
                 .formLogin().disable()      // 폼 로그인 비활성화 (JSON 기반 API 사용)
                 .sessionManagement()        // 세션 관리 설정
@@ -93,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
-                .antMatchers("/api/member/login", "/api/member", "/api/health").permitAll()
+                .antMatchers("/api/members/login", "/api/members", "/api/health").permitAll()
 //                .antMatchers("/api/**").permitAll()   // TODO 현재 모든 api 접근 가능
                 .anyRequest().authenticated(); // 나머지는 로그인 필요
     }
