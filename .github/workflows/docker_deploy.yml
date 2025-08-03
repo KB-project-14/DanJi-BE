@@ -1,0 +1,83 @@
+name: bastion_docker_deploy
+
+
+on:
+  push:
+    branches: ["develop"]
+
+permissions:
+  contents: read
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v4
+
+      - name: JDK 21 설치
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle 설정
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: gradlew 실행 권한 부여
+        run: chmod +x ./gradlew
+
+      - name: Gradle Build
+        run: ./gradlew build -x test
+        env:
+          SERVER_DB_URL: ${{ secrets.SERVER_DB_URL }}
+          SERVER_DB_USERNAME: ${{ secrets.SERVER_DB_USERNAME }}
+          SERVER_DB_PASSWORD: ${{ secrets.SERVER_DB_PASSWORD }}
+          SECRET_KEY : ${{ secrets.SECRET_KEY }}
+          PUBLIC_API : ${{ secrets.PUBLIC_API }}
+          KAKAO_API : ${{ secrets.KAKAO_API }}
+
+      - name: DockerHub 로그인
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/app:latest .
+
+      - name: Docker 이미지 Push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+
+      - name: EC2 (Private Subnet) 배포 via Bastion
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.PRIVATE_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          proxy_host: ${{ secrets.BASTION_HOST }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+
+            docker stop app || true
+            docker rm app || true
+
+            docker run -d \
+              --name app \
+              -p 8080:8080 \
+              -e "SERVER_DB_URL=${{ secrets.SERVER_DB_URL }}" \
+              -e "SERVER_DB_USERNAME=${{ secrets.SERVER_DB_USERNAME }}" \
+              -e "SERVER_DB_PASSWORD=${{ secrets.SERVER_DB_PASSWORD }}" \
+              -e "SECRET_KEY=${{ secrets.SECRET_KEY }}" \
+              -e "PUBLIC_API=${{ secrets.PUBLIC_API }}" \
+              -e "KAKAO_API=${{ secrets.KAKAO_API }}" \
+              -e "SPRING_PROFILES_ACTIVE=dev" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+
+            docker ps
