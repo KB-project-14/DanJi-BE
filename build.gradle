@@ -133,6 +133,13 @@ dependencies {
     implementation 'io.projectreactor:reactor-core:3.4.33'      // Reactor 필요
     implementation 'io.projectreactor.netty:reactor-netty-http:1.0.40'
 
+    // Spring Batch 핵심 라이브러리
+    implementation 'org.springframework.batch:spring-batch-core:4.3.10'
+
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+
+
+
 }
 
 
