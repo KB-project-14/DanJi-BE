@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
+@PropertySource("classpath:/application-${spring.profiles.active}.properties")
 @MapperScan(basePackages = {"org.danji.board.mapper",
         "org.danji.member.mapper",
         "org.danji.travel.mapper",
