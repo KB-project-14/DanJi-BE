@@ -4,13 +4,12 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.badge.dto.BadgeDTO;
+import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.badge.service.BadgeService;
+import org.danji.badge.enums.BadgeType;
 import org.danji.global.common.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +27,14 @@ public class BadgeController {
     private final BadgeService badgeService;
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<BadgeDTO>>> getBadgeList() {
-        List<BadgeDTO> badgeList = badgeService.getBadgeList();
+    public ResponseEntity<ApiResponse<List<BadgeDTO>>> getBadgeList(
+            @RequestParam(required = false) BadgeType badgeType
+            ) {
+        BadgeFilterDTO filter = BadgeFilterDTO.builder()
+                .badgeType(badgeType)
+                .build();
+
+        List<BadgeDTO> badgeList = badgeService.getBadgeListByFilter(filter);
         return ResponseEntity.ok(ApiResponse.success(badgeList));
     }
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.badge.domain.BadgeVO;
 import org.danji.badge.dto.BadgeDTO;
+import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.global.error.ErrorCode;
 import org.danji.badge.exception.BadgeException;
 import org.danji.badge.mapper.BadgeMapper;
@@ -32,10 +33,14 @@ public class BadgeServiceImpl implements BadgeService {
         return BadgeDTO.of(vo);    }
 
     @Override
-    public List<BadgeDTO> getBadgeList() {
-        log.info("뱃지 목록 조회 요청");
+    public List<BadgeDTO> getBadgeListByFilter(BadgeFilterDTO filter) {
+        if (filter == null) {
+            filter = BadgeFilterDTO.builder().build();
+        }
 
-        List<BadgeVO> badgeList = mapper.findAll();
+        log.info("뱃지 필터 조회 요청: filter = {}", filter);
+
+        List<BadgeVO> badgeList = mapper.findByFilter(filter);
 
         return badgeList.stream()
                 .map(BadgeDTO::of)

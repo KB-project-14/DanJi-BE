@@ -23,7 +23,7 @@
         WHERE b.badge_id = #{badgeId}
     </select>
 
-    <select id="findAll" resultMap="badgeMap">
+    <select id="findByFilter" resultMap="badgeMap">
         SELECT *
             FROM badge
     </select>
