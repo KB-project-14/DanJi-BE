@@ -3,6 +3,7 @@ package org.danji.badge.service;
 import lombok.extern.log4j.Log4j2;
 import org.danji.badge.dto.BadgeDTO;
 
+import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.global.config.RootConfig;
 import org.danji.security.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,10 @@ class BadgeServiceTest {
 
     @Test
     void get() {
-        // given - 실제 존재하는 뱃지 ID를 사용하거나, 테스트 데이터를 미리 준비
+        // given
+        BadgeFilterDTO emptyFilter = BadgeFilterDTO.builder().build();
+        List<BadgeDTO> allBadges = badgeService.getBadgeListByFilter(emptyFilter);
 
-        List<BadgeDTO> allBadges = badgeService.getBadgeList();
         assertFalse(allBadges.isEmpty(), "테스트를 위한 뱃지 데이터가 필요합니다");
         UUID existingBadgeId = allBadges.get(0).getBadgeId();
 
@@ -45,9 +47,11 @@ class BadgeServiceTest {
     }
 
     @Test
-    void getBadgeList() {
+    void getBadgeListByFilter() {
+        BadgeFilterDTO filter = BadgeFilterDTO.builder().build();
+
         // when
-        List<BadgeDTO> badgeList = badgeService.getBadgeList();
+        List<BadgeDTO> badgeList = badgeService.getBadgeListByFilter(filter);
 
         // then
         log.info("뱃지 목록 조회 결과: {} 개", badgeList.size());
@@ -59,6 +63,27 @@ class BadgeServiceTest {
             assertNotNull(badge.getBadgeId());
             assertNotNull(badge.getName());
             assertNotNull(badge.getComment());
+        }
+    }
+
+    @Test
+    void getBadgeListByFilterWithCondition() {
+        // given - 특정 조건 필터링
+        BadgeFilterDTO filter = BadgeFilterDTO.builder()
+                .badgeType(org.danji.badge.enums.BadgeType.NORMAL) // enum import 필요
+                .build();
+
+        // when
+        List<BadgeDTO> badgeList = badgeService.getBadgeListByFilter(filter);
+
+        // then
+        log.info("필터된 뱃지 목록 조회 결과: {} 개", badgeList.size());
+        assertNotNull(badgeList);
+
+        // 필터 조건 검증
+        for (BadgeDTO badge : badgeList) {
+            log.info("필터된 뱃지 정보: {}", badge);
+            assertEquals(org.danji.badge.enums.BadgeType.NORMAL, badge.getBadgeType());
         }
     }
 }
