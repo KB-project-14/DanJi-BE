@@ -36,7 +36,7 @@ public class AvailableMerchantChunkJobConfig {
     @Bean
     public Step slaveStep() {
         return stepBuilderFactory.get("slaveStep")
-                .<LocalCurrencyVO, List<AvailableMerchantVO>>chunk(1)
+                .<LocalCurrencyVO, List<AvailableMerchantVO>>chunk(2)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
