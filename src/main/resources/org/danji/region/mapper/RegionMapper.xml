@@ -6,17 +6,31 @@
 <mapper namespace="org.danji.region.mapper.RegionMapper">
 
     <resultMap id="RegionMap" type="org.danji.region.domain.RegionVO">
-        <id property="regionId" column="region_id" />
-        <result property="province" column="province" />
-        <result property="city" column="city" />
-        <result property="createdAt" column="created_at" />
-        <result property="updatedAt" column="updatedAt" />
+        <id property="regionId" column="region_id"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updatedAt"/>
     </resultMap>
     <!--전체 조회-->
-    <select id="findAll" resultType="org.danji.region.domain.RegionVO">
-        select region_id, province, city
-        from region
-        order by region_id
+    <select id="findByFilter" resultType="RegionVO">
+        select r.region_id, r.province, r.city, r.created_at, r.updated_at
+        from region r
+        <where>
+            <if test="hasLocalCurrency != null and hasLocalCurrency == true">
+                AND EXISTS (
+                SELECT 1 FROM local_currency lc
+                WHERE lc.region_id = r.region_id
+                )
+            </if>
+            <if test="hasLocalCurrency != null and hasLocalCurrency == false">
+                AND NOT EXISTS (
+                SELECT 1 FROM local_currency lc
+                WHERE lc.region_id = r.region_id
+                )
+            </if>
+        </where>
+        order by r.region_id
     </select>
     <!--단건 조회-->
     <select id="findById" resultMap="RegionMap">
