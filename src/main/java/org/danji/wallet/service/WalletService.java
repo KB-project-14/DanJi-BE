@@ -16,4 +16,7 @@ public interface WalletService {
     List<WalletDTO> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList);
 
     void deleteWallet(UUID walletId);
+
+    //지역화폐 정보 포함한 리스트 보여주기
+    List<WalletDetailDTO> getWalletWithCurrency();
 }

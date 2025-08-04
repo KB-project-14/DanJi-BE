@@ -30,4 +30,7 @@ public class WalletDetailDTO extends BaseDTO {
     private Integer maximum;
     private Integer percentage;
 
+    //프론트에 보낼 응답 추가
+    private String backgroundImageUrl;
+
 }

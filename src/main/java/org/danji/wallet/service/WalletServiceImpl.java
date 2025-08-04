@@ -79,6 +79,8 @@ public class WalletServiceImpl implements WalletService {
         return walletList.stream().map(WalletDTO::of).toList();
     }
 
+
+
     @Override
     @Transactional
     public List<WalletDTO> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList) {
@@ -118,6 +120,12 @@ public class WalletServiceImpl implements WalletService {
         walletMapper.delete(walletId);
 
         walletMapper.reorderDisplayOrder(wallet.getMemberId());
+    }
+
+    @Override
+    public List<WalletDetailDTO> getWalletWithCurrency() {
+        UUID memberId = AuthUtils.getMemberId();
+        return walletMapper.findWalletListByMemberId(memberId);
     }
 
 
