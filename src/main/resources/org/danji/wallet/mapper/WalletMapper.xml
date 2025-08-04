@@ -130,7 +130,7 @@
             lc.maximum
 --             lc.image_url AS backgroundImageUrl
         FROM wallet w
-        JOIN local_currency lc
+        LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
         WHERE w.member_id = #{memberId}
         ORDER BY w.display_order ASC
