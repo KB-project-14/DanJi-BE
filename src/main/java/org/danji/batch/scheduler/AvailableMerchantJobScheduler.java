@@ -16,7 +16,7 @@ public class AvailableMerchantJobScheduler {
     private final JobLauncher jobLauncher;
     private final Job merchantChunkJob;
 
-    @Scheduled(cron = "0 0 0 * * *")  // 매 1분마다 실행
+    @Scheduled(cron = "0 * * * * *")  // 매 1분마다 실행
     public void runJob() {
         try {
             jobLauncher.run(
