@@ -11,8 +11,7 @@ INSERT INTO badge (badge_id, name, badge_type, region_id, created_at, updated_at
 (UUID_TO_BIN(UUID()), '반짝반짝 광안대교', 'NORMAL', 26000, NOW(), NOW(),
  '파도 소리를 머금은 대교 위, 부산의 밤이 반깁니다.'),
 (UUID_TO_BIN(UUID()), '부산 불꽃축제', 'SPECIAL', 26000, NOW(), NOW(),
- '광안리 해변을 가르는 불꽃, 여름 밤의 부산을 느껴보세요.
-'),
+ '광안리 해변을 가르는 불꽃, 여름 밤의 부산을 느껴보세요.'),
 
 -- 대구광역시
 (UUID_TO_BIN(UUID()), '수줍은 사과', 'NORMAL', 27000, NOW(), NOW(),

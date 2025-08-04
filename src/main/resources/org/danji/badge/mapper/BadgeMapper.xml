@@ -13,13 +13,11 @@
         <result property="comment" column="comment"/>
     </resultMap>
 
-    <select id="findById" parameterType="java.util.UUID" resultType="BadgeVO">
-        SELECT badge_id as badgeId,
+    <select id="findById" parameterType="java.util.UUID" resultMap="badgeMap">
+        SELECT badge_id,
                name,
-               badge_type as badgeType,
-               region_id as regionId,
-               created_at as createdAt,
-               updated_at as updatedAt,
+               badge_type,
+               region_id,
                comment
         FROM badge b
         WHERE b.badge_id = #{badgeId}

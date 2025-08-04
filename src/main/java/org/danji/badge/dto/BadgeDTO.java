@@ -27,12 +27,12 @@ public class BadgeDTO extends BaseDTO {
     private BadgeType badgeType;
     private String comment;
 
-    public static BadgeDTO of(BadgeVO m) {
+    public static BadgeDTO of(@NonNull BadgeVO b) {
         return BadgeDTO.builder()
-                .name(m.getName())
-                .badgeId(m.getBadgeId())
-                .badgeType(m.getBadgeType())
-                .comment(m.getComment())
+                .name(b.getName())
+                .badgeId(b.getBadgeId())
+                .badgeType(b.getBadgeType())
+                .comment(b.getComment())
                 .build();
     }
 
