@@ -3,6 +3,7 @@ package org.danji.wallet.controller;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.danji.common.utils.AuthUtils;
 import org.danji.global.common.ApiResponse;
 import org.danji.wallet.dto.*;
 import org.danji.wallet.service.WalletService;
@@ -28,6 +29,8 @@ public class WalletController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<WalletDTO>> createWallet(@RequestBody WalletCreateDTO dto) {
+        UUID memberId = AuthUtils.getMemberId();
+        dto.setMemberId(memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(walletService.createWallet(dto)));
     }
 
@@ -37,8 +40,12 @@ public class WalletController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
-        List<WalletDTO> walletList = walletService.getWalletList(filter);
+//    public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
+//        List<WalletDTO> walletList = walletService.getWalletList(filter);
+//        return ResponseEntity.ok(ApiResponse.success(walletList));
+//    }
+    public ResponseEntity<ApiResponse<List<WalletDetailDTO>>> getWalletList() {
+        List<WalletDetailDTO> walletList = walletService.getWalletWithCurrency();
         return ResponseEntity.ok(ApiResponse.success(walletList));
     }
 

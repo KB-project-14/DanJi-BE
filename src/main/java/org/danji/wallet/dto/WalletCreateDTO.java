@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class WalletCreateDTO {
+    private UUID memberId;
     private UUID localCurrencyId;
     private WalletType walletType;
 }

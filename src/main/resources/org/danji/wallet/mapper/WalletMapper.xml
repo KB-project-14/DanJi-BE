@@ -116,6 +116,26 @@
         WHERE w.wallet_id = #{walletId}
     </select>
 
+    <select id="findWalletListByMemberId" resultType="org.danji.wallet.dto.WalletDetailDTO">
+        SELECT
+            w.wallet_id,
+            w.member_id,
+            w.wallet_type,
+            w.balance,
+            w.display_order,
+            w.local_currency_id,
+            lc.name AS localCurrencyName,
+            lc.benefit_type,
+            lc.percentage,
+            lc.maximum
+--             lc.image_url AS backgroundImageUrl
+        FROM wallet w
+        LEFT OUTER JOIN local_currency lc
+        ON w.local_currency_id = lc.local_currency_id
+        WHERE w.member_id = #{memberId}
+        ORDER BY w.display_order ASC
+    </select>
+
     <update id = "updateWalletTotalPayment">
         UPDATE wallet
         SET total_payment = total_payment + #{totalAmount},

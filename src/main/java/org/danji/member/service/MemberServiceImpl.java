@@ -8,6 +8,8 @@ import org.danji.member.domain.MemberVO;
 import org.danji.member.dto.*;
 import org.danji.member.exception.MemberException;
 import org.danji.member.mapper.MemberMapper;
+import org.danji.wallet.dto.WalletCreateDTO;
+import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.service.WalletService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final WalletService walletService;
 
     @Override
     public MemberDTO get(String username) {
@@ -44,13 +47,15 @@ public class MemberServiceImpl implements MemberService {
         }
 
         MemberVO member = dto.toVO();
+        UUID memberId = UUID.randomUUID();
 
-        member.setMemberId(UUID.randomUUID());
+        member.setMemberId(memberId);
         member.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         mapper.insert(member);
 
-//        walletService.createWallet();
+        walletService.createWallet(
+                WalletCreateDTO.builder().memberId(memberId).walletType(WalletType.CASH).build());
 
         return get(member.getUsername());
     }

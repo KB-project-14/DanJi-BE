@@ -24,15 +24,12 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletMapper walletMapper;
 
-
     @Override
     public WalletDTO createWallet(WalletCreateDTO walletCreateDTO) {
 
-        UUID memberId = AuthUtils.getMemberId();
-
         // 유저의 지역화폐 존재 여부 체크
         WalletVO existingWallet = walletMapper
-                .findByMemberIdAndLocalCurrencyId(memberId, walletCreateDTO.getLocalCurrencyId());
+                .findByMemberIdAndLocalCurrencyId(walletCreateDTO.getMemberId(), walletCreateDTO.getLocalCurrencyId());
 
         if (existingWallet != null) {
             throw new LocalCurrencyException(ErrorCode.DUPLICATED_LOCAL_CURRENCY_WALLET);
@@ -40,14 +37,14 @@ public class WalletServiceImpl implements WalletService {
 
         int displayOrder = 1;
         if (walletCreateDTO.getWalletType() != WalletType.CASH) {
-            displayOrder = walletMapper.findMaxDisplayOrderByMemberId(memberId) + 1;
+            displayOrder = walletMapper.findMaxDisplayOrderByMemberId(walletCreateDTO.getMemberId()) + 1;
         }
 
         UUID walletId = UUID.randomUUID();
 
         WalletVO createVo = WalletVO.builder()
                 .walletId(walletId)
-                .memberId(memberId)
+                .memberId(walletCreateDTO.getMemberId())
                 .localCurrencyId(walletCreateDTO.getLocalCurrencyId())
                 .walletType(walletCreateDTO.getWalletType())
                 .balance(0)
@@ -78,6 +75,8 @@ public class WalletServiceImpl implements WalletService {
 
         return walletList.stream().map(WalletDTO::of).toList();
     }
+
+
 
     @Override
     @Transactional
@@ -118,6 +117,12 @@ public class WalletServiceImpl implements WalletService {
         walletMapper.delete(walletId);
 
         walletMapper.reorderDisplayOrder(wallet.getMemberId());
+    }
+
+    @Override
+    public List<WalletDetailDTO> getWalletWithCurrency() {
+        UUID memberId = AuthUtils.getMemberId();
+        return walletMapper.findWalletListByMemberId(memberId);
     }
 
 
