@@ -34,16 +34,16 @@
     <select id="findByFilter" resultType="TransactionVO">
         SELECT *
         FROM transaction
-        WHERE owner_wallet_id = #{filter.walletId}
-        AND created_at BETWEEN #{filter.startDate} AND #{filter.lastDate}
+        WHERE owner_wallet_id = #{walletId}
+        AND created_at BETWEEN #{startDate} AND #{lastDate}
 
-        <if test="filter.direction != null">
-            AND direction = #{filter.direction}
+        <if test="direction != null">
+            AND direction = #{direction}
         </if>
 
         <choose>
-            <when test="filter.sortOrder != null">
-                ORDER BY created_at ${filter.sortOrder.name()}
+            <when test="sortOrder != null">
+                ORDER BY created_at ${sortOrder.name()}
             </when>
             <otherwise>
                 ORDER BY created_at DESC
