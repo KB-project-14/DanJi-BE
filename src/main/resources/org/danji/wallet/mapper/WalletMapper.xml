@@ -124,7 +124,7 @@
             w.balance,
             w.display_order,
             w.local_currency_id,
-            lc.name,
+            lc.name AS localCurrencyName,
             lc.benefit_type,
             lc.percentage,
             lc.maximum
