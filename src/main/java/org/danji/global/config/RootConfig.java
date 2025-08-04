@@ -49,7 +49,7 @@ import javax.sql.DataSource;
         "org.danji.transaction.processor",
         "org.danji.wallet.service",
         "org.danji.transaction.strategy",
-        "org.danji.badge.service"
+        "org.danji.badge.service",
         "org.danji.batch"
 })
 @Log4j2

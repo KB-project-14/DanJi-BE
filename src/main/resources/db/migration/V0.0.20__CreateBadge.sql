@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS badge;
 # 뱃지
 CREATE TABLE badge
 (
