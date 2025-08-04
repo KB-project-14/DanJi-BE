@@ -5,15 +5,15 @@
 
 <mapper namespace="org.danji.region.mapper.RegionMapper">
 
-    <resultMap id="RegionMap" type="org.danji.region.domain.RegionVO">
+    <resultMap id="RegionMap" type="RegionVO">
         <id property="regionId" column="region_id"/>
         <result property="province" column="province"/>
         <result property="city" column="city"/>
         <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updatedAt"/>
+        <result property="updatedAt" column="updated_at"/>
     </resultMap>
     <!--전체 조회-->
-    <select id="findByFilter" resultType="RegionVO">
+    <select id="findByFilter" resultMap="RegionMap">
         select r.region_id, r.province, r.city, r.created_at, r.updated_at
         from region r
         <where>
