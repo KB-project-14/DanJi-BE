@@ -37,8 +37,12 @@ public class WalletController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
-        List<WalletDTO> walletList = walletService.getWalletList(filter);
+//    public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
+//        List<WalletDTO> walletList = walletService.getWalletList(filter);
+//        return ResponseEntity.ok(ApiResponse.success(walletList));
+//    }
+    public ResponseEntity<ApiResponse<List<WalletDetailDTO>>> getWalletList() {
+        List<WalletDetailDTO> walletList = walletService.getWalletWithCurrency();
         return ResponseEntity.ok(ApiResponse.success(walletList));
     }
 
