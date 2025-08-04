@@ -6,6 +6,7 @@ import org.danji.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.region.dto.RegionDTO;
+import org.danji.region.dto.RegionFilterDTO;
 import org.danji.region.service.RegionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +25,10 @@ public class RegionController {
 
     @ApiOperation(value = "지역 목록 조회", notes = "모든 지역의 목록을 조회하는 API")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RegionDTO>>> getRegions() {
+    public ResponseEntity<ApiResponse<List<RegionDTO>>> getRegionList(RegionFilterDTO filterDTO) {
         log.info("지역 목록 조회 요청");
 
-        List<RegionDTO> regions = service.getRegions();
+        List<RegionDTO> regions = service.getRegionList(filterDTO);
         return ResponseEntity.ok(ApiResponse.success(regions));
     }
 }

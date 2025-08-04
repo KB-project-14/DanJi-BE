@@ -19,6 +19,7 @@
     <package name="org.danji.member.domain"/>
     <package name="org.danji.availableMerchant.domain"/>
     <package name="org.danji.availableMerchant.dto"/>
+    <package name="org.danji.region.domain"/>
   </typeAliases>
 
   <typeHandlers>
