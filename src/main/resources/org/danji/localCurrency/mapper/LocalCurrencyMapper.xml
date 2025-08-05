@@ -75,6 +75,25 @@
         ON lc.region_id = r.region_id
     </select>
 
+    <select id="findDetailById" resultType="LocalCurrencyDetailDTO">
+        select
+            lc.local_currency_id,
+            lc.region_id,
+            lc.name,
+            lc.benefit_type,
+            lc.maximum,
+            lc.percentage,
+            f.file_path as imageUrl
+        from local_currency lc
+        left join file_reference fr
+        on fr.reference_id = lc.local_currency_id
+        and fr.reference_type = 'local_currency'
+        and fr.usage_type = 'card_image'
+        left join file f
+        on fr.file_id = f.file_id
+        where lc.local_currency_id = #{localCurrencyId}
+    </select>
+
     <resultMap id="LocalCurrencyMap" type="LocalCurrencyVO">
         <id property="localCurrencyId" column="local_currency_id"/>
         <result property="regionId" column="region_id"/>

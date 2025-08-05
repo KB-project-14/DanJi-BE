@@ -12,6 +12,7 @@
     <package name="org.danji.auth.account.domain"/>
     <package name="org.danji.board.domain"/>
     <package name="org.danji.localCurrency.domain"/>
+    <package name="org.danji.localCurrency.dto"/>
     <package name="org.danji.transaction.domain"/>
     <package name="org.danji.wallet.domain"/>
     <package name="org.danji.wallet.dto"/>
