@@ -13,6 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BadgeFilterDTO {
-    private UUID regionId;
+    private Long regionId;
     private BadgeType badgeType;
 }
