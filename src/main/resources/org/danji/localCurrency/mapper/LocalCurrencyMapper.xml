@@ -30,7 +30,7 @@
     </select>
 
 
-    <select id="findByFilter" resultType="LocalCurrencyDetailDTO">
+    <select id="findByFilter" resultType="LocalCurrencyDTO">
         SELECT lc.local_currency_id,
                lc.region_id,
                lc.name,
