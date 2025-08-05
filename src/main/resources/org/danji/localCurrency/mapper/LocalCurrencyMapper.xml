@@ -84,7 +84,7 @@
     </select>
     <select id="findAll" resultType="LocalCurrencyVO">
         SELECT
-            lc.local_currency_id, lc.region_id, lc.name, r.province AS region_name, f.file_path AS imageUrl
+            lc.local_currency_id, lc.region_id, lc.name, r.province AS regionName, f.file_path AS imageUrl
         FROM
             local_currency lc
         JOIN region r
