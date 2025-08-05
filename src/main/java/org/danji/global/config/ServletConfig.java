@@ -62,6 +62,9 @@ public class ServletConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("/resources/assets/");
+
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
     }
 
 
