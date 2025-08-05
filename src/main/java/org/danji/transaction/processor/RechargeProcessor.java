@@ -97,7 +97,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         }
 
 
-        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트
             if (transferDTO.isTransactionLogging()) {
                 walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -(transferDTO.getAmount() + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
@@ -147,7 +147,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         //지역화폐 기준
         //인센티브 규정일때는 인센티브 금액까지 포함해서 transaction 테이블에 넣기
         TransactionVO localTx = null;
-        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
                     LocalCurrencyWalletVO.getBalance() ,  LocalCurrencyWalletVO.getBalance() +(int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),

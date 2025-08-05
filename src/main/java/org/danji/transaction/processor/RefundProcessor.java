@@ -78,7 +78,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         //int amount = cashbackMapper.sumAmountByWalletId(LocalCurrencyWalletVO.getWalletId());
         //인센티브 시, 요청금액이 지역화폐 지갑의 잔액(잔액 - 잔액 * 인센티브 퍼센트) + 수수료 적용(1%) 보다 작다면 예외 처리
-        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             //double rawValue = LocalCurrencyWalletVO.getBalance() * (100.0 / (100 + localCurrencyVO.getPercentage()));
             if (transferDTO.getAmount() > LocalCurrencyWalletVO.getBalance()) {
                 throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
@@ -96,7 +96,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
          근데 프론트 쪽에서, 요청 금액 이상의 요청이 들어왔을때 (수수료 포함, 인센티브 비율 만큼 돈 제거 등의 문구를 띄워줘야할것)
          **/
         //인센티브인 경우
-        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
             //-((int) Math.round(rawValue) + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE))
             walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -transferDTO.getAmount());
@@ -124,7 +124,7 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         //지역화폐 기준
         TransactionVO localTx = null;
-        if (localCurrencyVO.getBenefitType() == BenefitType.BONUS_CHARGE) {
+        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
 
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
