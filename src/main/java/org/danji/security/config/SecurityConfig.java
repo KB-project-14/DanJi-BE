@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
                 .antMatchers("/api/members/login", "/api/members", "/api/health").permitAll()
-//                .antMatchers("/api/**").permitAll()   // TODO 현재 모든 api 접근 가능
+                .antMatchers("/static/images/**").permitAll()
                 .anyRequest().authenticated(); // 나머지는 로그인 필요
     }
 

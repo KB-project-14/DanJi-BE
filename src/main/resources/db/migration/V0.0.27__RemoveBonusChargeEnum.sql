@@ -1,0 +1,2 @@
+ALTER TABLE local_currency
+    MODIFY benefit_type ENUM('CASHBACK', 'DISCOUNT_CHARGE', 'INCENTIVE');

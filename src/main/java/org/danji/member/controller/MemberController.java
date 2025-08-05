@@ -46,10 +46,10 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MemberDTO> get() {
+    public ResponseEntity<ApiResponse<MemberDTO>> get() {
         String username = AuthUtils.getUsername();
         MemberDTO dto = service.get(username);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(ApiResponse.success(dto));
     }
 
     @DeleteMapping("/me")
@@ -59,9 +59,9 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<MemberDTO> update(@RequestBody MemberUpdateDTO dto) {
+    public ResponseEntity<ApiResponse<MemberDTO>> update(@RequestBody MemberUpdateDTO dto) {
         MemberDTO updated = service.update(dto);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(ApiResponse.success(updated));
     }
 
 }
