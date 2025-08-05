@@ -1,8 +1,7 @@
-UPDATE local_currency
-set benefit_type = 'INCENTIVE' WHERE local_currency_id = UNHEX('3EE5B175719711F09C6300919E38B88B');
+SET SQL_SAFE_UPDATES = 0;
 
 UPDATE local_currency
-set benefit_type = 'INCENTIVE' WHERE local_currency_id = UNHEX('3EE5B7EC719711F09C6300919E38B88B');
+SET benefit_type = 'INCENTIVE'
+WHERE name IN ('울산페이', '탐나는전', '익산다이로움카드');
 
-UPDATE local_currency
-set benefit_type = 'INCENTIVE' WHERE local_currency_id = UNHEX('3EE5B23A719711F09C6300919E38B88B');
+SET SQL_SAFE_UPDATES = 1
