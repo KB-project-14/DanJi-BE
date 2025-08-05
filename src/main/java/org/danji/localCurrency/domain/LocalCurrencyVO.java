@@ -25,4 +25,5 @@ public class LocalCurrencyVO extends BaseVO {
     private Integer percentage;
 
     private String regionName;
+    private String imageUrl;
 }

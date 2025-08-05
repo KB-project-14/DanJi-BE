@@ -31,8 +31,24 @@
 
 
     <select id="findByFilter" resultMap="LocalCurrencyMap">
-        SELECT lc.*
-        FROM local_currency lc LEFT JOIN region r on r.region_id = lc.region_id
+        SELECT lc.local_currency_id,
+               lc.region_id,
+               lc.name,
+               lc.benefit_type,
+               lc.maximum,
+               lc.percentage,
+               lc.created_at,
+               lc.updated_at,
+               r.province AS regionName,
+               f.file_path AS imageUrl
+        FROM local_currency lc
+            LEFT JOIN region r on r.region_id = lc.region_id
+            LEFT JOIN file_reference fr
+            ON fr.reference_id = lc.local_currency_id
+            AND fr.reference_type = 'local_currency'
+            AND fr.usage_type = 'card_image'
+            LEFT JOIN file f
+            ON fr.file_id = f.file_id
         <where>
             <if test="localCurrencyId != null">
                 AND lc.local_currency_id = #{localCurrencyId}
@@ -47,7 +63,7 @@
                 AND r.province = #{province}
             </if>
             <if test="city != null and city != ''">
-                AND r.city #{city}
+                AND r.city = #{city}
             </if>
         </where>
     </select>
@@ -68,11 +84,17 @@
     </select>
     <select id="findAll" resultType="LocalCurrencyVO">
         SELECT
-            lc.local_currency_id, lc.region_id, lc.name, r.province AS region_name
+            lc.local_currency_id, lc.region_id, lc.name, r.province AS region_name, f.file_path AS imageUrl
         FROM
             local_currency lc
         JOIN region r
         ON lc.region_id = r.region_id
+        LEFT JOIN file_reference fr
+        ON fr.reference_id = lc.local_currency_id
+        AND fr.reference_type = 'local_currency'
+        AND fr.usage_type = 'card_image'
+        LEFT JOIN file f
+        ON f.file_id = fr.file_id
     </select>
 
     <select id="findDetailById" resultType="LocalCurrencyDetailDTO">
@@ -101,6 +123,8 @@
         <result property="benefitType" column="benefit_type"/>
         <result property="maximum" column="maximum"/>
         <result property="percentage" column="percentage"/>
+        <result property="regionName" column="regionName" />
+        <result property="imageUrl" column="imageUrl" />
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
