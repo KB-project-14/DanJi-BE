@@ -28,7 +28,8 @@ import java.time.format.DateTimeFormatter;
         "org.danji.transaction.controller",
         "org.danji.region.controller",
         "org.danji.localCurrency.controller",
-        "org.danji.wallet.controller"
+        "org.danji.wallet.controller",
+        "org.danji.badge.controller"
 })
 public class ServletConfig implements WebMvcConfigurer {
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.badge.mapper.BadgeMapper">
+
+    <resultMap id="badgeMap" type="BadgeVO">
+        <id property="badgeId" column="badge_id"/>
+        <result property="name" column="name"/>
+        <result property="badgeType" column="badge_type"/>
+        <result property="regionId" column="region_id"/>
+        <result property="comment" column="comment"/>
+    </resultMap>
+
+    <select id="findById" parameterType="java.util.UUID" resultMap="badgeMap">
+        SELECT badge_id,
+               name,
+               badge_type,
+               region_id,
+               comment
+        FROM badge b
+        WHERE b.badge_id = #{badgeId}
+    </select>
+
+    <select id="findByFilter" resultMap="badgeMap">
+        SELECT badge_id,
+                name,
+                badge_type,
+                region_id,
+                comment
+        FROM badge b
+        <where>
+            <if test="badgeType != null">
+                AND b.badge_type = #{badgeType}
+            </if>
+
+            <if test="regionId != null">
+                AND b.region_id = #{regionId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

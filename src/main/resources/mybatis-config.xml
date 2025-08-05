@@ -18,6 +18,8 @@
     <package name="org.danji.wallet.dto"/>
     <package name="org.danji.cashback.domain"/>
     <package name="org.danji.member.domain"/>
+    <package name="org.danji.badge.domain"/>
+
     <package name="org.danji.availableMerchant.domain"/>
     <package name="org.danji.availableMerchant.dto"/>
     <package name="org.danji.region.domain"/>
