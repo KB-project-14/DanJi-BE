@@ -29,6 +29,31 @@
             <AppenderRef ref="console"/>
         </Logger>
 
+
+        <!-- JDBC SQL 로그 -->
+        <Logger name="org.springframework.jdbc.core" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <!-- MyBatis 내부 로그 -->
+        <Logger name="org.mybatis" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <Logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <!-- Spring Batch 로그 -->
+        <Logger name="org.springframework.batch" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <!-- Spring Batch DB 쿼리 로그 -->
+        <Logger name="org.springframework.batch.item.database" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
     </Loggers>
 
 </Configuration>
