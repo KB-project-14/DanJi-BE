@@ -127,11 +127,16 @@
             lc.name AS localCurrencyName,
             lc.benefit_type,
             lc.percentage,
-            lc.maximum
---             lc.image_url AS backgroundImageUrl
+            lc.maximum,
+            f.file_path AS backgroundImageUrl
         FROM wallet w
-        JOIN local_currency lc
+        LEFT JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
+        LEFT JOIN file_reference fr
+        ON fr.reference_id = lc.local_currency_id
+        AND fr.reference_type = 'local_currency'
+        LEFT JOIN file f
+        ON fr.file_id = f.file_id
         WHERE w.member_id = #{memberId}
         ORDER BY w.display_order ASC
     </select>
