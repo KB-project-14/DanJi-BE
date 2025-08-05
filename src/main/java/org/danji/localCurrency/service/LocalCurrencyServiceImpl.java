@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 import org.danji.localCurrency.exception.LocalCurrencyException;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
@@ -48,5 +49,16 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
         List<LocalCurrencyVO> voList = localCurrencyMapper.findByFilter(filter);
 
         return voList.stream().map(LocalCurrencyDTO::of).toList();
+    }
+
+    @Override
+    public LocalCurrencyDetailDTO getLocalCurrencyDetail(UUID localCurrencyId) {
+        LocalCurrencyDetailDTO dto = localCurrencyMapper.findDetailById(localCurrencyId);
+
+        if (dto == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
+
+        return dto;
     }
 }

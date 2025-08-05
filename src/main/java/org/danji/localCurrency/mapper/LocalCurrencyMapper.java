@@ -1,6 +1,7 @@
 package org.danji.localCurrency.mapper;
 
 import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface LocalCurrencyMapper {
     LocalCurrencyVO findByWalletId(UUID walletId);
 
     List<LocalCurrencyVO> findAll();
+
+    //이미지 파일 포함한 세부 조회
+    LocalCurrencyDetailDTO findDetailById(UUID localCurrencyId);
 }
