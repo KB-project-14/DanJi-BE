@@ -108,7 +108,7 @@
                lc.benefit_type,
                lc.maximum,
                lc.percentage,
-               f.file_path AS imageUrl,
+               f.file_path,
                w.created_at,
                w.updated_at
         FROM wallet w
@@ -131,11 +131,11 @@
             w.balance,
             w.display_order,
             w.local_currency_id,
-            lc.name AS localCurrencyName,
+            lc.name AS local_currency_name,
             lc.benefit_type,
             lc.percentage,
             lc.maximum,
-            f.file_path AS backgroundImageUrl
+            f.file_path
         FROM wallet w
         LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
