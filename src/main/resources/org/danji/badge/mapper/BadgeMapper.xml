@@ -24,8 +24,21 @@
     </select>
 
     <select id="findByFilter" resultMap="badgeMap">
-        SELECT *
-            FROM badge
+        SELECT badge_id,
+                name,
+                badge_type,
+                region_id,
+                comment
+        FROM badge b
+        <where>
+            <if test="badgeType != null">
+                AND b.badge_type = #{badgeType}
+            </if>
+
+            <if test="regionId != null">
+                AND b.region_id = #{regionId}
+            </if>
+        </where>
     </select>
 
 </mapper>

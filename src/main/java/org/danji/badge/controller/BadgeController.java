@@ -19,21 +19,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Api(
-        tags = "뱃지",                    // 그룹 이름 (필수)
-        description = "뱃지 CRUD API",        // 상세 설명
-        value = "BadgeController"              // 컨트롤러 식별자
+        tags = "뱃지",
+        description = "뱃지 CRUD API",
+        value = "BadgeController"
 )
 public class BadgeController {
     private final BadgeService badgeService;
 
     @GetMapping("")
     public ResponseEntity<ApiResponse<List<BadgeDTO>>> getBadgeList(
-            @RequestParam(required = false) BadgeType badgeType
+            @ModelAttribute BadgeFilterDTO filter
             ) {
-        BadgeFilterDTO filter = BadgeFilterDTO.builder()
-                .badgeType(badgeType)
-                .build();
-
         List<BadgeDTO> badgeList = badgeService.getBadgeListByFilter(filter);
         return ResponseEntity.ok(ApiResponse.success(badgeList));
     }
