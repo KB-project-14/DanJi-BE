@@ -23,6 +23,4 @@ public class LocalCurrencyVO extends BaseVO {
     private BenefitType benefitType;
     private Integer maximum;
     private Integer percentage;
-
-    private String regionName;
 }

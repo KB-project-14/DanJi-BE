@@ -7,6 +7,7 @@ import org.danji.batch.step.AvailableMerchantWriter;
 import org.danji.batch.step.LocalCurrencyPartitionedReader;
 import org.danji.batch.step.LocalCurrencyPartitioner;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.dto.LocalCurrencyDTO;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -36,7 +37,7 @@ public class AvailableMerchantChunkJobConfig {
     @Bean
     public Step slaveStep() {
         return stepBuilderFactory.get("slaveStep")
-                .<LocalCurrencyVO, List<AvailableMerchantVO>>chunk(2)
+                .<LocalCurrencyDTO, List<AvailableMerchantVO>>chunk(2)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
