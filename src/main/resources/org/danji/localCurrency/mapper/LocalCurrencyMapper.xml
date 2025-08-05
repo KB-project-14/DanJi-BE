@@ -30,7 +30,7 @@
     </select>
 
 
-    <select id="findByFilter" resultMap="LocalCurrencyMap">
+    <select id="findByFilter" resultType="LocalCurrencyDetailDTO">
         SELECT lc.local_currency_id,
                lc.region_id,
                lc.name,
@@ -123,8 +123,6 @@
         <result property="benefitType" column="benefit_type"/>
         <result property="maximum" column="maximum"/>
         <result property="percentage" column="percentage"/>
-        <result property="regionName" column="regionName" />
-        <result property="imageUrl" column="imageUrl" />
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>

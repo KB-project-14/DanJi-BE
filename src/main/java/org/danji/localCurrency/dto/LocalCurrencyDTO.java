@@ -32,8 +32,6 @@ public class LocalCurrencyDTO extends BaseDTO {
                 .benefitType(vo.getBenefitType())
                 .maximum(vo.getMaximum())
                 .percentage(vo.getPercentage())
-                .regionName(vo.getRegionName())
-                .imageUrl(vo.getImageUrl())
                 .createdAt(vo.getCreatedAt())
                 .updatedAt(vo.getUpdatedAt())
                 .build();

@@ -8,6 +8,8 @@ import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.availableMerchant.service.KakaoApiClient;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyVO, List<AvailableMerchantVO>> {
+public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDTO, List<AvailableMerchantVO>> {
 
 
     private final KakaoApiClient kakaoApiClient;
@@ -35,7 +37,7 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyVO
     private String serviceKey;
 
     @Override
-    public List<AvailableMerchantVO> process(LocalCurrencyVO currency) throws Exception {
+    public List<AvailableMerchantVO> process(LocalCurrencyDTO currency) throws Exception {
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
 
