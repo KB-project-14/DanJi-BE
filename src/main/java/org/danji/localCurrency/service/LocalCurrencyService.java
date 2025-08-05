@@ -1,6 +1,7 @@
 package org.danji.localCurrency.service;
 
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface LocalCurrencyService {
 
     List<LocalCurrencyDTO> getLocalCurrencyList(LocalCurrencyFilterDTO filter);
 
+    LocalCurrencyDetailDTO getLocalCurrencyDetail(UUID localCurrencyId);
 }

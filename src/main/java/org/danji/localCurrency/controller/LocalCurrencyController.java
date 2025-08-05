@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
+import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 import org.danji.localCurrency.service.LocalCurrencyService;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,13 @@ public class LocalCurrencyController {
     private final LocalCurrencyService localCurrencyService;
 
     @GetMapping("/{localCurrencyId}")
-    public ResponseEntity<ApiResponse<LocalCurrencyDTO>> getLocalCurrency(@PathVariable("localCurrencyId") UUID localCurrencyId) {
-        LocalCurrencyDTO localCurrency = localCurrencyService.getLocalCurrency(localCurrencyId);
-        return ResponseEntity.ok(ApiResponse.success(localCurrency));
+//    public ResponseEntity<ApiResponse<LocalCurrencyDTO>> getLocalCurrency(@PathVariable("localCurrencyId") UUID localCurrencyId) {
+//        LocalCurrencyDTO localCurrency = localCurrencyService.getLocalCurrency(localCurrencyId);
+//        return ResponseEntity.ok(ApiResponse.success(localCurrency));
+//    }
+    public ResponseEntity<ApiResponse<LocalCurrencyDetailDTO>> getLocalCurrencyDetail(@PathVariable("localCurrencyId") UUID localCurrencyId) {
+        LocalCurrencyDetailDTO dto = localCurrencyService.getLocalCurrencyDetail(localCurrencyId);
+        return ResponseEntity.ok(ApiResponse.success(dto));
     }
 
     @GetMapping("")
