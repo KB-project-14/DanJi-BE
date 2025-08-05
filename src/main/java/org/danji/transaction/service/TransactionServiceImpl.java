@@ -3,10 +3,8 @@ package org.danji.transaction.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
-import org.danji.localCurrency.enums.BenefitType;
 import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.transaction.converter.TransactionConverter;
-import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransactionFilterDTO;
 import org.danji.transaction.dto.request.TransferDTO;
@@ -51,7 +49,12 @@ public class TransactionServiceImpl implements TransactionService {
 
         int totalCharge = calculateTotalWithType(transactionList, Type.CHARGE);
         LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findByWalletId(transactionFilterDTO.getWalletId());
-        Integer percentage = localCurrencyVO.getPercentage();
+
+        Integer percentage = 0;
+
+        if (localCurrencyVO != null) {
+            percentage = localCurrencyVO.getPercentage();
+        }
 
         return TransactionAggregateDTO.builder()
                 .transactions(transactionList)

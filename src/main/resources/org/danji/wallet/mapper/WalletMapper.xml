@@ -130,7 +130,7 @@
             lc.maximum,
             f.file_path AS backgroundImageUrl
         FROM wallet w
-        LEFT JOIN local_currency lc
+        LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
         LEFT JOIN file_reference fr
         ON fr.reference_id = lc.local_currency_id

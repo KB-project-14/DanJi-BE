@@ -21,9 +21,9 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    private final String API_NAME = "Board API";
+    private final String API_NAME = "Danji API";
     private final String API_VERSION = "1.0";
-    private final String API_DESCRIPTION = "Board API 명세서";
+    private final String API_DESCRIPTION = "Danji API 명세서";
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
