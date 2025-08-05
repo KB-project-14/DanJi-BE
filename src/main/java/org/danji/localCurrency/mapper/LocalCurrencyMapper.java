@@ -1,6 +1,7 @@
 package org.danji.localCurrency.mapper;
 
 import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.dto.LocalCurrencyDTO;
 import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.danji.localCurrency.dto.LocalCurrencyFilterDTO;
 
@@ -14,7 +15,7 @@ public interface LocalCurrencyMapper {
 
     LocalCurrencyVO findByRegionId(Long RegionId);
 
-    List<LocalCurrencyVO> findByFilter(LocalCurrencyFilterDTO filter);
+    List<LocalCurrencyDTO> findByFilter(LocalCurrencyFilterDTO filter);
 
     void create(LocalCurrencyVO localCurrency);
 

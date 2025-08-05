@@ -46,9 +46,9 @@ public class LocalCurrencyServiceImpl implements LocalCurrencyService {
     @Override
     public List<LocalCurrencyDTO> getLocalCurrencyList(LocalCurrencyFilterDTO filter) {
 
-        List<LocalCurrencyVO> voList = localCurrencyMapper.findByFilter(filter);
+        List<LocalCurrencyDTO> dtoList = localCurrencyMapper.findByFilter(filter);
 
-        return voList.stream().map(LocalCurrencyDTO::of).toList();
+        return dtoList;
     }
 
     @Override
