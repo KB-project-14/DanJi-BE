@@ -23,7 +23,7 @@
         WHERE b.badge_id = #{badgeId}
     </select>
 
-    <select id="findByFilter" resultMap="badgeMap">
+    <select id="findByFilter" parameterType="org.danji.badge.dto.BadgeFilterDTO" resultMap="badgeMap">
         SELECT badge_id,
                 name,
                 badge_type,
