@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public interface LocalCurrencyMapper {
     List<LocalCurrencyVO> findAllByName(String name);
+
     // Mybatis 에서는 Optional 반환이 안됨
     LocalCurrencyVO findById(UUID localCurrencyId);
 
@@ -25,4 +26,5 @@ public interface LocalCurrencyMapper {
 
     //이미지 파일 포함한 세부 조회
     LocalCurrencyDetailDTO findDetailById(UUID localCurrencyId);
+
 }

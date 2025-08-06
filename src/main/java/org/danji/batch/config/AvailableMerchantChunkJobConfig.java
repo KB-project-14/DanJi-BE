@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.batch.step.AvailableMerchantProcessor;
 import org.danji.batch.step.AvailableMerchantWriter;
+
 import org.danji.batch.step.LocalCurrencyPartitionedReader;
 import org.danji.batch.step.LocalCurrencyPartitioner;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
@@ -37,10 +38,11 @@ public class AvailableMerchantChunkJobConfig {
     @Bean
     public Step slaveStep() {
         return stepBuilderFactory.get("slaveStep")
-                .<LocalCurrencyDTO, List<AvailableMerchantVO>>chunk(2)
+                .<LocalCurrencyDTO, List<AvailableMerchantVO>>chunk(1)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
+                .transactionManager(transactionManager)
                 .build();
     }
 

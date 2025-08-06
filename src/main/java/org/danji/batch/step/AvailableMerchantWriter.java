@@ -17,11 +17,8 @@ public class AvailableMerchantWriter implements ItemWriter<List<AvailableMerchan
     @Override
     public void write(List<? extends List<AvailableMerchantVO>> items) {
         for (List<AvailableMerchantVO> batch : items) {
-            for (AvailableMerchantVO vo : batch) {
-                if (!merchantMapper.existsByNameAndAddress(vo.getName(), vo.getAddress())) {
-                    merchantMapper.create(vo);
-                }
-            }
+            if (batch == null || batch.isEmpty()) continue;
+            merchantMapper.createBatch(batch);
         }
     }
 }
