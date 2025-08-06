@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danji.memberBadge.mapper.MemberBadgeMapper">
+    <insert id="insert">
+        INSERT INTO member_badge
+            (member_badge_id, member_id, badge_id, badge_grade)
+        VALUES (#{memberBadgeId}, #{memberId}, #{badgeId}, #{badgeGrade})
+    </insert>
+
+    <select id="findById" resultMap="memberBadgeDetailMap">
+        <include refid="memberBadgeDetailQuery"/>
+        WHERE mb.member_badge_id = #{memberBadgeId}
+    </select>
+
+
+    <select id="findByFilter" resultMap="memberBadgeDetailMap">
+        <include refid="memberBadgeDetailQuery" />
+
+        <where>
+            <if test="memberId != null">
+                AND mb.member_id = #{memberId}
+            </if>
+            <if test="badgeId != null">
+                AND mb.badge_id = #{badgeId}
+            </if>
+            <if test="badgeGrade != null">
+                AND mb.badge_id = #{badgeGrade}
+            </if>
+            <if test="badgeType != null">
+                AND b.badge_type = #{badgeType}
+            </if>
+            <if test="regionId != null">
+                AND r.region_id = #{regionId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByMemberIdAndBadgeId" resultType="MemberBadgeVO">
+        SELECT *
+        FROM member_badge
+        WHERE member_id = #{memberId}
+        AND badge_id = #{badgeId}
+    </select>
+
+
+
+    <resultMap id="memberBadgeDetailMap" type="MemberBadgeDetailDTO">
+        <id property="memberBadgeId" column="member_badge_id" />
+        <result property="memberId" column="badge_id" />
+        <result property="badgeGrade" column="badge_grade" />
+
+        <result property="regionId" column="region_id" />
+        <result property="regionName" column="region_name" />
+        <result property="comment" column="comment" />
+        <result property="imageUrl" column="image_url" />
+
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="memberBadgeDetailQuery">
+        SELECT mb.member_badge_id,
+               mb.member_id,
+               mb.badge_grade,
+               b.badge_type,
+               b.comment,
+               r.region_id,
+               r.region_name,
+               f.file_path AS image_url,
+               mb.created_at,
+               mb.update_at
+        FROM member m
+                 JOIN member_badge mb
+                      ON m.member_id = mb.member_id
+                 JOIN badge b
+                      ON mb.badge_id = b.badge_id
+                 LEFT JOIN region r
+                           ON b.region_id = r.region_id
+                 JOIN file_reference fr
+                      ON fr.reference_id = b.badge_id
+                          AND fr.reference_type = 'badge'
+                          AND fr.usage_type = CONCAT('badge_image_', mb.badge_grade)
+                 JOIN file f
+                      ON fr.file_id = f.file_id
+    </sql>
+</mapper>

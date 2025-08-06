@@ -23,9 +23,8 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource({"classpath:/application.properties"})
 @PropertySource("classpath:/application-${spring.profiles.active}.properties")
-@MapperScan(basePackages = {"org.danji.board.mapper",
+@MapperScan(basePackages = {
         "org.danji.member.mapper",
-        "org.danji.travel.mapper",
         "org.danji.mapper",
         "org.danji.availableMerchant.mapper",
         "org.danji.mapper",
@@ -34,11 +33,11 @@ import javax.sql.DataSource;
         "org.danji.localCurrency.mapper",
         "org.danji.cashback.mapper",
         "org.danji.region.mapper",
-        "org.danji.badge.mapper"
+        "org.danji.badge.mapper",
+        "org.danji.memberBadge.mapper",
 })
-@ComponentScan(basePackages = {"org.danji.board.service",
+@ComponentScan(basePackages = {
         "org.danji.member.service",
-        "org.danji.travel.service",
         "org.danji.availableMerchant.service",
         "org.danji.availableMerchant.util",
         "org.danji.transaction.service",
@@ -50,7 +49,8 @@ import javax.sql.DataSource;
         "org.danji.wallet.service",
         "org.danji.transaction.strategy",
         "org.danji.badge.service",
-        "org.danji.batch"
+        "org.danji.batch",
+        "org.danji.memberBadge.service"
 })
 @Log4j2
 @EnableTransactionManagement
