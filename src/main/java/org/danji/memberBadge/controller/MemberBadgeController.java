@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/MemberBadges")
+@RequestMapping("/api/member-badges")
 @RequiredArgsConstructor
 @Api(
         tags = "맴버-뱃지",                    // 그룹 이름 (필수)

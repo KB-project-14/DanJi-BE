@@ -6,8 +6,8 @@
 <mapper namespace="org.danji.memberBadge.mapper.MemberBadgeMapper">
     <insert id="insert">
         INSERT INTO member_badge
-            (member_badge_id, member_id, badge_id, badge_grade)
-        VALUES (#{memberBadgeId}, #{memberId}, #{badgeId}, #{badgeGrade})
+            (member_badge_id, member_id, badge_id, badge_grade, created_at, updated_at)
+        VALUES (#{memberBadgeId}, #{memberId}, #{badgeId}, #{badgeGrade}, now(), now())
     </insert>
 
     <select id="findById" resultMap="memberBadgeDetailMap">
