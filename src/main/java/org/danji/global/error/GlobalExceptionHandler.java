@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.common.ApiResponse;
 import org.danji.global.exception.BusinessException;
+import org.danji.transaction.exception.TransactionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<Object> handleBusinessException(BusinessException ex,
-                                                           HttpServletRequest httpRequest) {
+                                                             HttpServletRequest httpRequest) {
 
         log.error("[BusinessException] : {}", ex.getErrorMessage());
         log.error("[BusinessException 발생 에러코드] : {}", ex.getErrorCode());
@@ -100,8 +101,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(ex.getStatus()).body(ApiResponse.failure(errorResponse));
     }
-
-
 
 
 }

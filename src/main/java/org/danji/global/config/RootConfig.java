@@ -50,7 +50,8 @@ import javax.sql.DataSource;
         "org.danji.transaction.strategy",
         "org.danji.badge.service",
         "org.danji.batch",
-        "org.danji.memberBadge.service"
+        "org.danji.memberBadge.service",
+        "org.danji.global.error"
 })
 @Log4j2
 @EnableTransactionManagement
