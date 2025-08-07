@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.danji.global.error.ErrorCode;
 import org.danji.memberBadge.domain.MemberBadgeVO;
 import org.danji.memberBadge.dto.MemberBadgeCreateDTO;
+import org.danji.memberBadge.dto.MemberBadgeDTO;
 import org.danji.memberBadge.dto.MemberBadgeDetailDTO;
 import org.danji.memberBadge.dto.MemberBadgeFilterDTO;
 import org.danji.memberBadge.enums.BadgeGrade;
@@ -23,7 +24,7 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
 
     @Override
     @Transactional
-    public MemberBadgeDetailDTO createMemberBadge(MemberBadgeCreateDTO createDTO) {
+    public MemberBadgeDTO createMemberBadge(MemberBadgeCreateDTO createDTO) {
         //validateMemberBadge(createDTO.getMemberId(), createDTO.getBadgeId());
         MemberBadgeVO vo = createDTO.toVo();
 
@@ -31,7 +32,7 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
         vo.setMemberBadgeId(memberBadgeId);
 
         mapper.insert(vo);
-        return getMemberBadge(memberBadgeId);
+        return MemberBadgeDTO.of(vo);
     }
 
     @Override
