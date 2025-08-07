@@ -141,8 +141,6 @@ public class LocalMixedStrategy implements PaymentStrategy {
                 memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
             }
         }
-
-
         TransactionVO localTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), paymentDTO.getLocalWalletId(), null,
                 LocalCurrencyWalletVO.getBalance(), LocalCurrencyWalletVO.getBalance() - paymentDTO.getInputAmount(),
