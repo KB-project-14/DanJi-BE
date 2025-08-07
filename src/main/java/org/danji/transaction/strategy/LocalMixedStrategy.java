@@ -4,7 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
+import org.danji.badge.domain.BadgeVO;
+import org.danji.badge.dto.BadgeFilterDTO;
+import org.danji.badge.enums.BadgeType;
+import org.danji.badge.exception.BadgeException;
+import org.danji.badge.mapper.BadgeMapper;
 import org.danji.global.error.ErrorCode;
+import org.danji.localCurrency.domain.LocalCurrencyVO;
+import org.danji.localCurrency.exception.LocalCurrencyException;
+import org.danji.localCurrency.mapper.LocalCurrencyMapper;
+import org.danji.memberBadge.dto.MemberBadgeCreateDTO;
+import org.danji.memberBadge.enums.BadgeGrade;
+import org.danji.memberBadge.service.MemberBadgeService;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.PaymentDTO;
@@ -31,10 +42,17 @@ import static org.danji.transaction.validator.WalletValidator.checkOwnership;
 @RequiredArgsConstructor
 public class LocalMixedStrategy implements PaymentStrategy {
 
+    private static final int bronze_criteria = 50000;
+    private static final int silver_criteria = 100000;
+    private static final int gold_criteria = 200000;
+
     private final WalletMapper walletMapper;
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
     private final TransactionMapper transactionMapper;
+    private final MemberBadgeService memberBadgeService;
+    private final BadgeMapper badgeMapper;
+    private final LocalCurrencyMapper localCurrencyMapper;
 
     @Override
     public boolean supports(PaymentDTO paymentDTO) {
@@ -58,6 +76,10 @@ public class LocalMixedStrategy implements PaymentStrategy {
         if (LocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
+        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());
+        if (localCurrencyVO == null) {
+            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
+        }
         WalletFilterDTO walletFilterDTO = WalletFilterDTO.builder().memberId(userId).walletType(WalletType.LOCAL).build();
         List<WalletVO> localWalletByUserIdVO = walletMapper.findByFilter(walletFilterDTO);
         if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)) {
@@ -70,6 +92,56 @@ public class LocalMixedStrategy implements PaymentStrategy {
 
         walletMapper.updateWalletBalance(paymentDTO.getLocalWalletId(), -paymentDTO.getInputAmount());
         walletMapper.updateWalletTotalPayment(paymentDTO.getLocalWalletId(), paymentDTO.getInputAmount());
+
+        int paymentAmount = LocalCurrencyWalletVO.getTotalPayment() + paymentDTO.getInputAmount();
+
+        if (paymentAmount > bronze_criteria && paymentAmount < silver_criteria){
+            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
+                            .regionId(localCurrencyVO.getRegionId())
+                                    .build();
+            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
+
+            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.BRONZE)){
+                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
+                        .badgeId(byFilter.get(0).getBadgeId())
+                        .badgeGrade(BadgeGrade.BRONZE)
+                        .memberId(userId)
+                        .build();
+                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
+            }
+        }
+        else if (paymentAmount > silver_criteria && paymentAmount < gold_criteria){
+            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
+                    .regionId(localCurrencyVO.getRegionId())
+                    .build();
+            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
+
+            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.SILVER)){
+                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
+                        .badgeId(byFilter.get(0).getBadgeId())
+                        .badgeGrade(BadgeGrade.SILVER)
+                        .memberId(userId)
+                        .build();
+                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
+            }
+
+        }
+        else if (paymentAmount > gold_criteria){
+            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
+                    .regionId(localCurrencyVO.getRegionId())
+                    .build();
+            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
+
+            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.GOLD)){
+                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
+                        .badgeId(byFilter.get(0).getBadgeId())
+                        .badgeGrade(BadgeGrade.GOLD)
+                        .memberId(userId)
+                        .build();
+                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
+            }
+        }
+
 
         TransactionVO localTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), paymentDTO.getLocalWalletId(), null,

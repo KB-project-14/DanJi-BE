@@ -6,6 +6,7 @@ import org.danji.memberBadge.domain.MemberBadgeVO;
 import org.danji.memberBadge.dto.MemberBadgeCreateDTO;
 import org.danji.memberBadge.dto.MemberBadgeDetailDTO;
 import org.danji.memberBadge.dto.MemberBadgeFilterDTO;
+import org.danji.memberBadge.enums.BadgeGrade;
 import org.danji.memberBadge.exception.MemberBadgeException;
 import org.danji.memberBadge.mapper.MemberBadgeMapper;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
     @Override
     @Transactional
     public MemberBadgeDetailDTO createMemberBadge(MemberBadgeCreateDTO createDTO) {
-        validateMemberBadge(createDTO.getMemberId(), createDTO.getBadgeId());
+        //validateMemberBadge(createDTO.getMemberId(), createDTO.getBadgeId());
         MemberBadgeVO vo = createDTO.toVo();
 
         UUID memberBadgeId = UUID.randomUUID();
@@ -48,10 +49,11 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
     }
 
 
-    private void validateMemberBadge(UUID memberId, UUID badgeId) {
-        MemberBadgeVO vo = mapper.findByMemberIdAndBadgeId(memberId, badgeId);
+    public Boolean validateMemberBadge(UUID memberId, UUID badgeId, BadgeGrade badgeGrade) {
+        MemberBadgeVO vo = mapper.findByMemberIdAndBadgeIdAndBadgeGrade(memberId, badgeId, badgeGrade);
         if (vo != null) {
-            throw new MemberBadgeException(ErrorCode.DUPLICATED_MEMBER_BADGE);
+            return false;
         }
+        return true;
     }
 }
