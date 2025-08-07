@@ -40,7 +40,11 @@ public enum ErrorCode {
     INPUT_AMOUNT_EXCEEDS_MERCHANT_AMOUNT(HttpStatus.BAD_REQUEST, "AM-02", "입력한 금액이 가맹점 요청 금액을 초과했습니다."),
 
     //badge
-    BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "BD-01", "뱃지를 찾을 수 없습니다.");
+    BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "BD-01", "뱃지를 찾을 수 없습니다."),
+
+    //memberBadge
+    MEMBER_BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MB-BG-01", "보유한 뱃지를 찾을 수 없습니다."),
+    DUPLICATED_MEMBER_BADGE(HttpStatus.CONFLICT, "MB-BG-02", "이미 보유한 뱃지입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
