@@ -26,7 +26,8 @@ public class MemberBadgeDetailDTO extends BaseDTO {
     private BadgeType badgeType;
     private String comment;
     private Long regionId;
-    private String regionName;
+    private String province;
+    private String city;
     private String imageUrl;
 
 }

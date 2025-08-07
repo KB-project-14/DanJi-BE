@@ -23,9 +23,6 @@
             <if test="memberId != null">
                 AND mb.member_id = #{memberId}
             </if>
-            <if test="badgeId != null">
-                AND mb.badge_id = #{badgeId}
-            </if>
             <if test="badgeGrade != null">
                 AND mb.badge_id = #{badgeGrade}
             </if>
@@ -53,7 +50,8 @@
         <result property="badgeGrade" column="badge_grade" />
 
         <result property="regionId" column="region_id" />
-        <result property="regionName" column="region_name" />
+        <result property="province" column="province" />
+        <result property="city" column="city" />
         <result property="comment" column="comment" />
         <result property="imageUrl" column="image_url" />
 
@@ -68,10 +66,11 @@
                b.badge_type,
                b.comment,
                r.region_id,
-               r.region_name,
+               r.province,
+               r.city,
                f.file_path AS image_url,
                mb.created_at,
-               mb.update_at
+               mb.updated_at
         FROM member m
                  JOIN member_badge mb
                       ON m.member_id = mb.member_id
