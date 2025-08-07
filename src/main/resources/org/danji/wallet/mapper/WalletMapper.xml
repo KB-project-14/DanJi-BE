@@ -19,7 +19,9 @@
                member_id,
                local_currency_id,
                wallet_type,
-               balance
+               balance,
+               created_at,
+               updated_at
         FROM wallet
         WHERE member_id = #{userId}
           AND wallet_type = 'CASH'
@@ -70,10 +72,15 @@
 
 
     <update id="bulkUpdateDisplayOrder">
-        <foreach collection="list" item="wallet" separator=";">
-            UPDATE wallet
-            SET display_order = #{wallet.displayOrder}
-            WHERE wallet_id = #{wallet.walletId}
+        UPDATE wallet
+        SET display_order = CASE wallet_id
+        <foreach collection="list" item="w">
+            WHEN #{w.walletId} THEN #{w.displayOrder}
+        </foreach>
+        END
+        WHERE wallet_id IN
+        <foreach collection="list" item="w" open="(" separator="," close=")">
+            #{w.walletId}
         </foreach>
     </update>
 
