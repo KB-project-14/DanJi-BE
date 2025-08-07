@@ -1,3 +1,12 @@
+UPDATE file SET file_path = '/static/images/localCurrency/busan.jpg' WHERE original_name = 'busan.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/daegu.jpg' WHERE original_name = 'daegu.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/gunsan.jpg' WHERE original_name = 'gunsan.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/gwangju.jpg' WHERE original_name = 'gwangju.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/iksan.jpg' WHERE original_name = 'iksan.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/jeju.jpg' WHERE original_name = 'jeju.jpg';
+UPDATE file SET file_path = '/static/images/localCurrency/ulsan.jpg' WHERE original_name = 'ulsan.jpg';
+
+
 INSERT INTO file
 (file_id, original_name, stored_name, file_path, content_type, file_size, created_at, updated_at)
 VALUES
