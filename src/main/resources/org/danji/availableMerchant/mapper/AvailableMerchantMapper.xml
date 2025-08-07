@@ -5,12 +5,9 @@
 
 <mapper namespace="org.danji.availableMerchant.mapper.AvailableMerchantMapper">
     <insert id="create">
-        INSERT INTO available_merchant (
-            available_merchant_id, name, address, latitude, longitude,
-            category, local_currency_id, created_at, updated_at
-        )
-        VALUES (
-                #{availableMerchantId},
+        INSERT INTO available_merchant (available_merchant_id, name, address, latitude, longitude,
+                                        category, local_currency_id, created_at, updated_at)
+        VALUES (#{availableMerchantId},
                 #{name},
                 #{address},
                 #{latitude},
@@ -18,61 +15,60 @@
                 #{category},
                 #{localCurrencyId},
                 NOW(),
-                NOW()
-               )
+                NOW())
     </insert>
     <insert id="createBatch" parameterType="java.util.List">
         INSERT INTO available_merchant (
-            available_merchant_id, name, address, latitude, longitude, category, local_currency_id
+        available_merchant_id, name, address, latitude, longitude, category, local_currency_id, created_at, updated_at
         ) VALUES
         <foreach collection="list" item="merchant" separator=",">
             (
-             #{merchant.availableMerchantId},
-             #{merchant.name},
-             #{merchant.address},
-             #{merchant.latitude},
-             #{merchant.longitude},
-             #{merchant.category},
-             #{merchant.localCurrencyId},
-             NOW(),
-             NOW()
+            #{merchant.availableMerchantId},
+            #{merchant.name},
+            #{merchant.address},
+            #{merchant.latitude},
+            #{merchant.longitude},
+            #{merchant.category},
+            #{merchant.localCurrencyId},
+            NOW(),
+            NOW()
             )
         </foreach>
     </insert>
     <select id="existsByNameAndAddress" resultType="java.lang.Boolean">
-        SELECT EXISTS(
-            SELECT 1 FROM available_merchant
-            WHERE name = #{name} AND address = #{address}
-        )
+        SELECT EXISTS(SELECT 1
+                      FROM available_merchant
+                      WHERE name = #{name}
+                        AND address = #{address})
     </select>
     <select id="findByFilter" resultMap="availableMerchantMap">
         SELECT
-            BIN_TO_UUID(am.available_merchant_id) AS available_merchant_id,
-            am.name,
-            am.address,
-            am.latitude,
-            am.longitude,
-            am.category,
-            BIN_TO_UUID(am.local_currency_id) AS local_currency_id,
-            am.created_at,
-            am.updated_at,
-            lc.name AS local_currency_name
-            <if test="latitude != null and longitude != null">
-                , ROUND(6371 * ACOS(
-                LEAST(1,
-                COS(RADIANS(#{latitude})) * COS(RADIANS(am.latitude)) *
-                COS(RADIANS(am.longitude) - RADIANS(#{longitude})) +
-                SIN(RADIANS(#{latitude})) * SIN(RADIANS(am.latitude))
-                )
-                ), 1) AS distance
-            </if>
-            <if test="latitude == null or longitude == null">
-                , 0 AS distance
-            </if>
+        BIN_TO_UUID(am.available_merchant_id) AS available_merchant_id,
+        am.name,
+        am.address,
+        am.latitude,
+        am.longitude,
+        am.category,
+        BIN_TO_UUID(am.local_currency_id) AS local_currency_id,
+        am.created_at,
+        am.updated_at,
+        lc.name AS local_currency_name
+        <if test="latitude != null and longitude != null">
+            , ROUND(6371 * ACOS(
+            LEAST(1,
+            COS(RADIANS(#{latitude})) * COS(RADIANS(am.latitude)) *
+            COS(RADIANS(am.longitude) - RADIANS(#{longitude})) +
+            SIN(RADIANS(#{latitude})) * SIN(RADIANS(am.latitude))
+            )
+            ), 1) AS distance
+        </if>
+        <if test="latitude == null or longitude == null">
+            , 0 AS distance
+        </if>
 
         FROM available_merchant am
         LEFT JOIN
-            local_currency lc ON am.local_currency_id = lc.local_currency_id
+        local_currency lc ON am.local_currency_id = lc.local_currency_id
         <where>
             AND (latitude != 0.000000 OR longitude != 0.000000)
             <if test="name != null and name != ''">
@@ -89,34 +85,45 @@
             HAVING distance &lt;= 3
         </if>
         ORDER BY
-            <choose>
-                <when test="latitude != null and longitude != null">
-                    distance ASC
-                </when>
-                <otherwise>
-                    am.created_at DESC
-                </otherwise>
-            </choose>
+        <choose>
+            <when test="latitude != null and longitude != null">
+                distance ASC
+            </when>
+            <otherwise>
+                am.created_at DESC
+            </otherwise>
+        </choose>
     </select>
 
     <resultMap id="availableMerchantMap" type="AvailableMerchantDTO">
-        <id column="available_merchant_id" property="availableMerchantId" javaType="java.util.UUID" />
-        <result column="name" property="name" />
-        <result column="address" property="address" />
-        <result column="latitude" property="latitude" />
-        <result column="longitude" property="longitude" />
-        <result column="category" property="category" />
+        <id column="available_merchant_id" property="availableMerchantId" javaType="java.util.UUID"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="category" property="category"/>
         <result column="local_currency_id" property="localCurrencyId" javaType="java.util.UUID"/>
-        <result column="created_at" property="createdAt" />
-        <result column="updated_at" property="updatedAt" />
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
 
-        <result column="local_currency_name" property="localCurrencyName" />
-        <result column="distance" property="distance" />
+        <result column="local_currency_name" property="localCurrencyName"/>
+        <result column="distance" property="distance"/>
     </resultMap>
 
-    <select id = "findById" parameterType="java.util.UUID" resultType="AvailableMerchantVO">
-            SELECT *
-            FROM available_merchant
-            WHERE available_merchant_id = #{availableMerchantId}
+    <select id="findById" parameterType="java.util.UUID" resultType="AvailableMerchantVO">
+        SELECT *
+        FROM available_merchant
+        WHERE available_merchant_id = #{availableMerchantId}
     </select>
+
+    <select id="findExistingByNameAndAddressList"
+            resultType="AvailableMerchantVO">
+        SELECT name, address
+        FROM available_merchant
+        WHERE (name, address) IN
+        <foreach collection="merchantKeys" item="key" separator="," open="(" close=")">
+            (#{key.name}, #{key.address})
+        </foreach>
+    </select>
+
 </mapper>

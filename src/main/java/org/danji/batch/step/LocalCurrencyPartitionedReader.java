@@ -22,26 +22,14 @@ public class LocalCurrencyPartitionedReader implements ItemReader<LocalCurrencyD
     private final RegionMapper regionMapper;
 
     @Value("#{stepExecutionContext['localCurrency']}") // 혹은 'localCurrencyId', 'currencyName' 등
-    private LocalCurrencyVO localCurrencyVO;
+    private LocalCurrencyDTO localCurrencyDTO;
 
     private boolean isRead = false;
 
     @Override
     public LocalCurrencyDTO read() {
-        RegionVO regionVO = regionMapper.findById(localCurrencyVO.getRegionId());
         if (!isRead) {
             isRead = true;
-            LocalCurrencyDTO localCurrencyDTO = LocalCurrencyDTO.builder()
-                    .localCurrencyId(localCurrencyVO.getLocalCurrencyId())
-                    .regionId(localCurrencyVO.getRegionId())
-                    .name(localCurrencyVO.getName())
-                    .benefitType(localCurrencyVO.getBenefitType())
-                    .maximum(localCurrencyVO.getMaximum())
-                    .percentage(localCurrencyVO.getPercentage())
-                    .createdAt(localCurrencyVO.getCreatedAt())
-                    .updatedAt(localCurrencyVO.getUpdatedAt())
-                    .regionName(regionVO.getProvince())
-                    .build();
             return localCurrencyDTO;
         } else {
             return null;

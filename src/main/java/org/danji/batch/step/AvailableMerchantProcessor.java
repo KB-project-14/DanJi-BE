@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.availableMerchant.service.KakaoApiClient;
-import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
-import org.danji.localCurrency.dto.LocalCurrencyDetailDTO;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,9 +17,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -44,7 +41,6 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDT
         WebClient webClient = WebClient.builder()
                 .uriBuilderFactory(factory)
                 .build();
-        List<AvailableMerchantVO> results = new ArrayList<>();
 
         String encodedCity = URLEncoder.encode(currency.getRegionName(), StandardCharsets.UTF_8);
         String encodedBill = URLEncoder.encode(currency.getName(), StandardCharsets.UTF_8);
@@ -67,31 +63,61 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDT
         JsonNode items = objectMapper.readTree(response)
                 .path("response").path("body").path("items");
 
+        List<AvailableMerchantVO> allMerchants = new ArrayList<>();
+
+        //해당 지역화폐를 사용할 수 있는 가맹점 수집
         for (JsonNode item : items) {
             String name = item.path("affiliateNm").asText();
             String address = item.path("lctnRoadNmAddr").asText();
             String category = item.path("sectorNm").asText();
 
             if (name.isEmpty() || address.isEmpty()) continue;
-            if (merchantMapper.existsByNameAndAddress(name, address)) continue;
-
-            String cleanedAddress = address.replaceAll("\\s*(지하)?\\d+층", "").trim();
-            BigDecimal[] coords = kakaoApiClient.getCoordinates(cleanedAddress);
-            if (coords == null) continue;
 
             AvailableMerchantVO vo = AvailableMerchantVO.builder()
                     .availableMerchantId(UUID.randomUUID())
                     .name(name)
                     .address(address)
-                    .latitude(coords[0])
-                    .longitude(coords[1])
                     .category(category)
                     .localCurrencyId(currency.getLocalCurrencyId())
                     .build();
 
-            results.add(vo);
+            allMerchants.add(vo);
         }
 
+        if (allMerchants.isEmpty()) return Collections.emptyList();
+
+
+        // 중복 가맹점 조회 및 필터링
+        List<Map<String, String>> merchantKeys = allMerchants.stream()
+                .map(vo -> {
+                    Map<String, String> key = new HashMap<>();
+                    key.put("name", vo.getName());
+                    key.put("address", vo.getAddress());
+                    return key;
+                })
+                .toList();
+
+        List<AvailableMerchantVO> existing = merchantMapper.findExistingByNameAndAddressList(merchantKeys);
+        Set<String> existingKeySet = existing.stream()
+                .map(vo -> vo.getName() + "|" + vo.getAddress())
+                .collect(Collectors.toSet());
+
+        List<AvailableMerchantVO> filtered = allMerchants.stream()
+                .filter(vo -> !existingKeySet.contains(vo.getName() + "|" + vo.getAddress()))
+                .toList();
+
+        if (filtered.isEmpty()) return Collections.emptyList();
+
+        List<AvailableMerchantVO> results = new ArrayList<>();
+        for (AvailableMerchantVO vo : filtered) {
+            String cleanedAddress = vo.getAddress().replaceAll("\\s*(지하)?\\d+층", "").trim();
+            BigDecimal[] coords = kakaoApiClient.getCoordinates(cleanedAddress);
+            if (coords == null) continue;
+
+            vo.setLatitude(coords[0]);
+            vo.setLongitude(coords[1]);
+            results.add(vo);
+        }
         return results;
     }
 }
