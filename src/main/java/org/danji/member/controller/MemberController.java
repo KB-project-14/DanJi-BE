@@ -27,21 +27,22 @@ public class MemberController {
     // @ModelAttribute 생략됨 -> formdata 형태로 요청이 올 때 이미지를 받기 위해
     @PostMapping()
     public ResponseEntity<ApiResponse<MemberDTO>> join(@RequestBody MemberJoinDTO member) {
+        MemberDTO memberDTO = service.join(member);
+        String jwt = jwtProcessor.generateToken(memberDTO);
+        memberDTO.setAccessToken(jwt);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(service.join(member)));
+                .body(ApiResponse.success(memberDTO));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<MemberDTO>> login(@RequestBody LoginDTO loginDTO) {
         MemberDTO memberDTO = service.login(loginDTO);
         String jwt = jwtProcessor.generateToken(memberDTO);;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(jwt);
+        memberDTO.setAccessToken(jwt);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .headers(headers)
                 .body(ApiResponse.success(memberDTO));
     }
 

@@ -24,6 +24,8 @@ public class MemberDTO extends BaseDTO {
     private Role role;
     private String name;
 
+    private String accessToken;
+
     public static MemberDTO of(MemberVO m) {
         return MemberDTO.builder()
                 .memberId(m.getMemberId())
