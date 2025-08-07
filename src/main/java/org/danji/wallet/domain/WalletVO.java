@@ -21,4 +21,5 @@ public class WalletVO extends BaseVO {
     private WalletType walletType;
     private Integer balance;
     private int displayOrder;
+    private int totalPayment;
 }

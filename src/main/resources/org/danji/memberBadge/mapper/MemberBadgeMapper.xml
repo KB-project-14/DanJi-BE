@@ -38,11 +38,12 @@
         </where>
     </select>
 
-    <select id="findByMemberIdAndBadgeId" resultType="MemberBadgeVO">
+    <select id="findByMemberIdAndBadgeIdAndBadgeGrade" resultType="MemberBadgeVO">
         SELECT *
         FROM member_badge
         WHERE member_id = #{memberId}
         AND badge_id = #{badgeId}
+        AND badge_grade = #{badgeGrade}
     </select>
 
 
