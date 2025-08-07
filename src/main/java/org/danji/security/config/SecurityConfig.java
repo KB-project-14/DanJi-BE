@@ -126,7 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //  configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
 
         // 허용할 HTTP 메서드 목록 지정
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
 
         // 모든 요청 헤더 허용
         configuration.setAllowedHeaders(List.of("*"));
