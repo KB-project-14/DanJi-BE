@@ -71,12 +71,15 @@ public class RootConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-
         config.setDriverClassName(driver);
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-
+        config.setMaximumPoolSize(50);
+        config.setMinimumIdle(5);
+        config.setConnectionTimeout(30000);
+        config.setIdleTimeout(600000);
+        config.setMaxLifetime(1800000);
         HikariDataSource dataSource = new HikariDataSource(config);
         return dataSource;
     }
