@@ -21,7 +21,8 @@ public class LocalCurrencyDTO extends BaseDTO {
     private Integer maximum;
     private Integer percentage;
 
-    private String regionName;
+    private String province;
+    private String city;
     private String imageUrl;
 
     public static LocalCurrencyDTO of(LocalCurrencyVO vo) {

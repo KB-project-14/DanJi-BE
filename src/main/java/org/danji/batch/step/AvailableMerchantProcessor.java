@@ -42,7 +42,7 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDT
                 .uriBuilderFactory(factory)
                 .build();
 
-        String encodedCity = URLEncoder.encode(currency.getRegionName(), StandardCharsets.UTF_8);
+        String encodedCity = URLEncoder.encode(currency.getProvince(), StandardCharsets.UTF_8);
         String encodedBill = URLEncoder.encode(currency.getName(), StandardCharsets.UTF_8);
 
         String url = "http://api.data.go.kr/openapi/tn_pubr_public_local_bill_api" +
