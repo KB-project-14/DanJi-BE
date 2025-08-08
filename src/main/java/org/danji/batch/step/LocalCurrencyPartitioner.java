@@ -44,7 +44,7 @@ public class LocalCurrencyPartitioner implements Partitioner {
                     .percentage(vo.getPercentage())
                     .createdAt(vo.getCreatedAt())
                     .updatedAt(vo.getUpdatedAt())
-                    .regionName(regionVO.getProvince())
+                    .province(regionVO.getProvince())
                     .build();
 
             allDtos.add(dto);
