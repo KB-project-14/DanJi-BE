@@ -138,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 쿠키/Authorization 사용 시
         cfg.setAllowCredentials(true);
 
-        // ★ 프리플라이트 캐시 24시간
+        // ★ 프리플라이트 캐시 24시간ㅎ
         cfg.setMaxAge(86_400L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
