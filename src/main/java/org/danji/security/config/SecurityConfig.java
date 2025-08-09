@@ -119,25 +119,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         // CORS 설정 객체 생성
-        CorsConfiguration configuration = new CorsConfiguration();
+        CorsConfiguration cfg = new CorsConfiguration();
 
-        // 모든 요청 허용
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        //  configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
+        // 권장: 정확한 오리진만 허용 (credentials=true일 때 와일드카드 지양)
+        cfg.setAllowedOrigins(List.of("*"));
+        // 또는 패턴을 꼭 써야 하면 아래를 쓰되 보안상 비추천
+        // cfg.setAllowedOriginPatterns(List.of("https://*.vercel.app"));
 
-        // 허용할 HTTP 메서드 목록 지정
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        // 프리플라이트 포함
+        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
 
-        // 모든 요청 헤더 허용
-        configuration.setAllowedHeaders(List.of("*"));
-        // 자격 증명(쿠키, Authorization 헤더 등)을 포함한 요청 허용
-        configuration.setAllowCredentials(true);
+        // 필요한 헤더만 (Authorization, Content-Type 정도) — 불필요하면 CORS 자체가 덜 일어남
+        cfg.setAllowedHeaders(List.of("*"));
 
-        // 특정 URL 경로 패턴에 대해 위의 CORS 설정을 적용
+        // 응답에서 노출할 헤더가 필요하면
+        // cfg.setExposedHeaders(List.of("Location"));
+
+        // 쿠키/Authorization 사용 시
+        cfg.setAllowCredentials(true);
+
+        // ★ 프리플라이트 캐시 24시간
+        cfg.setMaxAge(86_400L);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 적용
-
-        // 설정된 CORS 소스를 반환 (스프링 시큐리티나 필터 체인에 의해 사용됨)
+        source.registerCorsConfiguration("/**", cfg);
         return source;
     }
 
