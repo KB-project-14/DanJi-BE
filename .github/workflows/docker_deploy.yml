@@ -80,4 +80,31 @@ jobs:
               -e "SPRING_PROFILES_ACTIVE=dev" \
               ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
 
+      - name: EC2 (Private Subnet) 배포 via Bastion
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.PRIVATE_HOST_2 }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          proxy_host: ${{ secrets.BASTION_HOST}}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+
+            docker stop app || true
+            docker rm app || true
+
+            docker run -d \
+              --name app \
+              -p 8080:8080 \
+              -e "SERVER_DB_URL=${{ secrets.SERVER_DB_URL }}" \
+              -e "SERVER_DB_USERNAME=${{ secrets.SERVER_DB_USERNAME }}" \
+              -e "SERVER_DB_PASSWORD=${{ secrets.SERVER_DB_PASSWORD }}" \
+              -e "SECRET_KEY=${{ secrets.SECRET_KEY }}" \
+              -e "PUBLIC_API=${{ secrets.PUBLIC_API }}" \
+              -e "KAKAO_API=${{ secrets.KAKAO_API }}" \
+              -e "SPRING_PROFILES_ACTIVE=dev" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+            
             docker ps
