@@ -122,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration cfg = new CorsConfiguration();
 
         // 권장: 정확한 오리진만 허용 (credentials=true일 때 와일드카드 지양)
-        cfg.setAllowedOrigins(List.of("https://danji.vercel.app", "http://localhost:5173/"));
+        cfg.setAllowedOrigins(List.of("https://danji.vercel.app", "http://localhost:5173/", "https://danji.cloud/"));
         // 또는 패턴을 꼭 써야 하면 아래를 쓰되 보안상 비추천
         // cfg.setAllowedOriginPatterns(List.of("https://*.vercel.app"));
 
