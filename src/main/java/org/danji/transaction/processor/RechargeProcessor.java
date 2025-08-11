@@ -83,8 +83,8 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         int MaxChargeAmount = localCurrencyVO.getMaximum();
         int monthValue = LocalDateTime.now().getMonthValue();
         int totalChargeAmountByMonth = transactionMapper.findTotalChargeAmountByMonth(LocalCurrencyWalletVO.getWalletId(), monthValue);
-        int exactAmount = (int)(totalChargeAmountByMonth * (100.0 / (100.0 + localCurrencyVO.getPercentage())));
-        if (transferDTO.getAmount() > MaxChargeAmount - exactAmount){
+        double exactAmount = (totalChargeAmountByMonth * (100.0 / (100.0 + localCurrencyVO.getPercentage())));
+        if (transferDTO.getAmount() > MaxChargeAmount - (int) Math.round(exactAmount)){
             throw new LocalCurrencyException(ErrorCode.LOCAL_WALLET_EXCEEDS_MONTHLY_MAX);
         }
         // 요청금액보다 메인 지갑의 잔액이 작다면 예외 터뜨리기
@@ -96,6 +96,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
             }
         }
 
+        double rawValue = transferDTO.getAmount() * ((100.0 + localCurrencyVO.getPercentage()) / 100.0);
 
         if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             //요청금액 에 incentive 비율을 합한 금액으로 업데이트
@@ -104,7 +105,7 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
             }else{
                 walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -transferDTO.getAmount());
             }
-            walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)));
+            walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), (int) Math.round(rawValue));
 //        } else if (localCurrencyVO.getBenefitType() == BenefitType.CASHBACK) {
 //            // 요청 금액 업데이트 시키기
 //            if (transferDTO.isTransactionLogging()) {
@@ -150,8 +151,8 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
         if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), LocalCurrencyWalletVO.getWalletId(), mainWalletVO.getWalletId(),
-                    LocalCurrencyWalletVO.getBalance() ,  LocalCurrencyWalletVO.getBalance() +(int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)),
-                    (int) (transferDTO.getAmount() * (1 + localCurrencyVO.getPercentage() / 100.0)), Direction.INCOME, transferDTO.getType(), "충전", LocalCurrencyWalletVO.getWalletId());
+                    LocalCurrencyWalletVO.getBalance() ,  LocalCurrencyWalletVO.getBalance() +(int) Math.round(rawValue),
+                    (int) Math.round(rawValue), Direction.INCOME, transferDTO.getType(), "충전", LocalCurrencyWalletVO.getWalletId());
             int successLocalCurrencyWalletCount = transactionMapper.insert(localTx);
             if (successLocalCurrencyWalletCount != 1) {
                 throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
