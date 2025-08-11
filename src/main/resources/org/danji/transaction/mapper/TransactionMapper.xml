@@ -35,7 +35,7 @@
         SELECT *
         FROM transaction
         WHERE owner_wallet_id = #{walletId}
-        AND created_at BETWEEN #{startDate} AND #{lastDate}
+        AND created_at BETWEEN #{startDate} AND DATE_ADD(#{lastDate}, INTERVAL 1 DAY)
 
         <if test="direction != null">
             AND direction = #{direction}
