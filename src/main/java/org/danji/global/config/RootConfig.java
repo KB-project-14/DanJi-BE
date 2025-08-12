@@ -93,7 +93,7 @@ public class RootConfig {
 
         // 여기서 mapperLocations 추가
         sqlSessionFactory.setMapperLocations(
-                applicationContext.getResources("classpath*:mybatis/mapper/**/*.xml"));
+                applicationContext.getResources("classpath*:org/danji/**/*.xml"));
 
         return sqlSessionFactory.getObject();
     }
