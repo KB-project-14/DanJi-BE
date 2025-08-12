@@ -27,6 +27,10 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(WalletCreateDTO walletCreateDTO) {
 
+        if(walletCreateDTO.getMemberId() == null){
+            walletCreateDTO.setMemberId(AuthUtils.getMemberId());
+        }
+
         // 유저의 지역화폐 존재 여부 체크
         WalletVO existingWallet = walletMapper
                 .findByMemberIdAndLocalCurrencyId(walletCreateDTO.getMemberId(), walletCreateDTO.getLocalCurrencyId());
