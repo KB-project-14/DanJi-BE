@@ -14,7 +14,6 @@ import org.danji.transaction.domain.TransactionVO;
 import org.danji.transaction.dto.request.TransferDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
-import org.danji.transaction.enums.Type;
 import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
 import org.danji.wallet.domain.WalletVO;
@@ -108,10 +107,19 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 //            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -(transferDTO.getAmount() + amount + (int) (transferDTO.getAmount() * RECHARGE_FEE_RATE)));
 //            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), transferDTO.getAmount());
 //        }
+        //인센티브도 캐시백도 아닌 경우 원금 그대로 환불
+        else {
+            int requestAmount = transferDTO.getAmount();
+            walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -requestAmount);
+            walletMapper.updateWalletBalance(transferDTO.getToWalletId(), requestAmount);
+        }
 
         //transaction 테이블에 복식 부기
         //메인지갑 기준
-        double rawValue = transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()));
+        //인센티브일 때만 원금으로 역산, 아니면 그대로
+        double rawValue = (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE && localCurrencyVO.getPercentage() != null)
+            ? transferDTO.getAmount() * (100.0 / (100.0 + localCurrencyVO.getPercentage()))
+                : (double) transferDTO.getAmount();
         TransactionVO mainTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
                 mainWalletVO.getBalance(), mainWalletVO.getBalance() + (int) Math.round(rawValue),
@@ -124,7 +132,8 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 
         //지역화폐 기준
         TransactionVO localTx = null;
-        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
+        //지금은 항상 실행되어야 해서 incentive일 때만 생성하는 조건문 주석 처리
+//        if (localCurrencyVO.getBenefitType() == BenefitType.INCENTIVE) {
 
             localTx = transactionConverter.toTransactionVO(
                     UUID.randomUUID(), transferDTO.getFromWalletId(), transferDTO.getToWalletId(),
@@ -146,7 +155,8 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
 //            if (successLocalWalletCount != 1) {
 //                throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED_LOCAL);
 //            }
-        }
+//        }
+
 
         return List.of(
                 transactionConverter.toTransactionDTO(mainTx),
