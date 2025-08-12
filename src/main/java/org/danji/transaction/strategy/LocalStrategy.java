@@ -94,7 +94,7 @@ public class LocalStrategy implements PaymentStrategy {
 
         int paymentAmount = LocalCurrencyWalletVO.getTotalPayment() + paymentDTO.getInputAmount();
 
-        if (paymentAmount > bronze_criteria && paymentAmount < silver_criteria){
+        if (paymentAmount >= bronze_criteria && paymentAmount < silver_criteria){
             BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
                     .regionId(localCurrencyVO.getRegionId())
                     .build();
@@ -109,7 +109,7 @@ public class LocalStrategy implements PaymentStrategy {
                 memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
             }
         }
-        else if (paymentAmount > silver_criteria && paymentAmount < gold_criteria){
+        else if (paymentAmount >= silver_criteria && paymentAmount < gold_criteria){
             BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
                     .regionId(localCurrencyVO.getRegionId())
                     .build();
@@ -125,7 +125,7 @@ public class LocalStrategy implements PaymentStrategy {
             }
 
         }
-        else if (paymentAmount > gold_criteria){
+        else if (paymentAmount >= gold_criteria){
             BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
                     .regionId(localCurrencyVO.getRegionId())
                     .build();
