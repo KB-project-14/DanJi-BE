@@ -6,7 +6,10 @@
 <configuration>
   <settings>
     <setting name="mapUnderscoreToCamelCase" value="true"/>
+    <setting name="logImpl" value="SLF4J"/>
   </settings>
+
+
 
   <typeAliases>
     <package name="org.danji.auth.account.domain"/>

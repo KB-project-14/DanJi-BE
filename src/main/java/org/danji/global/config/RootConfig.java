@@ -91,6 +91,10 @@ public class RootConfig {
                 applicationContext.getResource("classpath:/mybatis-config.xml"));
         sqlSessionFactory.setDataSource(dataSource());
 
+        // 여기서 mapperLocations 추가
+        sqlSessionFactory.setMapperLocations(
+                applicationContext.getResources("classpath*:mybatis/mapper/**/*.xml"));
+
         return sqlSessionFactory.getObject();
     }
 
