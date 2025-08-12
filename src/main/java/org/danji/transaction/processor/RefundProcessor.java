@@ -110,6 +110,9 @@ public class RefundProcessor implements TransferProcessor<TransferDTO> {
         //인센티브도 캐시백도 아닌 경우 원금 그대로 환불
         else {
             int requestAmount = transferDTO.getAmount();
+            if (requestAmount > LocalCurrencyWalletVO.getBalance()) {
+                        throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
+            }
             walletMapper.updateWalletBalance(transferDTO.getFromWalletId(), -requestAmount);
             walletMapper.updateWalletBalance(transferDTO.getToWalletId(), requestAmount);
         }
