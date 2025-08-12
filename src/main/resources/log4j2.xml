@@ -54,6 +54,15 @@
             <AppenderRef ref="console"/>
         </Logger>
 
+        <Logger name="org.mybatis.spring.SqlSessionTemplate" level="DEBUG" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <!-- 바인딩된 파라미터와 Preparing/Parameters/Total 로그 자세히 보려면 TRACE 권장 -->
+        <Logger name="org.apache.ibatis.logging.jdbc.BaseJdbcLogger" level="TRACE" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
     </Loggers>
 
 </Configuration>
