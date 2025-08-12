@@ -53,7 +53,10 @@ public class TransactionController {
     )
     @PostMapping("/payment")
     public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyPayment(@RequestBody PaymentDTO paymentDTO) {
+        Long startTime = System.nanoTime();
         List<TransactionDTO> result = transactionService.handlePayment(paymentDTO);
+        Long endTime = System.nanoTime();
+        System.out.println("checkTime: " + (endTime - startTime));
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 

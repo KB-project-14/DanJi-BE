@@ -11,7 +11,7 @@
     </insert>
 
 
-    <select id="findById" resultMap="LocalCurrencyMap">
+    <select id="findById" parameterType="java.util.UUID" resultMap="LocalCurrencyMap" >
         select *
         from local_currency
         where local_currency_id = #{localCurrencyId}

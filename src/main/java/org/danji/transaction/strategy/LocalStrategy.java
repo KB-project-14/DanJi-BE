@@ -46,7 +46,7 @@ public class LocalStrategy implements PaymentStrategy {
     @Override
     @Transactional
     public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId) {
-
+        //Long startTime3 = System.nanoTime();
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
         if (availableMerchantVO == null) {
@@ -107,6 +107,9 @@ public class LocalStrategy implements PaymentStrategy {
         if (successMerchantTxCount != 1) {
             throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
+
+        //Long endtime3 = System.nanoTime();
+        //System.out.println("checkPayment: " + (endtime3 - startTime3));
 
         return List.of(
                 transactionConverter.toTransactionDTO(LocalTx),
