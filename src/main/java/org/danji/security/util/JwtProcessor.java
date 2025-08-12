@@ -19,8 +19,7 @@ import java.util.Date;
 @Log4j2
 public class JwtProcessor {
 
-    // 토큰 만료 시간 (5분)
-    static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 60;
+    static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 1000;
 
     private final Key key;
 

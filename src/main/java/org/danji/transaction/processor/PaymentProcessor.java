@@ -50,7 +50,7 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
 
         //결제 비밀번호 확인 로직
         UUID userId = AuthUtils.getMemberId();
@@ -58,18 +58,18 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
         }
 
-        //long endTime = System.nanoTime();
-        //System.out.println("CheckWalletPin : " + (endTime - startTime));
+        long endTime = System.nanoTime();
+        System.out.println("CheckWalletPin : " + (endTime - startTime));
 
-        //long startTime2 = System.nanoTime();
+        long startTime2 = System.nanoTime();
 
         if (paymentDTO.getType() == PaymentType.GENERAL) {
             return processGeneral(paymentDTO);
         }
 
-        //long endTime2 = System.nanoTime();
+        long endTime2 = System.nanoTime();
 
-        //System.out.println("ExcuteGeneralPayment : " + (endTime2 - startTime2));
+        System.out.println("ExcuteGeneralPayment : " + (endTime2 - startTime2));
 
         // 지역화폐는 strategy를 통해 분기
         return strategies.stream()
