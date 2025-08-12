@@ -13,7 +13,7 @@ public interface WalletMapper {
 
     WalletVO findById(UUID walletId);
 
-    void updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
+    int updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
 
     WalletVO findByMemberIdAndLocalCurrencyId(@Param("memberId") UUID memberId, @Param("localCurrencyId") UUID localCurrencyId);
 
