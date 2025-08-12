@@ -150,8 +150,14 @@ public class RechargeProcessor implements TransferProcessor<TransferDTO> {
 
         //잔액 업데이트
         //메인 지갑 차감 + 지역화폐 지갑 증액(보너스 포함/미포함)
-        walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -totalAmount);
-        walletMapper.updateWalletBalance(localCurrencyWalletVO.getWalletId(), creditedAmount);
+        int deducted = walletMapper.updateWalletBalance(mainWalletVO.getWalletId(), -totalAmount);
+            if (deducted != 1) {
+                    throw new IllegalStateException("메인 지갑 차감 실패: walletId=" + mainWalletVO.getWalletId());
+            }
+        int credited = walletMapper.updateWalletBalance(localCurrencyWalletVO.getWalletId(), creditedAmount);
+            if (credited != 1) {
+                    throw new IllegalStateException("지역화폐 지갑 입금 실패: walletId=" + localCurrencyWalletVO.getWalletId());
+            }
 
         //거래내역 - 메인지갑
         TransactionVO mainTx = transactionConverter.toTransactionVO(
