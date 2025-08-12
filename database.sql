@@ -18,3 +18,4 @@ VALUES (UUID_TO_BIN('11111111-1111-1111-1111-111111111111'), 26001, '동백전',
        (UUID_TO_BIN(UUID()), 26015, '동백전', 'CASHBACK', 500000, 5, NOW(), NOW()),
        (UUID_TO_BIN(UUID()), 26016, '동백전', 'CASHBACK', 500000, 5, NOW(), NOW());
 
+update wallet set balance = 1000000 where wallet_id = UNHEX('16168622d7184ffb8278c368471ba01c')
