@@ -16,4 +16,6 @@ public interface MemberMapper {
     void deleteByUsername(String username);
 
     MemberVO findById(UUID memberId);
+
+    String findPaymentPinById(UUID memberId);
 }

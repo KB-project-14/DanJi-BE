@@ -75,7 +75,7 @@ public class RootConfig {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-        config.setMaximumPoolSize(50);
+        config.setMaximumPoolSize(100);
         config.setMinimumIdle(5);
         config.setConnectionTimeout(30000);
         config.setIdleTimeout(600000);
