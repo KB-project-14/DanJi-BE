@@ -44,8 +44,8 @@ public class WalletController {
 //        List<WalletDTO> walletList = walletService.getWalletList(filter);
 //        return ResponseEntity.ok(ApiResponse.success(walletList));
 //    }
-    public ResponseEntity<ApiResponse<List<WalletDetailDTO>>> getWalletList() {
-        List<WalletDetailDTO> walletList = walletService.getWalletWithCurrency();
+    public ResponseEntity<ApiResponse<List<WalletDetailDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
+        List<WalletDetailDTO> walletList = walletService.getWalletWithCurrency(filter);
         return ResponseEntity.ok(ApiResponse.success(walletList));
     }
 

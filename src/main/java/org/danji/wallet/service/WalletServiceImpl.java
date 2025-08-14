@@ -81,7 +81,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
 
-
     @Override
     @Transactional
     public List<WalletDTO> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList) {
@@ -124,9 +123,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDetailDTO> getWalletWithCurrency() {
-        UUID memberId = AuthUtils.getMemberId();
-        return walletMapper.findWalletListByMemberId(memberId);
+    public List<WalletDetailDTO> getWalletWithCurrency(WalletFilterDTO filter) {
+        if (filter.getMemberId() == null) {
+            UUID memberId = AuthUtils.getMemberId();
+            filter.setMemberId(memberId);
+        }
+        return walletMapper.findWalletListByFilter(filter);
     }
 
 

@@ -135,35 +135,38 @@
     WHERE w.wallet_id = #{walletId}
   </select>
 
-  <select id="findWalletListByMemberId" resultMap="walletDetailMap">
-    SELECT w.wallet_id,
-           w.member_id,
-           w.wallet_type,
-           w.balance,
-           w.display_order,
-           w.local_currency_id,
-           lc.name AS local_currency_name,
-           lc.benefit_type,
-           lc.maximum,
-           lc.percentage,
-           r.region_id,
-           r.province,
-           r.city,
-           f.file_path
-    FROM wallet w
-           LEFT OUTER JOIN local_currency lc
-                           ON w.local_currency_id = lc.local_currency_id
-           JOIN region r
-                ON lc.region_id = r.region_id
-           LEFT JOIN file_reference fr
-                     ON fr.reference_id = lc.local_currency_id
-                       AND fr.reference_type = 'local_currency'
-                       AND fr.usage_type = 'card_image'
-           LEFT JOIN file f
-                     ON fr.file_id = f.file_id
-    WHERE w.member_id = #{memberId}
-    ORDER BY w.display_order ASC
-  </select>
+    <select id="findWalletListByFilter" resultMap="walletDetailMap">
+        SELECT
+        w.wallet_id,
+        w.member_id,
+        w.wallet_type,
+        w.balance,
+        w.display_order,
+        w.local_currency_id,
+        lc.name AS local_currency_name,
+        lc.benefit_type,
+        lc.percentage,
+        lc.maximum,
+        f.file_path
+        FROM wallet w
+        LEFT OUTER JOIN local_currency lc
+        ON w.local_currency_id = lc.local_currency_id
+        LEFT JOIN file_reference fr
+        ON fr.reference_id = lc.local_currency_id
+        AND fr.reference_type = 'local_currency'
+        AND fr.usage_type = 'card_image'
+        LEFT JOIN file f
+        ON fr.file_id = f.file_id
+        <where>
+            <if test="memberId != null">
+                AND member_id = #{memberId}
+            </if>
+            <if test="walletType != null">
+                AND wallet_type = #{walletType}
+            </if>
+        </where>
+        ORDER BY w.display_order ASC
+    </select>
 
   <update id="updateWalletTotalPayment">
     UPDATE wallet
