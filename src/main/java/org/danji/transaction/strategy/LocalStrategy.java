@@ -94,12 +94,12 @@ public class LocalStrategy implements PaymentStrategy {
 
         int paymentAmount = LocalCurrencyWalletVO.getTotalPayment() + paymentDTO.getInputAmount();
 
-        if (paymentAmount > bronze_criteria && paymentAmount < silver_criteria){
-            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
-                    .regionId(localCurrencyVO.getRegionId())
-                    .build();
-            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
+        BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
+                .regionId(localCurrencyVO.getRegionId())
+                .build();
+        List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
 
+        if (paymentAmount > bronze_criteria && paymentAmount < silver_criteria){
             if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.BRONZE)){
                 MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
                         .badgeId(byFilter.get(0).getBadgeId())
@@ -110,11 +110,6 @@ public class LocalStrategy implements PaymentStrategy {
             }
         }
         else if (paymentAmount > silver_criteria && paymentAmount < gold_criteria){
-            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
-                    .regionId(localCurrencyVO.getRegionId())
-                    .build();
-            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
-
             if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.SILVER)){
                 MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
                         .badgeId(byFilter.get(0).getBadgeId())
@@ -126,11 +121,6 @@ public class LocalStrategy implements PaymentStrategy {
 
         }
         else if (paymentAmount > gold_criteria){
-            BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
-                    .regionId(localCurrencyVO.getRegionId())
-                    .build();
-            List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
-
             if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.GOLD)){
                 MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
                         .badgeId(byFilter.get(0).getBadgeId())
