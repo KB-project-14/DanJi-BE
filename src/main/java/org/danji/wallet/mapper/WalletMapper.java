@@ -36,5 +36,5 @@ public interface WalletMapper {
     void updateWalletTotalPayment(@Param("walletId") UUID walletId, @Param("totalAmount") int totalAmount);
 
     //내가 가진 지역화폐 리스트 조회
-    List<WalletDetailDTO> findWalletListByMemberId(UUID memberId);
+    List<WalletDetailDTO> findWalletListByFilter(WalletFilterDTO filter);
 }
