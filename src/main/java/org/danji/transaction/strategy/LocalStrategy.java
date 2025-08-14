@@ -99,35 +99,24 @@ public class LocalStrategy implements PaymentStrategy {
                 .build();
         List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
 
-        if (paymentAmount > bronze_criteria && paymentAmount < silver_criteria){
-            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.BRONZE)){
-                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
-                        .badgeId(byFilter.get(0).getBadgeId())
-                        .badgeGrade(BadgeGrade.BRONZE)
-                        .memberId(userId)
-                        .build();
-                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
-            }
+        BadgeGrade target = null;
+        if (paymentAmount >= gold_criteria) {
+            target = BadgeGrade.GOLD;
+        } else if (paymentAmount >= silver_criteria) {
+            target = BadgeGrade.SILVER;
+        } else if (paymentAmount >= bronze_criteria) {
+            target = BadgeGrade.BRONZE;
         }
-        else if (paymentAmount > silver_criteria && paymentAmount < gold_criteria){
-            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.SILVER)){
-                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
-                        .badgeId(byFilter.get(0).getBadgeId())
-                        .badgeGrade(BadgeGrade.SILVER)
-                        .memberId(userId)
-                        .build();
-                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
-            }
 
-        }
-        else if (paymentAmount > gold_criteria){
-            if (memberBadgeService.validateMemberBadge(userId, byFilter.get(0).getBadgeId(), BadgeGrade.GOLD)){
-                MemberBadgeCreateDTO memberBadgeCreateDTO = MemberBadgeCreateDTO.builder()
-                        .badgeId(byFilter.get(0).getBadgeId())
-                        .badgeGrade(BadgeGrade.GOLD)
+        if (target != null) {
+            UUID badgeId = byFilter.get(0).getBadgeId(); // 한 번만 꺼내기
+            if (memberBadgeService.validateMemberBadge(userId, badgeId, target)) {
+                MemberBadgeCreateDTO dto = MemberBadgeCreateDTO.builder()
+                        .badgeId(badgeId)
+                        .badgeGrade(target)
                         .memberId(userId)
                         .build();
-                memberBadgeService.createMemberBadge(memberBadgeCreateDTO);
+                memberBadgeService.createMemberBadge(dto);
             }
         }
 
