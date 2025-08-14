@@ -1,0 +1,1 @@
+CREATE INDEX idx_member_badge ON member_badge (member_id, badge_id, badge_grade);
