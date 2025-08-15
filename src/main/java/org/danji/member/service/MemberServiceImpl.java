@@ -102,14 +102,14 @@ public class MemberServiceImpl implements MemberService {
         long t0 = System.nanoTime();
         MemberVO member = null;
         String findPaymentPin = null;
-        try (Connection c = dataSource.getConnection()) {           // 풀 대기
-            long t1 = System.nanoTime();
-            findPaymentPin = mapper.findPaymentPinById(memberId);                   // 쿼리 실행/매핑
-            long t2 = System.nanoTime();
-            log.info("connWait={}ms, query+map={}ms", (t1-t0)/1e6, (t2-t1)/1e6);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        //try (Connection c = dataSource.getConnection()) {           // 풀 대기
+        long t1 = System.nanoTime();
+        findPaymentPin = mapper.findPaymentPinById(memberId);                   // 쿼리 실행/매핑
+        long t2 = System.nanoTime();
+        log.info("connWait={}ms, query+map={}ms", (t1-t0)/1e6, (t2-t1)/1e6);
+       // }catch (SQLException e){
+         //   e.printStackTrace();
+        //}
 
 
         int result = 0;

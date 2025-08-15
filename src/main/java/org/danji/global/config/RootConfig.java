@@ -75,11 +75,28 @@ public class RootConfig {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-        config.setMaximumPoolSize(100);
-        config.setMinimumIdle(5);
-        config.setConnectionTimeout(30000);
-        config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
+        //config.addDataSourceProperty("cachePrepStmts", "true");
+        //config.addDataSourceProperty("prepStmtCacheSize", "250");
+        //config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        //config.addDataSourceProperty("useServerPrepStmts", "true");
+        //config.setMaximumPoolSize(32);
+
+// 스파이크 대응: 최소 아이들 커넥션 확보
+       // config.setMinimumIdle(24);
+
+// 풀 포화 시 빨리 실패
+//        config.setConnectionTimeout(10000);
+
+// DB wait_timeout보다 약간 짧게
+  //      config.setIdleTimeout(300_000);     // 5분
+    //    config.setMaxLifetime(1_700_000);   // 28분
+
+
+        config.setMaximumPoolSize(32);
+        config.setMinimumIdle(24);
+        //config.setConnectionTimeout(30000);
+        //config.setIdleTimeout(600000);
+        //config.setMaxLifetime(1800000);
         HikariDataSource dataSource = new HikariDataSource(config);
         return dataSource;
     }
@@ -95,6 +112,7 @@ public class RootConfig {
         sqlSessionFactory.setMapperLocations(
                 applicationContext.getResources("classpath*:mybatis/mapper/**/*.xml"));
 
+        sqlSessionFactory.setTypeHandlersPackage("org.danji.global.handler");
         return sqlSessionFactory.getObject();
     }
 

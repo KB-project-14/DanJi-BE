@@ -31,6 +31,29 @@
                 now())
     </insert>
 
+    <insert id="insertMany" parameterType="java.util.List">
+        INSERT INTO `transaction` (
+        transaction_id, from_wallet_id, to_wallet_id,
+        before_balance, after_balance, amount,
+        direction, `type`, `comment`, owner_wallet_id,
+        created_at, updated_at
+        )
+        VALUES
+        <foreach collection="list" item="t" separator=",">
+            (#{t.transactionId},
+            #{t.fromWalletId},
+            #{t.toWalletId},
+            #{t.beforeBalance},
+            #{t.afterBalance},
+            #{t.amount},
+            #{t.direction},
+            #{t.type},
+            #{t.comment},
+            #{t.ownerWalletId},
+            NOW(), NOW())
+        </foreach>
+    </insert>
+
     <select id="findByFilter" resultType="TransactionVO">
         SELECT *
         FROM transaction

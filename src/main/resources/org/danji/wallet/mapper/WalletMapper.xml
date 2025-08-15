@@ -179,4 +179,36 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
+
+    <update id="payAndAccumulate">
+        UPDATE wallet
+        SET balance       = balance - #{inputAmount},
+        total_payment = total_payment + #{inputAmount},
+        updated_at    = NOW()
+        WHERE wallet_id  = #{walletId}
+        AND member_id  = #{memberId}
+        AND wallet_type = 'LOCAL'
+    </update>
+
+    <select id="getPaymentContext"
+            resultType="org.danji.transaction.dto.request.PaymentContextDTO">
+        SELECT
+            w.wallet_id             AS walletId,
+            w.balance               AS balance,
+            w.total_payment         AS totalPayment,
+            lc.region_id            AS regionId,
+            am.name                 AS merchantName,
+            CASE WHEN w.wallet_id IS NULL              THEN 0 ELSE 1 END AS walletExists,
+            CASE WHEN am.available_merchant_id IS NULL THEN 0 ELSE 1 END AS merchantExists,
+            CASE WHEN lc.local_currency_id IS NULL     THEN 0 ELSE 1 END AS localCurrencyExists,
+            CASE WHEN w.member_id = #{memberId}
+                AND w.wallet_type = 'LOCAL' THEN 1 ELSE 0 END AS authorized
+        FROM (SELECT 1) x
+                 LEFT JOIN wallet w
+                           ON w.wallet_id = #{walletId}
+                 LEFT JOIN local_currency lc
+                           ON lc.local_currency_id = w.local_currency_id
+                 LEFT JOIN available_merchant am
+                           ON am.available_merchant_id = #{merchantId}
+    </select>
 </mapper>

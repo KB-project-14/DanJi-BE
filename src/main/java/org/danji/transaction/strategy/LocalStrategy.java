@@ -17,6 +17,7 @@ import org.danji.memberBadge.enums.BadgeGrade;
 import org.danji.memberBadge.service.MemberBadgeService;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
+import org.danji.transaction.dto.request.PaymentContextDTO;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
@@ -32,6 +33,7 @@ import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,40 +64,17 @@ public class LocalStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId) {
-        Long startTime3 = System.nanoTime();
+    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId, PaymentContextDTO ctx) {
 
-        AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());
-        if (availableMerchantVO == null) {
-            throw new AvailableMerchantException(ErrorCode.AVAILABLE_MERCHANT_NOT_FOUND);
-        }
-
-
-        WalletVO LocalCurrencyWalletVO = walletMapper.findById(paymentDTO.getLocalWalletId());
-        if (LocalCurrencyWalletVO == null) {
-            throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
-        }
-        LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(LocalCurrencyWalletVO.getLocalCurrencyId());
-        if (localCurrencyVO == null) {
-            throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
-        }
-        WalletFilterDTO walletFilterDTO = WalletFilterDTO.builder().memberId(userId).walletType(WalletType.LOCAL).build();
-        List<WalletVO> localWalletByUserIdVO = walletMapper.findByFilter(walletFilterDTO);
-        if (!checkOwnership(localWalletByUserIdVO, LocalCurrencyWalletVO)) {
-            throw new WalletException(ErrorCode.UNAUTHORIZED_WALLET_ACCESS);
-        }
-
-        if (LocalCurrencyWalletVO.getBalance() < paymentDTO.getMerchantAmount()) {
+        int updated = walletMapper.payAndAccumulate(ctx.getWalletId(), userId, paymentDTO.getInputAmount());
+        if (updated != 1) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
 
-        walletMapper.updateWalletBalance(LocalCurrencyWalletVO.getWalletId(), -paymentDTO.getMerchantAmount());
-        walletMapper.updateWalletTotalPayment(LocalCurrencyWalletVO.getWalletId(), paymentDTO.getInputAmount());
-
-        int paymentAmount = LocalCurrencyWalletVO.getTotalPayment() + paymentDTO.getInputAmount();
+        int paymentAmount = ctx.getTotalPayment() + paymentDTO.getInputAmount();
 
         BadgeFilterDTO badgeFilterDTO = BadgeFilterDTO.builder().badgeType(BadgeType.NORMAL)
-                .regionId(localCurrencyVO.getRegionId())
+                .regionId(ctx.getRegionId())
                 .build();
         List<BadgeVO> byFilter = badgeMapper.findByFilter(badgeFilterDTO);
 
@@ -120,50 +99,32 @@ public class LocalStrategy implements PaymentStrategy {
             }
         }
 
-        TransactionVO LocalTx = transactionConverter.toTransactionVO(
-                UUID.randomUUID(),
-                LocalCurrencyWalletVO.getWalletId(),
-                null,
-                LocalCurrencyWalletVO.getBalance(),
-                LocalCurrencyWalletVO.getBalance() - paymentDTO.getMerchantAmount(),
-                paymentDTO.getMerchantAmount(),
-                Direction.EXPENSE,
-                Type.PAYMENT,
-                availableMerchantVO.getName(),
-                LocalCurrencyWalletVO.getWalletId()
+        final UUID walletId   = ctx.getWalletId();
+        final String comment  = ctx.getMerchantName();
+        final int amount      = paymentDTO.getMerchantAmount();
+        final int before      = ctx.getBalance();
+        final int after       = before - amount;
+
+        //Long startTime5 = System.nanoTime();
+// 두 트랜잭션 VO 구성
+        TransactionVO expenseTx = transactionConverter.toTransactionVO(
+                UUID.randomUUID(), walletId, null,
+                before, after, amount,
+                Direction.EXPENSE, Type.PAYMENT, comment, walletId
+        );
+        TransactionVO incomeTx = transactionConverter.toTransactionVO(
+                UUID.randomUUID(), walletId, null,
+                null, null, amount,
+                Direction.INCOME, Type.PAYMENT, comment, null
         );
 
-        int successLocalTxCount = transactionMapper.insert(LocalTx);
-        if (successLocalTxCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
-        }
-
-        TransactionVO merchantTx = transactionConverter.toTransactionVO(
-                UUID.randomUUID(),
-                LocalCurrencyWalletVO.getWalletId(),
-                null,
-                null,
-                null,
-                paymentDTO.getMerchantAmount(),
-                Direction.INCOME,
-                Type.PAYMENT,
-                availableMerchantVO.getName(),
-                null
-        );
-
-        int successMerchantTxCount = transactionMapper.insert(merchantTx);
-        if (successMerchantTxCount != 1) {
-            throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
-        }
-
-        Long endtime3 = System.nanoTime();
-        System.out.println("checkPayment: " + (endtime3 - startTime3));
+// ← 왕복 1번: 멀티밸류 INSERT
+        int inserted = transactionMapper.insertMany(Arrays.asList(expenseTx, incomeTx));
+        if (inserted != 2) throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
 
         return List.of(
-                transactionConverter.toTransactionDTO(LocalTx),
-                transactionConverter.toTransactionDTO(merchantTx)
+                transactionConverter.toTransactionDTO(expenseTx),
+                transactionConverter.toTransactionDTO(incomeTx)
         );
     }
-
-
 }

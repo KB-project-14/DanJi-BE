@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TransactionMapper {
+
     int insert(TransactionVO transactionVO);
+    int insertMany(List<TransactionVO> transactionVO);
 
     List<TransactionVO> findByFilter(TransactionFilterDTO transactionFilterDTO);
 
