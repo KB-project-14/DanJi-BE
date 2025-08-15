@@ -51,7 +51,10 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
 
 
     public Boolean validateMemberBadge(UUID memberId, UUID badgeId, BadgeGrade badgeGrade) {
+        Long startTime = System.nanoTime();
         MemberBadgeVO vo = mapper.findByMemberIdAndBadgeIdAndBadgeGrade(memberId, badgeId, badgeGrade);
+        Long endTime = System.nanoTime();
+        System.out.println("validate: " + (endTime - startTime));
         if (vo != null) {
             return false;
         }

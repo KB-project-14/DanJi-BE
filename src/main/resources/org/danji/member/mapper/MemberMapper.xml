@@ -64,4 +64,10 @@
         WHERE member_id = #{userId}
   </select>
 
+  <select id="findPaymentPinById" parameterType="java.util.UUID" resultType="string" >
+    SELECT member.payment_pin
+    FROM member
+    Where member_id = #{memberId}
+  </select>
+
 </mapper>

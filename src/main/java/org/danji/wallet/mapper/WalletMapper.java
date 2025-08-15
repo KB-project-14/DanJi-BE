@@ -1,6 +1,7 @@
 package org.danji.wallet.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.danji.transaction.dto.request.PaymentContextDTO;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.dto.WalletDetailDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
@@ -37,4 +38,8 @@ public interface WalletMapper {
 
     //내가 가진 지역화폐 리스트 조회
     List<WalletDetailDTO> findWalletListByFilter(WalletFilterDTO filter);
+
+    int payAndAccumulate(@Param("walletId")UUID walletId, @Param("memberId")UUID memberId, @Param("inputAmount")Integer inputAmount);
+
+    PaymentContextDTO getPaymentContext(@Param("walletId") UUID localWalletId, @Param("memberId")UUID userId, @Param("merchantId") UUID availableMerchantId);
 }

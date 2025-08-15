@@ -18,6 +18,7 @@ import org.danji.memberBadge.enums.BadgeGrade;
 import org.danji.memberBadge.service.MemberBadgeService;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
+import org.danji.transaction.dto.request.PaymentContextDTO;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.Direction;
@@ -63,7 +64,8 @@ public class LocalMixedStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId) {
+    //TODO LocalStrategy 코드 참고하여 쿼리 최적화 리팩토링
+    public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId, PaymentContextDTO ctx) {
 
 
         AvailableMerchantVO availableMerchantVO = availableMerchantMapper.findById(paymentDTO.getAvailableMerchantId());

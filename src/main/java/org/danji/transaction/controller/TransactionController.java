@@ -47,16 +47,14 @@ public class TransactionController {
         List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
+
     @ApiOperation(
             value = "결제 API",
             notes = "결제 타입(LOCAL_CURRENCY, GENERAL) 에 따라 결제를 진행합니다."
     )
     @PostMapping("/payment")
     public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyPayment(@RequestBody PaymentDTO paymentDTO) {
-        Long startTime = System.nanoTime();
         List<TransactionDTO> result = transactionService.handlePayment(paymentDTO);
-        Long endTime = System.nanoTime();
-        System.out.println("checkTime: " + (endTime - startTime));
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 

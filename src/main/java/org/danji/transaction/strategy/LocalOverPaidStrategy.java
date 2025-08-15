@@ -3,6 +3,7 @@ package org.danji.transaction.strategy;
 import lombok.RequiredArgsConstructor;
 import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.global.error.ErrorCode;
+import org.danji.transaction.dto.request.PaymentContextDTO;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.PaymentType;
@@ -24,7 +25,7 @@ public class LocalOverPaidStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public List<TransactionDTO> process(PaymentDTO dto, UUID userId) {
+    public List<TransactionDTO> process(PaymentDTO dto, UUID userId, PaymentContextDTO ctx) {
         throw new AvailableMerchantException(ErrorCode.INPUT_AMOUNT_EXCEEDS_MERCHANT_AMOUNT);
     }
 }
