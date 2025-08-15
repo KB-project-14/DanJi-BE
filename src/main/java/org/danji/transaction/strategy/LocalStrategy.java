@@ -65,7 +65,6 @@ public class LocalStrategy implements PaymentStrategy {
     @Override
     @Transactional
     public List<TransactionDTO> process(PaymentDTO paymentDTO, UUID userId, PaymentContextDTO ctx) {
-
         int updated = walletMapper.payAndAccumulate(ctx.getWalletId(), userId, paymentDTO.getInputAmount());
         if (updated != 1) {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
@@ -106,7 +105,7 @@ public class LocalStrategy implements PaymentStrategy {
         final int after       = before - amount;
 
         //Long startTime5 = System.nanoTime();
-// 두 트랜잭션 VO 구성
+        // 두 트랜잭션 VO 구성
         TransactionVO expenseTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), walletId, null,
                 before, after, amount,
@@ -127,4 +126,6 @@ public class LocalStrategy implements PaymentStrategy {
                 transactionConverter.toTransactionDTO(incomeTx)
         );
     }
+
+
 }

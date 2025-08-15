@@ -1,148 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.danji.wallet.mapper.WalletMapper">
-    <insert id="create">
-        INSERT INTO wallet
-        (wallet_id, member_id, local_currency_id, wallet_type, balance,
-         display_order, created_at, updated_at)
-        VALUES
-            (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance},
-             #{displayOrder}, NOW(), NOW())
-    </insert>
+  <insert id="create">
+    INSERT INTO wallet
+    (wallet_id, member_id, local_currency_id, wallet_type, balance,
+     display_order, created_at, updated_at)
+    VALUES (#{walletId}, #{memberId}, #{localCurrencyId}, #{walletType}, #{balance},
+            #{displayOrder}, NOW(), NOW())
+  </insert>
 
-    <select id="getCashWalletByUserId" parameterType="java.util.UUID"
-            resultType="WalletVO">
-        SELECT wallet_id,
-               member_id,
-               local_currency_id,
-               wallet_type,
-               balance,
-               created_at,
-               updated_at
-        FROM wallet
-        WHERE member_id = #{userId}
-          AND wallet_type = 'CASH'
-    </select>
+  <select id="getCashWalletByUserId" parameterType="java.util.UUID"
+    resultType="WalletVO">
+    SELECT wallet_id,
+           member_id,
+           local_currency_id,
+           wallet_type,
+           balance,
+           created_at,
+           updated_at
+    FROM wallet
+    WHERE member_id = #{userId}
+      AND wallet_type = 'CASH'
+  </select>
 
-    <select id="findById" parameterType="java.util.UUID"
-            resultType="WalletVO">
-        SELECT *
-        FROM wallet
-        WHERE wallet_id = #{walletId}
+  <select id="findById" parameterType="java.util.UUID"
+    resultType="WalletVO">
+    SELECT *
+    FROM wallet
+    WHERE wallet_id = #{walletId}
 
-    </select>
+  </select>
 
-    <select id="findByMemberIdAndLocalCurrencyId" parameterType="java.util.UUID" resultType="WalletVO">
-        SELECT *
-        FROM wallet
-        WHERE member_id = #{memberId}
-          AND local_currency_id = #{localCurrencyId}
-    </select>
+  <select id="findByMemberIdAndLocalCurrencyId" parameterType="java.util.UUID"
+    resultType="WalletVO">
+    SELECT *
+    FROM wallet
+    WHERE member_id = #{memberId}
+      AND local_currency_id = #{localCurrencyId}
+  </select>
 
-    <select id="findByFilter" resultType="WalletVO">
-        SELECT *
-        FROM wallet
-        <where>
-            <if test="memberId != null">
-                AND member_id = #{memberId}
-            </if>
-            <if test="walletType != null">
-                AND wallet_type = #{walletType}
-            </if>
-        </where>
-    </select>
+  <select id="findByFilter" resultType="WalletVO">
+    SELECT *
+    FROM wallet
+    <where>
+      <if test="memberId != null">
+        AND member_id = #{memberId}
+      </if>
+      <if test="walletType != null">
+        AND wallet_type = #{walletType}
+      </if>
+    </where>
+  </select>
 
-    <update id="updateWalletBalance">
-        UPDATE wallet
-        SET balance    = balance + #{amount},
-            updated_at = NOW()
-        WHERE wallet_id = #{walletId}
-    </update>
-
-
-    <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
-        SELECT *
-        FROM wallet
-        WHERE member_id = #{memberId}
-          AND wallet_type = 'CASH'
-    </select>
+  <update id="updateWalletBalance">
+    UPDATE wallet
+    SET balance    = balance + #{amount},
+        updated_at = NOW()
+    WHERE wallet_id = #{walletId}
+  </update>
 
 
-    <update id="bulkUpdateDisplayOrder">
-        UPDATE wallet
-        SET display_order = CASE wallet_id
-        <foreach collection="list" item="w">
-            WHEN #{w.walletId} THEN #{w.displayOrder}
-        </foreach>
-        END
-        WHERE wallet_id IN
-        <foreach collection="list" item="w" open="(" separator="," close=")">
-            #{w.walletId}
-        </foreach>
-    </update>
+  <select id="findByMemberId" parameterType="java.util.UUID" resultType="WalletVO">
+    SELECT *
+    FROM wallet
+    WHERE member_id = #{memberId}
+      AND wallet_type = 'CASH'
+  </select>
 
-    <update id="reorderDisplayOrder">
-        UPDATE wallet w
-            JOIN (SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
-                  FROM wallet
-                  WHERE member_id = #{memberId}) t ON w.wallet_id = t.wallet_id
-        SET w.display_order = t.new_order
-    </update>
 
-    <delete id="delete">
-        DELETE
-        FROM wallet
-        WHERE wallet_id = #{walletId}
-    </delete>
+  <update id="bulkUpdateDisplayOrder">
+    UPDATE wallet
+    SET display_order = CASE wallet_id
+    <foreach collection="list" item="w">
+      WHEN #{w.walletId} THEN #{w.displayOrder}
+    </foreach>
+    END
+    WHERE wallet_id IN
+    <foreach collection="list" item="w" open="(" separator="," close=")">
+      #{w.walletId}
+    </foreach>
+  </update>
 
-    <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
-        SELECT COALESCE(MAX(display_order), 0)
-        FROM wallet
-        WHERE member_id = #{memberId}
-    </select>
+  <update id="reorderDisplayOrder">
+    UPDATE wallet w
+      JOIN (SELECT wallet_id, ROW_NUMBER() OVER (ORDER BY display_order) AS new_order
+            FROM wallet
+            WHERE member_id = #{memberId}) t ON w.wallet_id = t.wallet_id
+    SET w.display_order = t.new_order
+  </update>
 
-    <select id="selectWalletDetailByWalletId" resultMap="walletDetailMap">
-        SELECT w.wallet_id,
-               w.member_id,
-               w.local_currency_id,
-               w.wallet_type,
-               w.balance,
-               w.display_order,
-               lc.name     AS local_currency_name,
-               lc.benefit_type,
-               lc.maximum,
-               lc.percentage,
-               f.file_path,
-               w.created_at,
-               w.updated_at
-        FROM wallet w
-                 LEFT JOIN local_currency lc
-                      ON w.local_currency_id = lc.local_currency_id
-                 LEFT JOIN file_reference fr
-                           ON fr.reference_id = lc.local_currency_id
-                               AND fr.reference_type = 'local_currency'
-                               AND fr.usage_type = 'card_image'
-                 LEFT JOIN file f
-                           ON fr.file_id = f.file_id
-        WHERE w.wallet_id = #{walletId}
-    </select>
+  <delete id="delete">
+    DELETE
+    FROM wallet
+    WHERE wallet_id = #{walletId}
+  </delete>
 
-    <select id="findWalletListByMemberId" resultMap="walletDetailMap">
+  <select id="findMaxDisplayOrderByMemberId" parameterType="java.util.UUID" resultType="int">
+    SELECT COALESCE(MAX(display_order), 0)
+    FROM wallet
+    WHERE member_id = #{memberId}
+  </select>
+
+  <select id="selectWalletDetailByWalletId" resultMap="walletDetailMap">
+    SELECT w.wallet_id,
+           w.member_id,
+           w.local_currency_id,
+           w.wallet_type,
+           w.balance,
+           w.display_order,
+           lc.name AS local_currency_name,
+           lc.benefit_type,
+           lc.maximum,
+           lc.percentage,
+           r.region_id,
+           r.province,
+           r.city,
+           f.file_path,
+           w.created_at,
+           w.updated_at
+    FROM wallet w
+           LEFT JOIN local_currency lc
+                     ON w.local_currency_id = lc.local_currency_id
+           JOIN region r
+                ON lc.region_id = r.region_id
+           LEFT JOIN file_reference fr
+                     ON fr.reference_id = lc.local_currency_id
+                       AND fr.reference_type = 'local_currency'
+                       AND fr.usage_type = 'card_image'
+           LEFT JOIN file f
+                     ON fr.file_id = f.file_id
+    WHERE w.wallet_id = #{walletId}
+  </select>
+
+    <select id="findWalletListByFilter" resultMap="walletDetailMap">
         SELECT
-            w.wallet_id,
-            w.member_id,
-            w.wallet_type,
-            w.balance,
-            w.display_order,
-            w.local_currency_id,
-            lc.name AS local_currency_name,
-            lc.benefit_type,
-            lc.percentage,
-            lc.maximum,
-            f.file_path
+        w.wallet_id,
+        w.member_id,
+        w.wallet_type,
+        w.balance,
+        w.display_order,
+        w.local_currency_id,
+        lc.name AS local_currency_name,
+        lc.benefit_type,
+        lc.percentage,
+        lc.maximum,
+        f.file_path
         FROM wallet w
         LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
@@ -152,16 +157,24 @@
         AND fr.usage_type = 'card_image'
         LEFT JOIN file f
         ON fr.file_id = f.file_id
-        WHERE w.member_id = #{memberId}
+        <where>
+            <if test="memberId != null">
+                AND member_id = #{memberId}
+            </if>
+            <if test="walletType != null">
+                AND wallet_type = #{walletType}
+            </if>
+        </where>
         ORDER BY w.display_order ASC
     </select>
 
-    <update id = "updateWalletTotalPayment">
-        UPDATE wallet
-        SET total_payment = total_payment + #{totalAmount},
-            updated_at = NOW()
-        WHERE wallet_id = #{walletId}
-    </update>
+  <update id="updateWalletTotalPayment">
+    UPDATE wallet
+    SET total_payment = total_payment + #{totalAmount},
+        updated_at    = NOW()
+    WHERE wallet_id = #{walletId}
+  </update>
+
 
     <resultMap id="walletDetailMap" type="WalletDetailDTO">
         <id property="walletId" column="wallet_id"/>
@@ -174,20 +187,25 @@
         <result property="localCurrencyName" column="local_currency_name"/>
         <result property="benefitType" column="benefit_type"/>
         <result property="maximum" column="maximum"/>
-        <result property="percentage" column="percentage"/>
-        <result property="backgroundImageUrl" column="file_path" />
+
+        <result property="regionId" column="region_id"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="backgroundImageUrl" column="file_path"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+
+
     <update id="payAndAccumulate">
         UPDATE wallet
         SET balance       = balance - #{inputAmount},
-        total_payment = total_payment + #{inputAmount},
-        updated_at    = NOW()
+            total_payment = total_payment + #{inputAmount},
+            updated_at    = NOW()
         WHERE wallet_id  = #{walletId}
-        AND member_id  = #{memberId}
-        AND wallet_type = 'LOCAL'
+          AND member_id  = #{memberId}
+          AND wallet_type = 'LOCAL'
     </update>
 
     <select id="getPaymentContext"

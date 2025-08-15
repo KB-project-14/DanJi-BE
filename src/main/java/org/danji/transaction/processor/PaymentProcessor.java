@@ -7,9 +7,7 @@ import org.danji.availableMerchant.exception.AvailableMerchantException;
 import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
-import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.exception.LocalCurrencyException;
-import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.member.domain.MemberVO;
 import org.danji.member.mapper.MemberMapper;
 import org.danji.member.service.MemberService;
@@ -25,8 +23,6 @@ import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
 import org.danji.transaction.strategy.PaymentStrategy;
 import org.danji.wallet.domain.WalletVO;
-import org.danji.wallet.dto.WalletFilterDTO;
-import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Component;
@@ -49,7 +45,6 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     private final TransactionConverter transactionConverter;
     private final AvailableMerchantMapper availableMerchantMapper;
     private final MemberService memberService;
-    private final LocalCurrencyMapper localCurrencyMapper;
 
     private final List<PaymentStrategy> strategies;
 
@@ -57,12 +52,8 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //long startTime = System.nanoTime();
-
         //결제 비밀번호 확인 로직
-
         UUID userId = AuthUtils.getMemberId();
-
         if (!memberService.checkPaymentPin(paymentDTO.getWalletPin())) {
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
         }
@@ -79,10 +70,10 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
             throw new WalletException(ErrorCode.WALLET_BALANCE_NOT_ENOUGH);
         }
 
-
         if (paymentDTO.getType() == PaymentType.GENERAL) {
             return processGeneral(paymentDTO);
         }
+
 
         // 지역화폐는 strategy를 통해 분기
         return strategies.stream()
@@ -90,10 +81,11 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
                 .findFirst()
                 .orElseThrow(() -> new WalletException(ErrorCode.STRATEGY_NOT_FOUND))
                 .process(paymentDTO, userId, ctx);
+
+
     }
 
-    @Transactional
-    public List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
+    private List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
         // 일반 결제 처리 로직 (예: 메인지갑 차감)
 
         UUID userId = AuthUtils.getMemberId();

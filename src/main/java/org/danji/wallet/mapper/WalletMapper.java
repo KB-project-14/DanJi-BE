@@ -7,7 +7,6 @@ import org.danji.wallet.dto.WalletDetailDTO;
 import org.danji.wallet.dto.WalletFilterDTO;
 import org.danji.wallet.dto.WalletOrderUpdateDTO;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ public interface WalletMapper {
 
     WalletVO findById(UUID walletId);
 
-    void updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
+    int updateWalletBalance(@Param("walletId") UUID walletId, @Param("amount") int amount);
 
     WalletVO findByMemberIdAndLocalCurrencyId(@Param("memberId") UUID memberId, @Param("localCurrencyId") UUID localCurrencyId);
 
@@ -38,7 +37,7 @@ public interface WalletMapper {
     void updateWalletTotalPayment(@Param("walletId") UUID walletId, @Param("totalAmount") int totalAmount);
 
     //내가 가진 지역화폐 리스트 조회
-    List<WalletDetailDTO> findWalletListByMemberId(UUID memberId);
+    List<WalletDetailDTO> findWalletListByFilter(WalletFilterDTO filter);
 
     int payAndAccumulate(@Param("walletId")UUID walletId, @Param("memberId")UUID memberId, @Param("inputAmount")Integer inputAmount);
 

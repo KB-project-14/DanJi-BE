@@ -27,6 +27,10 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(WalletCreateDTO walletCreateDTO) {
 
+        if(walletCreateDTO.getMemberId() == null){
+            walletCreateDTO.setMemberId(AuthUtils.getMemberId());
+        }
+
         // 유저의 지역화폐 존재 여부 체크
         WalletVO existingWallet = walletMapper
                 .findByMemberIdAndLocalCurrencyId(walletCreateDTO.getMemberId(), walletCreateDTO.getLocalCurrencyId());
@@ -77,7 +81,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
 
-
     @Override
     @Transactional
     public List<WalletDTO> updateWalletOrder(List<WalletOrderUpdateDTO> walletOrderList) {
@@ -120,9 +123,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDetailDTO> getWalletWithCurrency() {
-        UUID memberId = AuthUtils.getMemberId();
-        return walletMapper.findWalletListByMemberId(memberId);
+    public List<WalletDetailDTO> getWalletWithCurrency(WalletFilterDTO filter) {
+        if (filter.getMemberId() == null) {
+            UUID memberId = AuthUtils.getMemberId();
+            filter.setMemberId(memberId);
+        }
+        return walletMapper.findWalletListByFilter(filter);
     }
 
 
