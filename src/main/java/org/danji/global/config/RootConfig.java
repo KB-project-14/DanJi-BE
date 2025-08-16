@@ -79,8 +79,8 @@ public class RootConfig {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.addDataSourceProperty("useServerPrepStmts", "true");
-        config.setMaximumPoolSize(50);
-        config.setMinimumIdle(40);
+        config.setMaximumPoolSize(20);
+        config.setMinimumIdle(16);
 
         HikariDataSource dataSource = new HikariDataSource(config);
         return dataSource;
