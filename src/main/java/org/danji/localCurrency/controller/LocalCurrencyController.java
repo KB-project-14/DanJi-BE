@@ -28,10 +28,6 @@ public class LocalCurrencyController {
     private final LocalCurrencyService localCurrencyService;
 
     @GetMapping("/{localCurrencyId}")
-//    public ResponseEntity<ApiResponse<LocalCurrencyDTO>> getLocalCurrency(@PathVariable("localCurrencyId") UUID localCurrencyId) {
-//        LocalCurrencyDTO localCurrency = localCurrencyService.getLocalCurrency(localCurrencyId);
-//        return ResponseEntity.ok(ApiResponse.success(localCurrency));
-//    }
     public ResponseEntity<ApiResponse<LocalCurrencyDetailDTO>> getLocalCurrencyDetail(@PathVariable("localCurrencyId") UUID localCurrencyId) {
         LocalCurrencyDetailDTO dto = localCurrencyService.getLocalCurrencyDetail(localCurrencyId);
         return ResponseEntity.ok(ApiResponse.success(dto));

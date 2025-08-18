@@ -7,7 +7,6 @@ import org.danji.transaction.dto.request.PaymentContextDTO;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.enums.PaymentType;
-import org.danji.wallet.exception.WalletException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

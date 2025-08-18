@@ -47,11 +47,8 @@ public class BatchConfig {
     public JobLauncher jobLauncher(JobRepository jobRepository) throws Exception {
         SimpleJobLauncher launcher = new SimpleJobLauncher();
         launcher.setJobRepository(jobRepository);
-
-        // 병렬 실행을 위한 TaskExecutor 설정
         launcher.setTaskExecutor(new SimpleAsyncTaskExecutor());
-
-        launcher.afterPropertiesSet(); // 필수
+        launcher.afterPropertiesSet();
         return launcher;
     }
 

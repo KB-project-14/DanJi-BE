@@ -21,14 +21,9 @@ public class AvailableMerchantDTO extends BaseDTO {
     private BigDecimal longitude;
     private String category;
     private UUID localCurrencyId;
-
-    //JOIN을 통해 조회된 지역화폐 이름
     private String localCurrencyName;
-
-    //현재 위치로부터의 거리를 담을 필드
     private BigDecimal distance;
     
-    //VO -> DTO 변환
     public static AvailableMerchantDTO of(AvailableMerchantVO vo) {
         return vo == null ? null : AvailableMerchantDTO.builder()
                 .availableMerchantId(vo.getAvailableMerchantId())
@@ -45,7 +40,6 @@ public class AvailableMerchantDTO extends BaseDTO {
                 .build();
     }
 
-    //DTO -> VO 변환
     public AvailableMerchantVO toVo() {
         return AvailableMerchantVO.builder()
                 .availableMerchantId(availableMerchantId)

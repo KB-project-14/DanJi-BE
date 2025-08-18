@@ -1,6 +1,5 @@
 package org.danji.transaction.processor;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
@@ -47,22 +46,18 @@ public class ConvertProcessor implements TransferProcessor<TransferDTO> {
     @Transactional
     @Override
     public List<TransactionDTO> process(TransferDTO transferDTO) {
-        //tranferDTO 에는 지역화폐 -> 지역화폐 전환 기록만 넘어올것으로 예상.
-        // 해당 지역화폐 지갑에서 member_id를 찾아서, mainwallet id를 찾은 후
-        // 새로운 transferDTO를 만들어서 refundProcessor에 넘겨야함
-        // transferDTO 에서 전달 받은 가격, from_wallet_id 랑, boolean 값을 false로 만든 transferDTO
+
         WalletVO fromLocalCurrencyWalletVO = walletMapper.findById(transferDTO.getFromWalletId());
         if (fromLocalCurrencyWalletVO == null) {
             throw new WalletException(ErrorCode.WALLET_NOT_FOUND);
         }
 
-        // 해당 지갑의 LocalCurrencyId로 지역화폐 찾기
         LocalCurrencyVO localCurrencyVO = localCurrencyMapper.findById(fromLocalCurrencyWalletVO.getLocalCurrencyId());
         if (localCurrencyVO == null) {
             throw new LocalCurrencyException(ErrorCode.LOCAL_CURRENCY_NOT_FOUND);
         }
 
-        //일단 현재는 로그인 구현이 안되었기 때문에, 이런식으로 번잡하게 찾아서 구현해놓음
+
         UUID memberId = fromLocalCurrencyWalletVO.getMemberId();
 
         WalletVO mainWalletVO = walletMapper.findByMemberId(memberId);

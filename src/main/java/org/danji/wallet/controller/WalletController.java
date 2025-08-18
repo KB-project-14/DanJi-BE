@@ -19,9 +19,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Api(
-        tags = "지갑",                    // 그룹 이름 (필수)
-        description = "지갑 CRUD API",        // 상세 설명
-        value = "WalletController"              // 컨트롤러 식별자
+        tags = "지갑",
+        description = "지갑 CRUD API",
+        value = "WalletController"
 )
 public class WalletController {
 
@@ -40,10 +40,6 @@ public class WalletController {
     }
 
     @GetMapping("")
-//    public ResponseEntity<ApiResponse<List<WalletDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
-//        List<WalletDTO> walletList = walletService.getWalletList(filter);
-//        return ResponseEntity.ok(ApiResponse.success(walletList));
-//    }
     public ResponseEntity<ApiResponse<List<WalletDetailDTO>>> getWalletList(@ModelAttribute WalletFilterDTO filter) {
         List<WalletDetailDTO> walletList = walletService.getWalletWithCurrency(filter);
         return ResponseEntity.ok(ApiResponse.success(walletList));

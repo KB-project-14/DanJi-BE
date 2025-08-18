@@ -29,7 +29,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -45,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationErrorFilter authenticationErrorFilter;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    // 커스텀 인증 필터 추가
+
     @Autowired
     private JwtUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter;
 
@@ -57,39 +56,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // 인증 에러 필터 - 가장 먼저 실행
+
                 .addFilterBefore(
                         authenticationErrorFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-                // JWT 인증 필터
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-                // 로그인 인증 필터
                 .addFilterBefore(
                         jwtUsernamePasswordAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-                // 예외 처리 설정
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)  // 401 에러 처리
-                .accessDeniedHandler(accessDeniedHandler);           // 403 에러 처리
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
 
-        //  HTTP 보안 설정
         http.cors().and()
-                .httpBasic().disable()      // 기본 HTTP 인증 비활성화
-                .csrf().disable()           // CSRF 보호 비활성화 (REST API에서는 불필요)
-                .formLogin().disable()      // 폼 로그인 비활성화 (JSON 기반 API 사용)
-                .sessionManagement()        // 세션 관리 설정
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // 무상태 모드
+                .httpBasic().disable()
+                .csrf().disable()
+                .formLogin().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // 경로별, 접근 권한 설정
         http
-                .authorizeRequests() // 경로별 접근 권한 설정
+                .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/",   // 실행 시 swagger로 바로 redirect
+                .antMatchers("/",
                         "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
@@ -97,11 +91,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/members/login", "/api/members", "/api/health").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/available-merchants", "/api/regions").permitAll()
                 .antMatchers("/static/images/**").permitAll()
-                .anyRequest().authenticated(); // 나머지는 로그인 필요
+                .anyRequest().authenticated();
     }
 
 
-    // 직접 만든 userDetailsService를 이용해 인증을 진행하도록 설정
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         log.info("configure .........................................");
@@ -110,7 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    // AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
@@ -119,29 +111,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // CORS 설정 객체 생성
+
         CorsConfiguration cfg = new CorsConfiguration();
-
-        // 권장: 정확한 오리진만 허용 (credentials=true일 때 와일드카드 지양)
         cfg.setAllowedOrigins(List.of("https://danji.vercel.app", "http://localhost:5173/", "https://danji.cloud/"));
-        // 또는 패턴을 꼭 써야 하면 아래를 쓰되 보안상 비추천
-        // cfg.setAllowedOriginPatterns(List.of("https://*.vercel.app"));
-
-        // 프리플라이트 포함
-        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-
-        // 필요한 헤더만 (Authorization, Content-Type 정도) — 불필요하면 CORS 자체가 덜 일어남
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
-
-        // 응답에서 노출할 헤더가 필요하면
-        // cfg.setExposedHeaders(List.of("Location"));
-
-        // 쿠키/Authorization 사용 시
         cfg.setAllowCredentials(true);
-
-        // ★ 프리플라이트 캐시 24시간ㅎ
         cfg.setMaxAge(86_400L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;

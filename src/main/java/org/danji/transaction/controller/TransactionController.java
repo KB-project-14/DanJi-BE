@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.danji.global.common.ApiResponse;
-import org.danji.security.account.domain.CustomUser;
 import org.danji.transaction.dto.request.PaymentDTO;
 import org.danji.transaction.dto.request.TransactionFilterDTO;
 import org.danji.transaction.dto.request.TransferDTO;
@@ -16,22 +15,20 @@ import org.danji.transaction.dto.response.TransactionDTO;
 import org.danji.transaction.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.UUID;
 
-@RestController                    // REST API 컨트롤러 선언 (@Controller + @ResponseBody)
-@RequestMapping("/api")   // 기본 URL 매핑
-@RequiredArgsConstructor           // final 필드 생성자 자동 생성
-@Slf4j                             // 로깅 기능
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 @Api(
-        tags = "트랜잭션 관리",                    // 그룹 이름 (필수)
-        description = "트랜잭션 CRUD API",        // 상세 설명
-        value = "TransactionController"         // 컨트롤러 식별자
+        tags = "트랜잭션 관리",
+        description = "트랜잭션 CRUD API",
+        value = "TransactionController"
 )
 public class TransactionController {
 
@@ -43,7 +40,7 @@ public class TransactionController {
     )
     @PostMapping("/wallets/transfer")
     public ResponseEntity<ApiResponse<List<TransactionDTO>>> LocalCurrencyRecharge(@RequestBody TransferDTO transferDTO) {
-        //System.out.println(user.getMember().getMemberId());
+
         List<TransactionDTO> result = transactionService.handleTransfer(transferDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
@@ -84,7 +81,6 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(result));
     }
 
-    //서버 배포 시, 헬스 체크를 위한 api
     @GetMapping("/health")
     public String home() {
         return "ok";

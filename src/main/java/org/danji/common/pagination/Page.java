@@ -12,14 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Page<T> {
-    private int totalCount; // 전체 데이터 건수
-    private int totalPage; // 전체 페이지 수
+    private int totalCount;
+    private int totalPage;
     @JsonIgnore
     private PageRequest pageRequest;
-    private List<T> list; // 데이터 목록
+    private List<T> list;
 
     public static <T> Page of(PageRequest pageRequest, int totalCount, List<T> list) {
-        int totalPage = (int) Math.ceil((double) totalCount / pageRequest.getAmount()); // 전체 페이지 수 계산
+        int totalPage = (int) Math.ceil((double) totalCount / pageRequest.getAmount());
         return new Page(totalCount, totalPage, pageRequest, list);
     }
 

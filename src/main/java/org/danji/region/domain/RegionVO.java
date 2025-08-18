@@ -3,9 +3,6 @@ package org.danji.region.domain;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.domain.BaseVO;
-import org.danji.global.dto.BaseDTO;
-
-import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

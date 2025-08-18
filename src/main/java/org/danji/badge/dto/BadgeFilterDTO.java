@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danji.badge.enums.BadgeType;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @NoArgsConstructor

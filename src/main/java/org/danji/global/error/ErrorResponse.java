@@ -2,9 +2,7 @@ package org.danji.global.error;
 
 import lombok.*;
 import org.springframework.validation.FieldError;
-
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

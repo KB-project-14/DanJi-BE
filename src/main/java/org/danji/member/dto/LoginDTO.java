@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danji.global.error.ErrorCode;
 import org.danji.member.exception.MemberException;
-import org.springframework.security.authentication.BadCredentialsException;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Data

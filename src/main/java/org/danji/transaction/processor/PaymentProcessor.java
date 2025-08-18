@@ -8,8 +8,6 @@ import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.common.utils.AuthUtils;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.exception.LocalCurrencyException;
-import org.danji.member.domain.MemberVO;
-import org.danji.member.mapper.MemberMapper;
 import org.danji.member.service.MemberService;
 import org.danji.transaction.converter.TransactionConverter;
 import org.danji.transaction.domain.TransactionVO;
@@ -25,15 +23,11 @@ import org.danji.transaction.strategy.PaymentStrategy;
 import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.danji.transaction.validator.WalletValidator.checkOwnership;
+
 
 @Service("PAYMENT")
 @RequiredArgsConstructor
@@ -52,7 +46,6 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     @Override
     public List<TransactionDTO> process(PaymentDTO paymentDTO) {
 
-        //결제 비밀번호 확인 로직
         UUID userId = AuthUtils.getMemberId();
         if (!memberService.checkPaymentPin(paymentDTO.getWalletPin())) {
             throw new WalletException(ErrorCode.INVALID_PAYMENT_PASSWORD);
@@ -75,7 +68,6 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
         }
 
 
-        // 지역화폐는 strategy를 통해 분기
         return strategies.stream()
                 .filter(strategy -> strategy.supports(paymentDTO))
                 .findFirst()
@@ -86,7 +78,6 @@ public class PaymentProcessor implements TransferProcessor<PaymentDTO> {
     }
 
     private List<TransactionDTO> processGeneral(PaymentDTO paymentDTO) {
-        // 일반 결제 처리 로직 (예: 메인지갑 차감)
 
         UUID userId = AuthUtils.getMemberId();
         WalletVO mainWalletVO = walletMapper.findByMemberId(userId);

@@ -31,7 +31,6 @@ import javax.sql.DataSource;
         "org.danji.wallet.mapper",
         "org.danji.transaction.mapper",
         "org.danji.localCurrency.mapper",
-        "org.danji.cashback.mapper",
         "org.danji.region.mapper",
         "org.danji.badge.mapper",
         "org.danji.memberBadge.mapper",
@@ -39,9 +38,7 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {
         "org.danji.member.service",
         "org.danji.availableMerchant.service",
-        "org.danji.availableMerchant.util",
         "org.danji.transaction.service",
-        "org.danji.cashback.converter",
         "org.danji.transaction.converter",
         "org.danji.region.service",
         "org.danji.localCurrency.service",
@@ -92,13 +89,9 @@ public class RootConfig {
         sqlSessionFactory.setConfigLocation(
                 applicationContext.getResource("classpath:/mybatis-config.xml"));
         sqlSessionFactory.setDataSource(dataSource());
-
-        // 여기서 mapperLocations 추가
         sqlSessionFactory.setMapperLocations(
                 applicationContext.getResources("classpath*:org/danji/**/*.mapper/*Mapper.xml")
         );
-
-
         sqlSessionFactory.setTypeHandlersPackage("org.danji.global.handler");
         return sqlSessionFactory.getObject();
     }
@@ -115,17 +108,13 @@ public class RootConfig {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
-                .baselineVersion("0.0")  // 초기 마이그레이션 버전 설정
+                .baselineVersion("0.0")
                 .baselineOnMigrate(true)
                 .encoding("UTF-8")
-                .cleanDisabled(true)  // 안전을 위해 clean 비활성화
+                .cleanDisabled(true)
                 .validateMigrationNaming(true)
                 .load();
-        // Flyway 설정
-
-        // 수동으로 migrate 호출
         flyway.migrate();
-
         return flyway;
     }
 
@@ -133,5 +122,4 @@ public class RootConfig {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-
 }

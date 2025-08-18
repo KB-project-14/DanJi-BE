@@ -5,13 +5,6 @@ import lombok.experimental.SuperBuilder;
 import org.danji.badge.domain.BadgeVO;
 import org.danji.badge.enums.BadgeType;
 import org.danji.global.dto.BaseDTO;
-import org.danji.member.domain.MemberVO;
-import org.danji.member.dto.MemberDTO;
-import org.danji.member.enums.Role;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)

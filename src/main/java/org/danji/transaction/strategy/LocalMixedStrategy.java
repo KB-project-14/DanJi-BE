@@ -7,7 +7,6 @@ import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.badge.domain.BadgeVO;
 import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.badge.enums.BadgeType;
-import org.danji.badge.exception.BadgeException;
 import org.danji.badge.mapper.BadgeMapper;
 import org.danji.global.error.ErrorCode;
 import org.danji.localCurrency.domain.LocalCurrencyVO;
@@ -163,7 +162,6 @@ public class LocalMixedStrategy implements PaymentStrategy {
             throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
         }
 
-        //현금 지갑에서 결제해야할 금액
         int leftBalance = paymentDTO.getMerchantAmount() - paymentDTO.getInputAmount();
         WalletVO mainWalletVO = walletMapper.findByMemberId(userId);
         if (mainWalletVO == null) {

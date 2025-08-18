@@ -23,15 +23,6 @@ tags = "가맹점 관리", description = "가맹점 CRUD API"
 public class AvailableMerchantController {
     private final AvailableMerchantService service;
 
-    @ApiOperation(value = "가맹점 등록", notes = "공공데이터 API에서 가맹점을 가져와 저장합니다.")
-    @PostMapping
-    public ResponseEntity<ApiResponse<String>> importMerchants(
-    ) {
-        //가맹점 생성 후 결과 반환
-        service.importFromPublicAPI();
-        return ResponseEntity.ok(ApiResponse.success("공공 API에서 가맹점 데이터 수집 완료"));
-    }
-
     @ApiOperation(value = "가맹점 필터링 조회", notes = "다양한 조건으로 가맹점을 검색합니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<AvailableMerchantDTO>>> findMerchantsByFilter(

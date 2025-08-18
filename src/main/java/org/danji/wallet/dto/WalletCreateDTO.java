@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.danji.wallet.enums.WalletType;
-
-import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
 @Data

@@ -1,6 +1,5 @@
 package org.danji.member.controller;
 
-import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.danji.common.utils.AuthUtils;
@@ -8,11 +7,8 @@ import org.danji.global.common.ApiResponse;
 import org.danji.member.dto.*;
 import org.danji.member.service.MemberService;
 import org.danji.security.util.JwtProcessor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Log4j2
@@ -24,7 +20,6 @@ public class MemberController {
     private final MemberService service;
     private final JwtProcessor jwtProcessor;
 
-    // @ModelAttribute 생략됨 -> formdata 형태로 요청이 올 때 이미지를 받기 위해
     @PostMapping()
     public ResponseEntity<ApiResponse<MemberDTO>> join(@RequestBody MemberJoinDTO member) {
         MemberDTO memberDTO = service.join(member);

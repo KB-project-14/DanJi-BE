@@ -65,7 +65,6 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDT
 
         List<AvailableMerchantVO> allMerchants = new ArrayList<>();
 
-        //해당 지역화폐를 사용할 수 있는 가맹점 수집
         for (JsonNode item : items) {
             String name = item.path("affiliateNm").asText();
             String address = item.path("lctnRoadNmAddr").asText();
@@ -86,8 +85,6 @@ public class AvailableMerchantProcessor implements ItemProcessor<LocalCurrencyDT
 
         if (allMerchants.isEmpty()) return Collections.emptyList();
 
-
-        // 중복 가맹점 조회 및 필터링
         List<Map<String, String>> merchantKeys = allMerchants.stream()
                 .map(vo -> {
                     Map<String, String> key = new HashMap<>();

@@ -15,7 +15,6 @@ public class RegionDTO extends BaseDTO {
     private String province;
     private String city;
 
-    //VO -> DTO 변환
     public static RegionDTO of(RegionVO vo) {
         return vo == null ? null : RegionDTO.builder()
                 .regionId(vo.getRegionId())
@@ -26,7 +25,6 @@ public class RegionDTO extends BaseDTO {
                 .build();
     }
 
-    //DTO -> VO 변환
     public RegionVO toVo() {
         return RegionVO.builder()
                 .regionId(regionId)

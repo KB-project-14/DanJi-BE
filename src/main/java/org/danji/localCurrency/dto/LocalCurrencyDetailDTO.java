@@ -1,6 +1,5 @@
 package org.danji.localCurrency.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import org.danji.localCurrency.enums.BenefitType;
 
@@ -14,7 +13,5 @@ public class LocalCurrencyDetailDTO {
     private BenefitType benefitType;
     private Integer maximum;
     private Integer percentage;
-
-    //이미지 파일
     private String imageUrl;
 }

@@ -18,31 +18,26 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    // 필터 생성자
+
     public JwtUsernamePasswordAuthenticationFilter(
-        AuthenticationManager authenticationManager,    // SecurityConfig 생성 후 Bean 등록
+        AuthenticationManager authenticationManager,
       LoginFailureHandler loginFailureHandler) {
 
-        // 부모 필터가 내부적으로 인증 처리를 할 수 있도록 설정해놓은 AuthenticationManager를 넘겨줌
         super(authenticationManager);
-        setFilterProcessesUrl("/api/auth/login");                    // POST 로그인 요청 URL
-       setAuthenticationFailureHandler(loginFailureHandler);        // 실패 핸들러 등록
+        setFilterProcessesUrl("/api/auth/login");
+       setAuthenticationFailureHandler(loginFailureHandler);
     }
 
 
-    // 로그인 요청 URL이 왔을 때 로그인 작업 처리
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
 
-        // 1. 요청 BODY의 JSON에서 username, password 추출
         LoginDTO login = LoginDTO.of(request);
-
-        // 2. 인증 토큰(UsernamePasswordAuthenticationToken) 구성
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
 
-        // 3. AuthenticationManager에게 인증 요청
+
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 

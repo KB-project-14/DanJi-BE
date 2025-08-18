@@ -10,7 +10,6 @@ import org.danji.global.error.ErrorResponse;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
 
-    //성공, 실패 여부
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private ApiStatus status;
     private T data;

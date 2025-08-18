@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.domain.BaseVO;
 import org.danji.wallet.enums.WalletType;
-
-import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)

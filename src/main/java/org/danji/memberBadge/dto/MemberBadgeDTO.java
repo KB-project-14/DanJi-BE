@@ -1,11 +1,9 @@
 package org.danji.memberBadge.dto;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.danji.global.domain.BaseVO;
 import org.danji.memberBadge.domain.MemberBadgeVO;
 import org.danji.memberBadge.enums.BadgeGrade;
-import org.danji.wallet.dto.WalletDTO;
+
 
 import java.util.UUID;
 

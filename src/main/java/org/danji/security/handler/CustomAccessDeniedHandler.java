@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @Component
 @Log4j2
-// 권한 문제 있을 때 응답할 형태를 지정하는 핸들러
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override

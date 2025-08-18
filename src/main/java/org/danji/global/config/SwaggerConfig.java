@@ -37,9 +37,8 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                // JWT 인증
-                .securityContexts(List.of(this.securityContext())) // SecurityContext 설정
-                .securitySchemes(List.of(this.apiKey())) // ApiKey 설정
+                .securityContexts(List.of(this.securityContext()))
+                .securitySchemes(List.of(this.apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
@@ -48,7 +47,7 @@ public class SwaggerConfig {
 
     }
 
-    // JWT SecurityContext 구성
+
     private SecurityContext securityContext() {
         return SecurityContext.builder()
 
@@ -65,7 +64,6 @@ public class SwaggerConfig {
         return List.of(new SecurityReference("Authorization", authorizationScopes));
     }
 
-    // ApiKey 정의
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Authorization", "header");
     }

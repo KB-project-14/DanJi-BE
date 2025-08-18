@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.UUID;
 
 
@@ -41,8 +39,6 @@ public class MemberServiceImpl implements MemberService {
         return MemberDTO.of(vo);
     }
 
-
-    // 2) 가입
     @Transactional
     @Override
     public MemberDTO join(MemberJoinDTO dto) {
@@ -64,8 +60,6 @@ public class MemberServiceImpl implements MemberService {
         return get(member.getUsername());
     }
 
-
-    // 3) 수정
     @Override
     public MemberDTO update(MemberUpdateDTO dto) {
         MemberVO member = validateMember(dto.getUsername(), dto.getPassword());
@@ -78,7 +72,6 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
-    // 4) 삭제
     @Override
     @Transactional
     public void delete(MemberDeleteDTO dto) {
@@ -95,22 +88,11 @@ public class MemberServiceImpl implements MemberService {
         return MemberDTO.of(vo);
     }
 
-    // 결제 시 사용 할 서비스
     @Override
-    public boolean checkPaymentPin(String paymentPin){
+    public boolean checkPaymentPin(String paymentPin) {
         UUID memberId = AuthUtils.getMemberId();
-        long t0 = System.nanoTime();
-        MemberVO member = null;
-        String findPaymentPin = null;
-        //try (Connection c = dataSource.getConnection()) {           // 풀 대기
-        long t1 = System.nanoTime();
-        findPaymentPin = mapper.findPaymentPinById(memberId);                   // 쿼리 실행/매핑
-        long t2 = System.nanoTime();
-        log.info("connWait={}ms, query+map={}ms", (t1-t0)/1e6, (t2-t1)/1e6);
-       // }catch (SQLException e){
-         //   e.printStackTrace();
-        //}
 
+        String findPaymentPin = mapper.findPaymentPinById(memberId);
 
         int result = 0;
         for (int i = 0; i < paymentPin.length(); i++) {

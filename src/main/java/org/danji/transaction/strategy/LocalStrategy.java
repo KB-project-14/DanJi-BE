@@ -1,17 +1,11 @@
 package org.danji.transaction.strategy;
 
 import lombok.RequiredArgsConstructor;
-import org.danji.availableMerchant.domain.AvailableMerchantVO;
-import org.danji.availableMerchant.exception.AvailableMerchantException;
-import org.danji.availableMerchant.mapper.AvailableMerchantMapper;
 import org.danji.badge.domain.BadgeVO;
 import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.badge.enums.BadgeType;
 import org.danji.badge.mapper.BadgeMapper;
 import org.danji.global.error.ErrorCode;
-import org.danji.localCurrency.domain.LocalCurrencyVO;
-import org.danji.localCurrency.exception.LocalCurrencyException;
-import org.danji.localCurrency.mapper.LocalCurrencyMapper;
 import org.danji.memberBadge.dto.MemberBadgeCreateDTO;
 import org.danji.memberBadge.enums.BadgeGrade;
 import org.danji.memberBadge.service.MemberBadgeService;
@@ -25,19 +19,15 @@ import org.danji.transaction.enums.PaymentType;
 import org.danji.transaction.enums.Type;
 import org.danji.transaction.exception.TransactionException;
 import org.danji.transaction.mapper.TransactionMapper;
-import org.danji.wallet.domain.WalletVO;
-import org.danji.wallet.dto.WalletFilterDTO;
-import org.danji.wallet.enums.WalletType;
 import org.danji.wallet.exception.WalletException;
 import org.danji.wallet.mapper.WalletMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.danji.transaction.validator.WalletValidator.checkOwnership;
+
 
 @Component
 @RequiredArgsConstructor
@@ -46,12 +36,9 @@ public class LocalStrategy implements PaymentStrategy {
     private static final int bronze_criteria = 50000;
     private static final int silver_criteria = 100000;
     private static final int gold_criteria = 200000;
-
-    private final AvailableMerchantMapper availableMerchantMapper;
     private final WalletMapper walletMapper;
     private final TransactionConverter transactionConverter;
     private final TransactionMapper transactionMapper;
-    private final LocalCurrencyMapper localCurrencyMapper;
     private final BadgeMapper badgeMapper;
     private final MemberBadgeService memberBadgeService;
 
@@ -87,7 +74,7 @@ public class LocalStrategy implements PaymentStrategy {
         }
 
         if (target != null) {
-            UUID badgeId = byFilter.get(0).getBadgeId(); // 한 번만 꺼내기
+            UUID badgeId = byFilter.get(0).getBadgeId();
             if (memberBadgeService.validateMemberBadge(userId, badgeId, target)) {
                 MemberBadgeCreateDTO dto = MemberBadgeCreateDTO.builder()
                         .badgeId(badgeId)
@@ -104,8 +91,7 @@ public class LocalStrategy implements PaymentStrategy {
         final int before      = ctx.getBalance();
         final int after       = before - amount;
 
-        //Long startTime5 = System.nanoTime();
-        // 두 트랜잭션 VO 구성
+
         TransactionVO expenseTx = transactionConverter.toTransactionVO(
                 UUID.randomUUID(), walletId, null,
                 before, after, amount,
@@ -117,7 +103,7 @@ public class LocalStrategy implements PaymentStrategy {
                 Direction.INCOME, Type.PAYMENT, comment, null
         );
 
-// ← 왕복 1번: 멀티밸류 INSERT
+
         int inserted = transactionMapper.insertMany(Arrays.asList(expenseTx, incomeTx));
         if (inserted != 2) throw new TransactionException(ErrorCode.TRANSACTION_SAVE_FAILED);
 

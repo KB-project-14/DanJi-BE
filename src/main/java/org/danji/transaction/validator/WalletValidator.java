@@ -1,9 +1,8 @@
 package org.danji.transaction.validator;
 
 import org.danji.wallet.domain.WalletVO;
-
 import java.util.List;
-import java.util.UUID;
+
 
 public class WalletValidator {
 

@@ -5,8 +5,6 @@ import lombok.experimental.SuperBuilder;
 import org.danji.global.domain.BaseVO;
 import org.danji.transaction.enums.Direction;
 import org.danji.transaction.enums.Type;
-
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)

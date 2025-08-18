@@ -22,7 +22,7 @@ public interface LocalCurrencyMapper {
 
     LocalCurrencyVO findByWalletId(UUID walletId);
 
-    List<LocalCurrencyVO> findAll();
+    List<LocalCurrencyDTO> findAll();
 
     //이미지 파일 포함한 세부 조회
     LocalCurrencyDetailDTO findDetailById(UUID localCurrencyId);

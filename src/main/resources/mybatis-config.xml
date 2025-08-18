@@ -19,7 +19,6 @@
     <package name="org.danji.transaction.domain"/>
     <package name="org.danji.wallet.domain"/>
     <package name="org.danji.wallet.dto"/>
-    <package name="org.danji.cashback.domain"/>
     <package name="org.danji.member.domain"/>
     <package name="org.danji.badge.domain"/>
 
@@ -33,7 +32,6 @@
 
   <typeHandlers>
     <typeHandler handler="org.danji.global.handler.UUIDTypeHandler"/>
-    <typeHandler handler="org.danji.cashback.handler.CashbackStatusTypeHandler"/>
   </typeHandlers>
 
 </configuration>

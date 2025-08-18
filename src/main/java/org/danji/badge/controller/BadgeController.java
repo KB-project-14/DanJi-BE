@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.danji.badge.dto.BadgeDTO;
 import org.danji.badge.dto.BadgeFilterDTO;
 import org.danji.badge.service.BadgeService;
-import org.danji.badge.enums.BadgeType;
 import org.danji.global.common.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

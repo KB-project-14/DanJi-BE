@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.danji.global.dto.BaseDTO;
 import org.danji.localCurrency.enums.BenefitType;
-import org.danji.wallet.domain.WalletVO;
 import org.danji.wallet.enums.WalletType;
 
 import java.util.UUID;
@@ -34,7 +33,6 @@ public class WalletDetailDTO extends BaseDTO {
     private String province;
     private String city;
 
-    //프론트에 보낼 응답 추가
     private String backgroundImageUrl;
 
 }

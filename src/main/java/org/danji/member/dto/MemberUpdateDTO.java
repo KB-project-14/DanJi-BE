@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.danji.member.domain.MemberVO;
-import org.danji.member.enums.Role;
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -24,7 +24,6 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         return new Class[]{ServletConfig.class, SwaggerConfig.class};
     }
 
-    // 스프링의 FrontController인 DispatcherServlet이 담당할 Url 매핑 패턴, / : 모든 요청에 대해 매핑
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
@@ -36,10 +35,10 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
         MultipartConfigElement multipartConfig =
                 new MultipartConfigElement(
-                        LOCATION,   // 업로드 처리 디렉토리 경로
-                        MAX_FILE_SIZE,    // 업로드 가능한 파일 하나의 최대 크기
-                        MAX_REQUEST_SIZE,    // 업로드 가능한 전체 최대 크기(여러 파일 업로드 하는 경우)
-                        FILE_SIZE_THRESHOLD        // 메모리 파일의 최대 크기(이보다 작으면 실제 메모리에서만 작업)
+                        LOCATION,
+                        MAX_FILE_SIZE,
+                        MAX_REQUEST_SIZE,
+                        FILE_SIZE_THRESHOLD
                 );
         registration.setMultipartConfig(multipartConfig);
     }

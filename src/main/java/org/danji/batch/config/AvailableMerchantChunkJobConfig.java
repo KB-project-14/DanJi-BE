@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.danji.availableMerchant.domain.AvailableMerchantVO;
 import org.danji.batch.step.AvailableMerchantProcessor;
 import org.danji.batch.step.AvailableMerchantWriter;
-
 import org.danji.batch.step.LocalCurrencyPartitionedReader;
 import org.danji.batch.step.LocalCurrencyPartitioner;
-import org.danji.localCurrency.domain.LocalCurrencyVO;
 import org.danji.localCurrency.dto.LocalCurrencyDTO;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,7 +15,6 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
