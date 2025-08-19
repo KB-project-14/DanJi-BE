@@ -136,12 +136,13 @@
   </select>
 
     <select id="findWalletListByFilter" resultMap="walletDetailMap">
-        SELECT w.wallet_id,
+        SELECT
+        w.wallet_id,
         w.member_id,
-        w.local_currency_id,
         w.wallet_type,
         w.balance,
         w.display_order,
+        w.local_currency_id,
         lc.name AS local_currency_name,
         lc.benefit_type,
         lc.maximum,
@@ -149,11 +150,9 @@
         r.region_id,
         r.province,
         r.city,
-        f.file_path,
-        w.created_at,
-        w.updated_at
+        f.file_path
         FROM wallet w
-        LEFT JOIN local_currency lc
+        LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
         JOIN region r
         ON lc.region_id = r.region_id
@@ -193,6 +192,7 @@
         <result property="localCurrencyName" column="local_currency_name"/>
         <result property="benefitType" column="benefit_type"/>
         <result property="maximum" column="maximum"/>
+        <result property="percentage" column="percentage"/>
 
         <result property="regionId" column="region_id"/>
         <result property="province" column="province"/>
