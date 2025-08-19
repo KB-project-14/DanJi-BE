@@ -145,12 +145,17 @@
         w.local_currency_id,
         lc.name AS local_currency_name,
         lc.benefit_type,
-        lc.percentage,
         lc.maximum,
+        lc.percentage,
+        r.region_id,
+        r.province,
+        r.city,
         f.file_path
         FROM wallet w
         LEFT OUTER JOIN local_currency lc
         ON w.local_currency_id = lc.local_currency_id
+        JOIN region r
+        ON lc.region_id = r.region_id
         LEFT JOIN file_reference fr
         ON fr.reference_id = lc.local_currency_id
         AND fr.reference_type = 'local_currency'
@@ -187,6 +192,7 @@
         <result property="localCurrencyName" column="local_currency_name"/>
         <result property="benefitType" column="benefit_type"/>
         <result property="maximum" column="maximum"/>
+        <result property="percentage" column="percentage"/>
 
         <result property="regionId" column="region_id"/>
         <result property="province" column="province"/>
