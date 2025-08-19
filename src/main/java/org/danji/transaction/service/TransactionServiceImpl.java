@@ -59,7 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionAggregateDTO.builder()
                 .transactions(transactionList)
                 .aggregateCharge(totalCharge)
-                .aggregateIncentive(totalCharge * percentage / 100)
+                .aggregateIncentive(totalCharge * percentage / (100 + percentage))
                 .build();
     }
 
