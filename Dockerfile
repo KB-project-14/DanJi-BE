@@ -1,6 +1,8 @@
 # 1. Tomcat 베이스 이미지 사용
 FROM tomcat:9-jdk17
 
+COPY server.xml /usr/local/tomcat/conf/server.xml
+
 # 2. 기존 webapps 디렉토리 초기화 (선택적으로 필요)
 RUN rm -rf /usr/local/tomcat/webapps/*
 
