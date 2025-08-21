@@ -72,8 +72,8 @@
                connectionTimeout="20000"
                redirectPort="8443"
                maxParameterCount="1000"
-               maxThreads="300"
-               minSpareThreads="10"
+               maxThreads="5"
+               minSpareThreads="5"
                acceptCount="100"/>
     <!-- A "Connector" using the shared thread pool-->
     <!--
